@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.mapper.TbProjectMapper">
+
+    <resultMap type="com.ruoyi.project.domain.TbProject" id="TbProjectResult">
+        <result property="projectId" column="project_id"/>
+        <result property="number" column="number"/>
+        <result property="name" column="name"/>
+        <result property="introduction" column="introduction"/>
+        <result property="type" column="type"/>
+        <result property="gtype" column="gtype"/>
+        <result property="upnum" column="upnum"/>
+        <result property="renum" column="renum"/>
+        <result property="isCancel" column="is_cancel"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="other" column="other"/>
+    </resultMap>
+
+
+</mapper>

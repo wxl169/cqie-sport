@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.people.mapper.TbStudentMapper">
+
+    <resultMap type="com.ruoyi.people.domain.TbStudent" id="TbStudentResult">
+        <result property="studentId" column="student_id"/>
+        <result property="classId" column="class_id"/>
+        <result property="collegeId" column="college_id"/>
+        <result property="isAthlete" column="is_athlete"/>
+        <result property="studentNumber" column="student_number"/>
+        <result property="name" column="name"/>
+        <result property="gender" column="gender"/>
+        <result property="idnumber" column="idnumber"/>
+        <result property="phoneNumber" column="phone_number"/>
+        <result property="birthday" column="birthday"/>
+        <result property="creditScore" column="credit_score"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="other" column="other"/>
+    </resultMap>
+
+
+</mapper>

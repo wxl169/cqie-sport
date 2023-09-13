@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.match.mapper.TbArrangementMapper">
+
+    <resultMap type="com.ruoyi.match.domain.TbArrangement" id="TbArrangementResult">
+        <result property="arrangementId" column="arrangement_id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="refereeId" column="referee_id"/>
+        <result property="typeId" column="type_id"/>
+        <result property="infoId" column="info_id"/>
+        <result property="type" column="type"/>
+        <result property="isCancel" column="is_cancel"/>
+        <result property="reason" column="reason"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="other" column="other"/>
+    </resultMap>
+
+
+</mapper>
