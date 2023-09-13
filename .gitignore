@@ -18,6 +18,8 @@ target/
 .project
 .settings
 .springBeans
+.gitee
+.run
 
 ### IntelliJ IDEA ###
 .idea
