@@ -1,6 +1,8 @@
 package com.ruoyi.people.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.ruoyi.common.annotation.Sensitive;
+import com.ruoyi.common.enums.SensitiveStrategy;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import java.io.Serializable;
@@ -15,7 +17,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 学生管理对象 tb_student
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-14
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -32,13 +34,15 @@ public class TbStudent extends BaseEntity {
     /**
      * 班级id
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long classId;
     /**
      * 学院id
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long collegeId;
     /**
-     * 是否为运动员 0：不是，1：是
+     * 运动员类型
      */
     private String isAthlete;
     /**
@@ -50,12 +54,13 @@ public class TbStudent extends BaseEntity {
      */
     private String name;
     /**
-     * 性别 1：男，0：女
+     * 性别
      */
     private String gender;
     /**
      * 身份证号 18位号码
      */
+    @Sensitive(strategy = SensitiveStrategy.ID_CARD)
     private String idnumber;
     /**
      * 联系电话
@@ -66,7 +71,7 @@ public class TbStudent extends BaseEntity {
      */
     private Date birthday;
     /**
-     * 运动会信用 默认100，若出现多次退选，舞弊等行为，扣除一定分数
+     * 信用值
      */
     private Long creditScore;
     /**
