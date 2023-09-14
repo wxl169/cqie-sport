@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.domain.PageQuery;
+import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.project.domain.TbCollege;
@@ -12,12 +13,14 @@ import com.ruoyi.project.domain.bo.TbCollegeBo;
 import com.ruoyi.project.domain.vo.TbCollegeVo;
 import com.ruoyi.project.mapper.TbCollegeMapper;
 import com.ruoyi.project.service.ITbCollegeService;
+import com.ruoyi.system.mapper.SysDictDataMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 学院管理Service业务层处理
@@ -30,12 +33,13 @@ import java.util.Map;
 public class TbCollegeServiceImpl implements ITbCollegeService {
 
     private final TbCollegeMapper baseMapper;
+    private final SysDictDataMapper sysDictDataMapper;
 
     /**
      * 查询学院管理
      */
     @Override
-    public TbCollegeVo queryById(Long collegeId){
+    public TbCollegeVo queryById(Long collegeId) {
         return baseMapper.selectVoById(collegeId);
     }
 
@@ -75,6 +79,13 @@ public class TbCollegeServiceImpl implements ITbCollegeService {
         boolean flag = baseMapper.insert(add) > 0;
         if (flag) {
             bo.setCollegeId(add.getCollegeId());
+
+            //添加到学院信息到字典
+            SysDictData sysDictData = new SysDictData();
+            sysDictData.setDictLabel(bo.getName());
+            sysDictData.setDictValue(String.valueOf(bo.getCollegeId()));
+            sysDictData.setDictType("college_name");
+            sysDictDataMapper.insert(sysDictData);
         }
         return flag;
     }
@@ -92,7 +103,7 @@ public class TbCollegeServiceImpl implements ITbCollegeService {
     /**
      * 保存前的数据校验
      */
-    private void validEntityBeforeSave(TbCollege entity){
+    private void validEntityBeforeSave(TbCollege entity) {
         //TODO 做一些数据校验,如唯一约束
     }
 
@@ -101,9 +112,14 @@ public class TbCollegeServiceImpl implements ITbCollegeService {
      */
     @Override
     public Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {
-        if(isValid){
+        if (isValid) {
             //TODO 做一些业务上的校验,判断是否需要校验
         }
+        List<TbCollege> tbColleges = baseMapper.selectBatchIds(ids);
+        List<String> collegeNames = tbColleges.stream().map(TbCollege::getName).collect(Collectors.toList());
+        LambdaQueryWrapper<SysDictData> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(SysDictData::getDictLabel, collegeNames);
+        sysDictDataMapper.delete(queryWrapper);
         return baseMapper.deleteBatchIds(ids) > 0;
     }
 }
