@@ -26,7 +26,7 @@ import com.ruoyi.match.service.ITbArrangeInfoService;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 安排信息单元 
+ * 安排信息单元
  *
  * @author ruoyi
  * @date 2023-09-13
@@ -72,7 +72,7 @@ public class TbArrangeInfoController extends BaseController {
     }
 
     /**
-     * 新增安排信息单元 
+     * 新增安排信息单元
      */
     @SaCheckPermission("match:arrangeInfo:add")
     @Log(title = "安排信息单元 ", businessType = BusinessType.INSERT)
@@ -83,7 +83,7 @@ public class TbArrangeInfoController extends BaseController {
     }
 
     /**
-     * 修改安排信息单元 
+     * 修改安排信息单元
      */
     @SaCheckPermission("match:arrangeInfo:edit")
     @Log(title = "安排信息单元 ", businessType = BusinessType.UPDATE)
@@ -94,7 +94,7 @@ public class TbArrangeInfoController extends BaseController {
     }
 
     /**
-     * 删除安排信息单元 
+     * 删除安排信息单元
      *
      * @param arrangeInfoIds 主键串
      */
@@ -105,4 +105,6 @@ public class TbArrangeInfoController extends BaseController {
                           @PathVariable Long[] arrangeInfoIds) {
         return toAjax(iTbArrangeInfoService.deleteWithValidByIds(Arrays.asList(arrangeInfoIds), true));
     }
+
+    //测试分支提交
 }
