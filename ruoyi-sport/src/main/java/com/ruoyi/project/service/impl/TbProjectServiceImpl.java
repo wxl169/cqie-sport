@@ -23,7 +23,7 @@ import java.util.Collection;
  * 项目管理 Service业务层处理
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-14
  */
 @RequiredArgsConstructor
 @Service
@@ -32,7 +32,7 @@ public class TbProjectServiceImpl implements ITbProjectService {
     private final TbProjectMapper baseMapper;
 
     /**
-     * 查询项目管理 
+     * 查询项目管理
      */
     @Override
     public TbProjectVo queryById(Long projectId){
@@ -61,19 +61,16 @@ public class TbProjectServiceImpl implements ITbProjectService {
     private LambdaQueryWrapper<TbProject> buildQueryWrapper(TbProjectBo bo) {
         Map<String, Object> params = bo.getParams();
         LambdaQueryWrapper<TbProject> lqw = Wrappers.lambdaQuery();
+        lqw.eq(bo.getProjectId() != null, TbProject::getProjectId, bo.getProjectId());
+        lqw.like(StringUtils.isNotBlank(bo.getNumber()), TbProject::getNumber, bo.getNumber());
         lqw.like(StringUtils.isNotBlank(bo.getName()), TbProject::getName, bo.getName());
         lqw.eq(StringUtils.isNotBlank(bo.getType()), TbProject::getType, bo.getType());
         lqw.eq(StringUtils.isNotBlank(bo.getGtype()), TbProject::getGtype, bo.getGtype());
-        lqw.between(params.get("beginUpnum") != null && params.get("endUpnum") != null,
-            TbProject::getUpnum ,params.get("beginUpnum"), params.get("endUpnum"));
-        lqw.between(params.get("beginRenum") != null && params.get("endRenum") != null,
-            TbProject::getRenum ,params.get("beginRenum"), params.get("endRenum"));
-        lqw.eq(StringUtils.isNotBlank(bo.getIsCancel()), TbProject::getIsCancel, bo.getIsCancel());
         return lqw;
     }
 
     /**
-     * 新增项目管理 
+     * 新增项目管理
      */
     @Override
     public Boolean insertByBo(TbProjectBo bo) {
@@ -87,7 +84,7 @@ public class TbProjectServiceImpl implements ITbProjectService {
     }
 
     /**
-     * 修改项目管理 
+     * 修改项目管理
      */
     @Override
     public Boolean updateByBo(TbProjectBo bo) {
@@ -104,7 +101,7 @@ public class TbProjectServiceImpl implements ITbProjectService {
     }
 
     /**
-     * 批量删除项目管理 
+     * 批量删除项目管理
      */
     @Override
     public Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {

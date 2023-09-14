@@ -1,6 +1,14 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="90px">
+      <el-form-item label="项目编号" prop="number">
+        <el-input
+          v-model="queryParams.number"
+          placeholder="请输入项目编号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="项目名称" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -9,29 +17,25 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="招收人数 / 队数 根据比赛类型字段判断人数 / 队数" prop="upnum">
-        <el-input
-          v-model="queryParams.upnum"
-          placeholder="请输入招收人数 / 队数 根据比赛类型字段判断人数 / 队数"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="比赛类型" prop="type">
+        <el-select v-model="queryParams.type" placeholder="请选择比赛类型" clearable>
+          <el-option
+            v-for="dict in dict.type.match_type"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="裁判员数量" prop="renum">
-        <el-input
-          v-model="queryParams.renum"
-          placeholder="请输入裁判员数量"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="是否删除" prop="isCancel">
-        <el-input
-          v-model="queryParams.isCancel"
-          placeholder="请输入是否删除"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="选手类型" prop="gtype">
+        <el-select v-model="queryParams.gtype" placeholder="请选择选手类型" clearable>
+          <el-option
+            v-for="dict in dict.type.player_type"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -90,11 +94,18 @@
       <el-table-column label="项目id 项目表的主键" align="center" prop="projectId" v-if="false"/>
       <el-table-column label="项目编号" align="center" prop="number" />
       <el-table-column label="项目名称" align="center" prop="name" />
-      <el-table-column label="比赛类型 0：个人，1：团体" align="center" prop="type" />
-      <el-table-column label="男子/女子赛 0：女子，1：男子" align="center" prop="gtype" />
-      <el-table-column label="招收人数 / 队数 根据比赛类型字段判断人数 / 队数" align="center" prop="upnum" />
+      <el-table-column label="比赛类型" align="center" prop="type">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.match_type" :value="scope.row.type"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="选手类型" align="center" prop="gtype">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.player_type" :value="scope.row.gtype"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="招收人数/队数" align="center" prop="upnum" />
       <el-table-column label="裁判员数量" align="center" prop="renum" />
-      <el-table-column label="是否删除" align="center" prop="isCancel" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -125,7 +136,7 @@
 
     <!-- 添加或修改项目管理 对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="项目编号" prop="number">
           <el-input v-model="form.number" placeholder="请输入项目编号" />
         </el-form-item>
@@ -135,8 +146,28 @@
         <el-form-item label="规则介绍" prop="introduction">
           <el-input v-model="form.introduction" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="招收人数 / 队数 根据比赛类型字段判断人数 / 队数" prop="upnum">
-          <el-input v-model="form.upnum" placeholder="请输入招收人数 / 队数 根据比赛类型字段判断人数 / 队数" />
+        <el-form-item label="比赛类型" prop="type">
+          <el-select v-model="form.type" placeholder="请选择比赛类型">
+            <el-option
+              v-for="dict in dict.type.match_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="选手类型" prop="gtype">
+          <el-select v-model="form.gtype" placeholder="请选择选手类型">
+            <el-option
+              v-for="dict in dict.type.player_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="招收人数 / 队数" prop="upnum">
+          <el-input v-model="form.upnum" placeholder="请输入招收人数 / 队数 " />
         </el-form-item>
         <el-form-item label="裁判员数量" prop="renum">
           <el-input v-model="form.renum" placeholder="请输入裁判员数量" />
@@ -155,6 +186,7 @@ import { listProject, getProject, delProject, addProject, updateProject } from "
 
 export default {
   name: "Project",
+  dicts: ['match_type', 'player_type'],
   data() {
     return {
       // 按钮loading
@@ -181,53 +213,34 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        projectId: undefined,
+        number: undefined,
         name: undefined,
         type: undefined,
         gtype: undefined,
-        upnum: undefined,
-        renum: undefined,
-        isCancel: undefined,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        projectId: [
-          { required: true, message: "项目id 项目表的主键不能为空", trigger: "blur" }
-        ],
         number: [
           { required: true, message: "项目编号不能为空", trigger: "blur" }
         ],
         name: [
           { required: true, message: "项目名称不能为空", trigger: "blur" }
         ],
-        introduction: [
-          { required: true, message: "规则介绍不能为空", trigger: "blur" }
-        ],
         type: [
-          { required: true, message: "比赛类型 0：个人，1：团体不能为空", trigger: "change" }
+          { required: true, message: "比赛类型不能为空", trigger: "change" }
         ],
         gtype: [
-          { required: true, message: "男子/女子赛 0：女子，1：男子不能为空", trigger: "change" }
+          { required: true, message: "选手类型不能为空", trigger: "change" }
         ],
         upnum: [
-          { required: true, message: "招收人数 / 队数 根据比赛类型字段判断人数 / 队数不能为空", trigger: "blur" }
+          { required: true, message: "招收人数/队数不能为空", trigger: "blur" }
         ],
         renum: [
           { required: true, message: "裁判员数量不能为空", trigger: "blur" }
         ],
-        isCancel: [
-          { required: true, message: "是否删除不能为空", trigger: "blur" }
-        ],
-        createTime: [
-          { required: true, message: "录入时间不能为空", trigger: "blur" }
-        ],
-        updateTime: [
-          { required: true, message: "更新时间不能为空", trigger: "blur" }
-        ],
-        other: [
-          { required: true, message: "其他 备用字段不能为空", trigger: "blur" }
-        ]
       }
     };
   },
@@ -328,6 +341,7 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
+      console.log(row);
       const projectIds = row.projectId || this.ids;
       this.$modal.confirm('是否确认删除项目管理 编号为"' + projectIds + '"的数据项？').then(() => {
         this.loading = true;

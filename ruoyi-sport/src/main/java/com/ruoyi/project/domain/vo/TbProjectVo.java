@@ -5,21 +5,24 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import com.ruoyi.common.annotation.ExcelDictFormat;
 import com.ruoyi.common.convert.ExcelDictConvert;
 import lombok.Data;
-import java.util.Date;
-
 
 
 /**
  * 项目管理 视图对象 tb_project
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-14
  */
 @Data
 @ExcelIgnoreUnannotated
 public class TbProjectVo {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 项目id 项目表的主键
+     */
+    private Long projectId;
 
     /**
      * 项目编号
@@ -36,13 +39,15 @@ public class TbProjectVo {
     /**
      * 比赛类型 0：个人，1：团体
      */
-    @ExcelProperty(value = "比赛类型 0：个人，1：团体")
+    @ExcelProperty(value = "比赛类型 0：个人，1：团体", converter = ExcelDictConvert.class)
+    @ExcelDictFormat(dictType = "match_type")
     private String type;
 
     /**
      * 男子/女子赛 0：女子，1：男子
      */
-    @ExcelProperty(value = "男子/女子赛 0：女子，1：男子")
+    @ExcelProperty(value = "男子/女子赛 0：女子，1：男子", converter = ExcelDictConvert.class)
+    @ExcelDictFormat(dictType = "player_type")
     private String gtype;
 
     /**
@@ -56,12 +61,6 @@ public class TbProjectVo {
      */
     @ExcelProperty(value = "裁判员数量")
     private Long renum;
-
-    /**
-     * 是否删除
-     */
-    @ExcelProperty(value = "是否删除")
-    private String isCancel;
 
 
 }
