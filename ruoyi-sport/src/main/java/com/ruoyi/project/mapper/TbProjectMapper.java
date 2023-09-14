@@ -8,7 +8,7 @@ import com.ruoyi.common.core.mapper.BaseMapperPlus;
  * 项目管理 Mapper接口
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-14
  */
 public interface TbProjectMapper extends BaseMapperPlus<TbProjectMapper, TbProject, TbProjectVo> {
 
