@@ -13,7 +13,7 @@ import java.util.Date;
  * 学院管理视图对象 tb_college
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-14
  */
 @Data
 @ExcelIgnoreUnannotated
@@ -44,12 +44,6 @@ public class TbCollegeVo {
      */
     @ExcelProperty(value = "学院总分 初始为0")
     private Long score;
-
-    /**
-     * 其他 备用字段
-     */
-    @ExcelProperty(value = "其他 备用字段")
-    private String other;
 
 
 }

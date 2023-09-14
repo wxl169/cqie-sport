@@ -2,6 +2,7 @@ package com.ruoyi.project.domain.vo;
 
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.ExcelDictFormat;
 import com.ruoyi.common.convert.ExcelDictConvert;
 import lombok.Data;
@@ -13,7 +14,7 @@ import java.util.Date;
  * 班级管理视图对象 tb_class
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-14
  */
 @Data
 @ExcelIgnoreUnannotated
@@ -30,6 +31,7 @@ public class TbClassVo {
     /**
      * 学院id
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ExcelProperty(value = "学院id")
     private Long collegeId;
 
@@ -50,12 +52,6 @@ public class TbClassVo {
      */
     @ExcelProperty(value = "班级总分 初始为0")
     private Long score;
-
-    /**
-     * 其他 备用字段
-     */
-    @ExcelProperty(value = "其他 备用字段")
-    private String other;
 
 
 }

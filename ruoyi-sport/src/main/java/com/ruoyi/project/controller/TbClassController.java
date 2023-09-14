@@ -2,6 +2,7 @@ package com.ruoyi.project.controller;
 
 import java.util.List;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import lombok.RequiredArgsConstructor;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +17,7 @@ import com.ruoyi.common.core.domain.PageQuery;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.validate.AddGroup;
 import com.ruoyi.common.core.validate.EditGroup;
+import com.ruoyi.common.core.validate.QueryGroup;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.project.domain.vo.TbClassVo;
@@ -27,7 +29,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 班级管理
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-14
  */
 @Validated
 @RequiredArgsConstructor
@@ -77,6 +79,7 @@ public class TbClassController extends BaseController {
     @RepeatSubmit()
     @PostMapping()
     public R<Void> add(@Validated(AddGroup.class) @RequestBody TbClassBo bo) {
+        System.out.println("bo = " + bo);
         return toAjax(iTbClassService.insertByBo(bo));
     }
 

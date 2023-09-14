@@ -23,7 +23,7 @@ import java.util.Collection;
  * 班级管理Service业务层处理
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-14
  */
 @RequiredArgsConstructor
 @Service
@@ -63,9 +63,6 @@ public class TbClassServiceImpl implements ITbClassService {
         LambdaQueryWrapper<TbClass> lqw = Wrappers.lambdaQuery();
         lqw.eq(bo.getCollegeId() != null, TbClass::getCollegeId, bo.getCollegeId());
         lqw.like(StringUtils.isNotBlank(bo.getName()), TbClass::getName, bo.getName());
-        lqw.eq(bo.getSnum() != null, TbClass::getSnum, bo.getSnum());
-        lqw.eq(bo.getScore() != null, TbClass::getScore, bo.getScore());
-        lqw.eq(StringUtils.isNotBlank(bo.getOther()), TbClass::getOther, bo.getOther());
         return lqw;
     }
 
