@@ -3,6 +3,8 @@ package com.ruoyi.project.controller;
 import java.util.List;
 import java.util.Arrays;
 
+import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.project.domain.vo.TbCollegeVo;
 import lombok.RequiredArgsConstructor;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.*;
@@ -18,16 +20,14 @@ import com.ruoyi.common.core.validate.AddGroup;
 import com.ruoyi.common.core.validate.EditGroup;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.project.domain.vo.TbCollegeVo;
 import com.ruoyi.project.domain.bo.TbCollegeBo;
 import com.ruoyi.project.service.ITbCollegeService;
-import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 学院管理
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-14
  */
 @Validated
 @RequiredArgsConstructor

@@ -1,29 +1,29 @@
 package com.ruoyi.project.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.common.core.domain.PageQuery;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.core.domain.PageQuery;
+import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.project.domain.TbCollege;
 import com.ruoyi.project.domain.bo.TbCollegeBo;
 import com.ruoyi.project.domain.vo.TbCollegeVo;
-import com.ruoyi.project.domain.TbCollege;
 import com.ruoyi.project.mapper.TbCollegeMapper;
 import com.ruoyi.project.service.ITbCollegeService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Collection;
 
 /**
  * 学院管理Service业务层处理
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-14
  */
 @RequiredArgsConstructor
 @Service
@@ -62,9 +62,6 @@ public class TbCollegeServiceImpl implements ITbCollegeService {
         Map<String, Object> params = bo.getParams();
         LambdaQueryWrapper<TbCollege> lqw = Wrappers.lambdaQuery();
         lqw.like(StringUtils.isNotBlank(bo.getName()), TbCollege::getName, bo.getName());
-        lqw.eq(bo.getSnum() != null, TbCollege::getSnum, bo.getSnum());
-        lqw.eq(bo.getScore() != null, TbCollege::getScore, bo.getScore());
-        lqw.eq(StringUtils.isNotBlank(bo.getOther()), TbCollege::getOther, bo.getOther());
         return lqw;
     }
 
