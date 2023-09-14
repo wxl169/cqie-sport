@@ -310,10 +310,17 @@
                 <version>${ruoyi-vue-plus.version}</version>
             </dependency>
 
-            <!-- demo模块 -->
+            <!-- sport模块 -->
             <dependency>
                 <groupId>com.ruoyi</groupId>
                 <artifactId>ruoyi-sport</artifactId>
+                <version>${ruoyi-vue-plus.version}</version>
+            </dependency>
+
+            <!-- sms对象存储模块 -->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-sms</artifactId>
                 <version>${ruoyi-vue-plus.version}</version>
             </dependency>
 
@@ -329,6 +336,7 @@
         <module>ruoyi-common</module>
         <module>ruoyi-oss</module>
         <module>ruoyi-sport</module>
+        <module>ruoyi-sms</module>
     </modules>
     <packaging>pom</packaging>
 
