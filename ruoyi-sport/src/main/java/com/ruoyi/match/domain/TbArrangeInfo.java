@@ -32,6 +32,7 @@ public class TbArrangeInfo extends BaseEntity {
     /**
      * 项目id
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long projectId;
     /**
      * 比赛时间

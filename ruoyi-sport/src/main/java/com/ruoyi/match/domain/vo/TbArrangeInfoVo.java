@@ -32,6 +32,7 @@ public class TbArrangeInfoVo {
     /**
      * 项目id
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ExcelProperty(value = "项目id")
     private Long projectId;
 

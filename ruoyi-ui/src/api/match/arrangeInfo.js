@@ -17,7 +17,7 @@ export function getArrangeInfo(arrangeInfoId) {
   })
 }
 
-// 新增安排信息单元 
+// 新增安排信息单元
 export function addArrangeInfo(data) {
   return request({
     url: '/match/arrangeInfo',
@@ -26,7 +26,7 @@ export function addArrangeInfo(data) {
   })
 }
 
-// 修改安排信息单元 
+// 修改安排信息单元
 export function updateArrangeInfo(data) {
   return request({
     url: '/match/arrangeInfo',
@@ -35,7 +35,7 @@ export function updateArrangeInfo(data) {
   })
 }
 
-// 删除安排信息单元 
+// 删除安排信息单元
 export function delArrangeInfo(arrangeInfoId) {
   return request({
     url: '/match/arrangeInfo/' + arrangeInfoId,

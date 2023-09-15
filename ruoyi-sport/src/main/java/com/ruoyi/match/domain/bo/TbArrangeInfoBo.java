@@ -32,6 +32,7 @@ public class TbArrangeInfoBo extends BaseEntity {
     /**
      * 项目id
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @NotNull(message = "项目id不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long projectId;
 
@@ -50,13 +51,11 @@ public class TbArrangeInfoBo extends BaseEntity {
     /**
      * 其他安排信息
      */
-    @NotBlank(message = "其他安排信息不能为空", groups = { AddGroup.class, EditGroup.class })
     private String content;
 
     /**
      * 其他 备用字段
      */
-    @NotBlank(message = "其他 备用字段不能为空", groups = { AddGroup.class, EditGroup.class })
     private String other;
 
 
