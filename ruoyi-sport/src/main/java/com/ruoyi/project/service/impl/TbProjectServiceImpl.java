@@ -5,16 +5,19 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.domain.PageQuery;
+import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.exception.base.BaseException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.match.domain.TbArrangement;
 import com.ruoyi.match.mapper.TbArrangementMapper;
+import com.ruoyi.project.domain.TbClass;
 import com.ruoyi.project.domain.TbProject;
 import com.ruoyi.project.domain.bo.TbProjectBo;
 import com.ruoyi.project.domain.vo.TbProjectVo;
 import com.ruoyi.project.mapper.TbProjectMapper;
 import com.ruoyi.project.service.ITbProjectService;
+import com.ruoyi.system.mapper.SysDictDataMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +40,8 @@ public class TbProjectServiceImpl implements ITbProjectService {
     private final TbProjectMapper baseMapper;
 
     private final TbArrangementMapper arrangementMapper;
+
+    private final SysDictDataMapper sysDictDataMapper;
 
     /**
      * 查询项目管理
@@ -86,6 +91,14 @@ public class TbProjectServiceImpl implements ITbProjectService {
         boolean flag = baseMapper.insert(add) > 0;
         if (flag) {
             bo.setProjectId(add.getProjectId());
+
+            //添加项目信息到字典
+            SysDictData sysDictData = new SysDictData();
+            sysDictData.setDictLabel(bo.getName());
+            sysDictData.setDictValue(String.valueOf(bo.getProjectId()));
+            sysDictData.setDictType("project_name");
+            sysDictDataMapper.insert(sysDictData);
+
         }
         return flag;
     }
@@ -127,6 +140,14 @@ public class TbProjectServiceImpl implements ITbProjectService {
         if (isValid) {
             //TODO 做一些业务上的校验,判断是否需要校验
         }
+
+        List<TbProject> tbProjects = baseMapper.selectBatchIds(ids);
+        List<String> collect = tbProjects.stream().map(TbProject::getName).collect(Collectors.toList());
+        LambdaQueryWrapper<SysDictData> projectQueryWrapper = new LambdaQueryWrapper<>();
+        projectQueryWrapper.in(SysDictData::getDictLabel, collect);
+        sysDictDataMapper.delete(projectQueryWrapper);
+
+
         LambdaQueryWrapper<TbArrangement> queryWrapper;
         List<TbArrangement> toDelete = new ArrayList<>();
         for (Long id : ids) {
@@ -137,8 +158,8 @@ public class TbProjectServiceImpl implements ITbProjectService {
         }
         if (!toDelete.isEmpty()) {
             arrangementMapper.deleteBatchIds(toDelete.stream()
-                    .map(TbArrangement::getArrangementId)
-                    .collect(Collectors.toList()));
+                .map(TbArrangement::getArrangementId)
+                .collect(Collectors.toList()));
         }
         return baseMapper.deleteBatchIds(ids) > 0;
     }
