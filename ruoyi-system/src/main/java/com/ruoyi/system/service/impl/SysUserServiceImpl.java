@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 用户 业务层处理
@@ -89,6 +90,16 @@ public class SysUserServiceImpl implements ISysUserService, UserService {
                 ids.add(user.getDeptId());
                 w.in("u.dept_id", ids);
             });
+        // 添加根据userid查询roleid的条件
+        Long userId = user.getUserId();
+        if (userId != null) {
+            List<Long> roleIds = userRoleMapper.selectList(new QueryWrapper<SysUserRole>()
+                    .eq("user_id", userId))
+                .stream()
+                .map(SysUserRole::getRoleId)
+                .collect(Collectors.toList());
+            wrapper.in("u.role_id", roleIds);
+        }
         return wrapper;
     }
 
