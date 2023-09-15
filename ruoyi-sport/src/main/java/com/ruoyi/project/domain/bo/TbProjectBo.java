@@ -14,7 +14,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 项目管理 业务对象 tb_project
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-14
  */
 
 @Data
@@ -24,7 +24,6 @@ public class TbProjectBo extends BaseEntity {
     /**
      * 项目id 项目表的主键
      */
-    @NotNull(message = "项目id 项目表的主键不能为空", groups = { AddGroup.class })
     private Long projectId;
 
     /**
@@ -42,7 +41,6 @@ public class TbProjectBo extends BaseEntity {
     /**
      * 规则介绍
      */
-    @NotBlank(message = "规则介绍不能为空", groups = { AddGroup.class, EditGroup.class })
     private String introduction;
 
     /**
@@ -68,12 +66,6 @@ public class TbProjectBo extends BaseEntity {
      */
     @NotNull(message = "裁判员数量不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long renum;
-
-    /**
-     * 是否删除
-     */
-    @NotBlank(message = "是否删除不能为空", groups = { EditGroup.class })
-    private String isCancel;
 
 
 }

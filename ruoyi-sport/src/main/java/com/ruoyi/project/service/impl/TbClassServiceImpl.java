@@ -1,41 +1,46 @@
 package com.ruoyi.project.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.common.core.domain.PageQuery;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.core.domain.PageQuery;
+import com.ruoyi.common.core.domain.entity.SysDictData;
+import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.project.domain.TbClass;
+import com.ruoyi.project.domain.TbCollege;
 import com.ruoyi.project.domain.bo.TbClassBo;
 import com.ruoyi.project.domain.vo.TbClassVo;
-import com.ruoyi.project.domain.TbClass;
 import com.ruoyi.project.mapper.TbClassMapper;
 import com.ruoyi.project.service.ITbClassService;
+import com.ruoyi.system.mapper.SysDictDataMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * 班级管理Service业务层处理
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-14
  */
 @RequiredArgsConstructor
 @Service
 public class TbClassServiceImpl implements ITbClassService {
 
     private final TbClassMapper baseMapper;
+    private final SysDictDataMapper sysDictDataMapper;
 
     /**
      * 查询班级管理
      */
     @Override
-    public TbClassVo queryById(Long classId){
+    public TbClassVo queryById(Long classId) {
         return baseMapper.selectVoById(classId);
     }
 
@@ -63,9 +68,6 @@ public class TbClassServiceImpl implements ITbClassService {
         LambdaQueryWrapper<TbClass> lqw = Wrappers.lambdaQuery();
         lqw.eq(bo.getCollegeId() != null, TbClass::getCollegeId, bo.getCollegeId());
         lqw.like(StringUtils.isNotBlank(bo.getName()), TbClass::getName, bo.getName());
-        lqw.eq(bo.getSnum() != null, TbClass::getSnum, bo.getSnum());
-        lqw.eq(bo.getScore() != null, TbClass::getScore, bo.getScore());
-        lqw.eq(StringUtils.isNotBlank(bo.getOther()), TbClass::getOther, bo.getOther());
         return lqw;
     }
 
@@ -79,6 +81,12 @@ public class TbClassServiceImpl implements ITbClassService {
         boolean flag = baseMapper.insert(add) > 0;
         if (flag) {
             bo.setClassId(add.getClassId());
+            //添加到学院信息到字典
+            SysDictData sysDictData = new SysDictData();
+            sysDictData.setDictLabel(bo.getName());
+            sysDictData.setDictValue(String.valueOf(bo.getClassId()));
+            sysDictData.setDictType("class_name");
+            sysDictDataMapper.insert(sysDictData);
         }
         return flag;
     }
@@ -96,7 +104,7 @@ public class TbClassServiceImpl implements ITbClassService {
     /**
      * 保存前的数据校验
      */
-    private void validEntityBeforeSave(TbClass entity){
+    private void validEntityBeforeSave(TbClass entity) {
         //TODO 做一些数据校验,如唯一约束
     }
 
@@ -105,9 +113,14 @@ public class TbClassServiceImpl implements ITbClassService {
      */
     @Override
     public Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {
-        if(isValid){
+        if (isValid) {
             //TODO 做一些业务上的校验,判断是否需要校验
         }
+        List<TbClass> tbClasses = baseMapper.selectBatchIds(ids);
+        List<String> collect = tbClasses.stream().map(TbClass::getName).collect(Collectors.toList());
+        LambdaQueryWrapper<SysDictData> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(SysDictData::getDictLabel, collect);
+        sysDictDataMapper.delete(queryWrapper);
         return baseMapper.deleteBatchIds(ids) > 0;
     }
 }

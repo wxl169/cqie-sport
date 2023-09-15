@@ -1,42 +1,20 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="学院id" prop="collegeId">
-        <el-input
-          v-model="queryParams.collegeId"
-          placeholder="请输入学院id"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="学院名称" prop="collegeId">
+        <el-select v-model="queryParams.collegeId" placeholder="请选择学院" clearable>
+          <el-option
+            v-for="dict in dict.type.college_name"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="班级名称" prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入班级名称"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="班级人数" prop="snum">
-        <el-input
-          v-model="queryParams.snum"
-          placeholder="请输入班级人数"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="班级总分 初始为0" prop="score">
-        <el-input
-          v-model="queryParams.score"
-          placeholder="请输入班级总分 初始为0"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="其他 备用字段" prop="other">
-        <el-input
-          v-model="queryParams.other"
-          placeholder="请输入其他 备用字段"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -95,12 +73,14 @@
 
     <el-table v-loading="loading" :data="classList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="班级id 班级表的主键" align="center" prop="classId" v-if="true"/>
-      <el-table-column label="学院id" align="center" prop="collegeId" />
+      <el-table-column label="学院名称" align="center" prop="collegeId">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.college_name" :value="scope.row.collegeId"/>
+        </template>
+      </el-table-column>
       <el-table-column label="班级名称" align="center" prop="name" />
       <el-table-column label="班级人数" align="center" prop="snum" />
-      <el-table-column label="班级总分 初始为0" align="center" prop="score" />
-      <el-table-column label="其他 备用字段" align="center" prop="other" />
+      <el-table-column label="班级总分" align="center" prop="score" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -132,20 +112,21 @@
     <!-- 添加或修改班级管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="学院id" prop="collegeId">
-          <el-input v-model="form.collegeId" placeholder="请输入学院id" />
+        <el-form-item label="学院名称" prop="collegeId">
+          <el-select v-model="form.collegeId" placeholder="请选择学院">
+            <el-option
+              v-for="dict in dict.type.college_name"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="班级名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入班级名称" />
         </el-form-item>
         <el-form-item label="班级人数" prop="snum">
           <el-input v-model="form.snum" placeholder="请输入班级人数" />
-        </el-form-item>
-        <el-form-item label="班级总分 初始为0" prop="score">
-          <el-input v-model="form.score" placeholder="请输入班级总分 初始为0" />
-        </el-form-item>
-        <el-form-item label="其他 备用字段" prop="other">
-          <el-input v-model="form.other" placeholder="请输入其他 备用字段" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -161,6 +142,7 @@ import { listClass, getClass, delClass, addClass, updateClass } from "@/api/proj
 
 export default {
   name: "Class",
+  dicts: ['college_name'],
   data() {
     return {
       // 按钮loading
@@ -189,19 +171,13 @@ export default {
         pageSize: 10,
         collegeId: undefined,
         name: undefined,
-        snum: undefined,
-        score: undefined,
-        other: undefined
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        classId: [
-          { required: true, message: "班级id 班级表的主键不能为空", trigger: "blur" }
-        ],
         collegeId: [
-          { required: true, message: "学院id不能为空", trigger: "blur" }
+          { required: true, message: "学院id不能为空", trigger: "change" }
         ],
         name: [
           { required: true, message: "班级名称不能为空", trigger: "blur" }
@@ -209,18 +185,12 @@ export default {
         snum: [
           { required: true, message: "班级人数不能为空", trigger: "blur" }
         ],
-        score: [
-          { required: true, message: "班级总分 初始为0不能为空", trigger: "blur" }
-        ],
         createTime: [
           { required: true, message: "录入时间不能为空", trigger: "blur" }
         ],
         updateTime: [
           { required: true, message: "更新时间不能为空", trigger: "blur" }
         ],
-        other: [
-          { required: true, message: "其他 备用字段不能为空", trigger: "blur" }
-        ]
       }
     };
   },

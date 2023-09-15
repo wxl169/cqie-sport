@@ -17,7 +17,7 @@ export function getProject(projectId) {
   })
 }
 
-// 新增项目管理 
+// 新增项目管理
 export function addProject(data) {
   return request({
     url: '/project/project',
@@ -26,7 +26,7 @@ export function addProject(data) {
   })
 }
 
-// 修改项目管理 
+// 修改项目管理
 export function updateProject(data) {
   return request({
     url: '/project/project',
@@ -35,7 +35,7 @@ export function updateProject(data) {
   })
 }
 
-// 删除项目管理 
+// 删除项目管理
 export function delProject(projectId) {
   return request({
     url: '/project/project/' + projectId,

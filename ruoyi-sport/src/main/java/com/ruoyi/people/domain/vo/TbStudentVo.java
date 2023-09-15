@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.ruoyi.common.annotation.ExcelDictFormat;
+import com.ruoyi.common.annotation.Sensitive;
 import com.ruoyi.common.convert.ExcelDictConvert;
+import com.ruoyi.common.enums.SensitiveStrategy;
 import lombok.Data;
 import java.util.Date;
 
@@ -32,12 +34,14 @@ public class TbStudentVo {
     /**
      * 班级id
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ExcelProperty(value = "班级id")
     private Long classId;
 
     /**
      * 学院id
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @ExcelProperty(value = "学院id")
     private Long collegeId;
 
@@ -68,12 +72,14 @@ public class TbStudentVo {
     /**
      * 身份证号 18位号码
      */
+    @Sensitive(strategy = SensitiveStrategy.ID_CARD)
     @ExcelProperty(value = "身份证号 18位号码")
     private String idnumber;
 
     /**
      * 联系电话
      */
+    @Sensitive(strategy = SensitiveStrategy.PHONE)
     @ExcelProperty(value = "联系电话")
     private String phoneNumber;
 

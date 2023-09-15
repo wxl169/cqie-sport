@@ -1,6 +1,7 @@
 package com.ruoyi.project.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import java.io.Serializable;
@@ -13,7 +14,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 班级管理对象 tb_class
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-14
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -30,6 +31,7 @@ public class TbClass extends BaseEntity {
     /**
      * 学院id
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long collegeId;
     /**
      * 班级名称

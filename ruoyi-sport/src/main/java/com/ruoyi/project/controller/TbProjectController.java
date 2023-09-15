@@ -1,35 +1,34 @@
 package com.ruoyi.project.controller;
 
-import java.util.List;
-import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
-
-import lombok.RequiredArgsConstructor;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.*;
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.validation.annotation.Validated;
-import com.ruoyi.common.annotation.RepeatSubmit;
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.annotation.RepeatSubmit;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.PageQuery;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.validate.AddGroup;
 import com.ruoyi.common.core.validate.EditGroup;
-import com.ruoyi.common.core.validate.QueryGroup;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.project.domain.vo.TbProjectVo;
 import com.ruoyi.project.domain.bo.TbProjectBo;
+import com.ruoyi.project.domain.vo.TbProjectVo;
 import com.ruoyi.project.service.ITbProjectService;
-import com.ruoyi.common.core.page.TableDataInfo;
+import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.util.Arrays;
+import java.util.List;
 
 /**
- * 项目管理 
+ * 项目管理
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-14
  */
 @Validated
 @RequiredArgsConstructor
@@ -72,7 +71,7 @@ public class TbProjectController extends BaseController {
     }
 
     /**
-     * 新增项目管理 
+     * 新增项目管理
      */
     @SaCheckPermission("project:project:add")
     @Log(title = "项目管理 ", businessType = BusinessType.INSERT)
@@ -83,7 +82,7 @@ public class TbProjectController extends BaseController {
     }
 
     /**
-     * 修改项目管理 
+     * 修改项目管理
      */
     @SaCheckPermission("project:project:edit")
     @Log(title = "项目管理 ", businessType = BusinessType.UPDATE)
@@ -94,7 +93,7 @@ public class TbProjectController extends BaseController {
     }
 
     /**
-     * 删除项目管理 
+     * 删除项目管理
      *
      * @param projectIds 主键串
      */

@@ -1,5 +1,6 @@
 package com.ruoyi.project.service;
 
+import com.ruoyi.project.domain.TbClass;
 import com.ruoyi.project.domain.vo.TbClassVo;
 import com.ruoyi.project.domain.bo.TbClassBo;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -12,7 +13,7 @@ import java.util.List;
  * 班级管理Service接口
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-14
  */
 public interface ITbClassService {
 

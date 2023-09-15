@@ -32,7 +32,7 @@ public class BaseEntity implements Serializable {
     /**
      * 创建者
      */
-    @TableField(fill = FieldFill.INSERT)
+    @TableField(fill = FieldFill.INSERT,exist = false)
     private String createBy;
 
     /**
@@ -44,7 +44,7 @@ public class BaseEntity implements Serializable {
     /**
      * 更新者
      */
-    @TableField(fill = FieldFill.INSERT_UPDATE)
+    @TableField(fill = FieldFill.INSERT_UPDATE,exist = false)
     private String updateBy;
 
     /**
