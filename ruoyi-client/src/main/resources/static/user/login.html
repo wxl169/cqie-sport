@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/mycss.css"/>
+</head>
+<body>
+    <!--Vue.js-->
+    <script src="../js/vue.js"></script>
+    <!--Element-ui-->
+    <script src="../js/index.js"></script>
+    <!--axios-->
+    <script src="../js/axios.min.js"></script>
+    <!--cookie工具类-->
+    <script src="../js/cookie_utils.js"></script>
+
+
+    <div id="container">
+        <el-container>
+            <el-header height="100px">
+                <img class="logo" src="../img/server_html/logo.png"/>
+            </el-header>
+
+            <el-row style="position: relative; top: 50px">
+                <el-col :span="14">
+                    <img id="xuanchaun" src="../img/server_html/login_bg.png">
+                </el-col>
+
+                <el-col :span="10">
+                    <el-row>
+                        <el-col :span="4" :offset="6">
+                            <span class="font-size-big">欢迎登录</span>
+                        </el-col>
+                    </el-row>
+                    <br>
+
+                    <el-form ref="form" :model="form" label-width="80px">
+                        <el-form-item label="邮箱">
+                            <el-row>
+                                <el-col :span="12">
+                                    <el-input type="email" maxlength="20" v-model="form.email" placeholder="请输入邮箱"></el-input>
+                                </el-col>
+                            </el-row>
+                        </el-form-item>
+                        <el-form-item label="密码">
+                            <el-row>
+                                <el-col :span="12">
+                                    <el-input type="password" maxlength="20" v-model="form.password" placeholder="请输入密码"></el-input>
+                                </el-col>
+                            </el-row>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-col>
+                                <el-button type="primary" @click="onSubmit" class="move-right-small">登录</el-button>
+                                <el-button @click="register" class="move-right-mid">注册</el-button>
+                            </el-col>
+                        </el-form-item>
+                    </el-form>
+                </el-col>
+            </el-row>
+
+
+            <el-footer>
+                <div class="foot">
+                    &copy;2021 by Zhou_LC
+                </div>
+            </el-footer>
+        </el-container>
+
+
+
+    </div>
+
+    <script>
+        var baseUrl = "http://localhost:8080";
+        var vm = new Vue({
+            el: '#container',
+            data: {
+                form: {
+                    email: '',
+                    password: ''
+                },
+                isLogin: false
+            },
+            created: function () {
+                var href = window.location.href;
+                var oneParam = href.split("?");
+                // console.log(oneParam);
+                if (oneParam[1] == 'reason=nologin') {
+                    this.$notify({
+                        title: '警告',
+                        message: '拒绝访问，请先登录',
+                        type: 'warning'
+                    });
+                }
+            },
+            methods: {
+                onSubmit() {
+                    // console.log('提交');
+                    // 发送 POST 请求
+                    axios({
+                        method: 'post',
+                        url: baseUrl + '/login',
+                        data: {
+                            email: this.form.email,
+                            password: this.form.password
+                        }
+                    }).then((res)=>{
+                        var vo = res.data;
+                        // console.log(vo);
+                        if (vo.code == 10000) {
+                            this.isLogin = true
+                            // console.log(vo);
+                            //如果登录成功，就把token存储到cookie
+                            setCookieValue("token",vo.msg);
+                            // console.log(vo.msg);
+                            //将用户昵称和用户头像的路径保存在cookie
+                            setCookieValue("userId",vo.data.userId);
+                            setCookieValue("username",vo.data.username);
+                            setCookieValue("img",vo.data.img);
+                            setCookieValue("type", vo.data.type);
+                            setCookieValue("typeId", vo.data.typeId);
+                            setCookieValue("gender", vo.data.gender);
+                            // console.log(document.cookie);
+                            window.location.href = "index.html?reason=successlogin";
+                        }
+
+                        if (!this.isLogin) {
+                            this.$notify.error({
+                                title: '登录失败',
+                                message: '账号或密码错误'
+                            });
+                        }
+                    });
+                },
+                register() {
+                    window.location.href = "register.html";
+                }
+            }
+        });
+    </script>
+</body>
+</html>
