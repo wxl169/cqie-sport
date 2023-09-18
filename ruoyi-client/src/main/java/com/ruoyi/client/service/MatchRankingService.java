@@ -10,5 +10,5 @@ import java.util.List;
  * @date 2023/9/15 12:01
  */
 public interface MatchRankingService {
-    List<MatchPankingVO> find(String arrangement);
+    List<MatchPankingVO> find(String arrangement,int type);
 }

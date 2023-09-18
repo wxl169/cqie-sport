@@ -1,6 +1,7 @@
 package com.ruoyi.client.controller;
 
 import com.ruoyi.client.service.MatchRankingService;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -12,14 +13,12 @@ import javax.annotation.Resource;
  * @date 2023/9/15 11:55
  */
 //比赛排行榜
+@Controller
 public class MatchRankingController {
-    int i;
     @Resource
     private MatchRankingService matchRankingService;
-    @RequestMapping("/matchRanking")
+    @RequestMapping("/user/matchRanking")
     public void matchRanking(String arrangement,int type,Model model){
-        System.out.println(type);
-        System.out.println(arrangement);
-       // matchRankingService.find(arrangement);
+        matchRankingService.find(arrangement,type);
     }
 }
