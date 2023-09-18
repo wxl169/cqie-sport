@@ -20,10 +20,16 @@ public class UserController extends BaseController {
 
     @Resource
     private UserServiceImpl userService;
-    @GetMapping("toLogin")
+    @RequestMapping("/toLogin")
     public String toLogin(){
         return "user/login";
     }
+
+    @RequestMapping("/toRegister")
+    public String toRegister(){
+        return "user/register";
+    }
+
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     @ResponseBody
     public R checkLogin(@RequestBody UserLoginDTO userLoginDTO) {

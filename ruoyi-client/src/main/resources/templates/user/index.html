@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" type="text/css" href="../../static/css/index.css"/>
-    <link rel="stylesheet" type="text/css" href="../../static/css/mycss.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/mycss.css"/>
 </head>
 <body>
 <!--Vue.js-->
-<script src="../../static/js/vue.js"></script>
+<script src="/static/js/vue.js"></script>
 <!--Element-ui-->
-<script src="../../static/js/index.js"></script>
+<script src="/static/js/index.js"></script>
 <!--axios-->
-<script src="../../static/js/axios.min.js"></script>
+<script src="/static/js/axios.min.js"></script>
 <!--cookie工具类-->
-<script src="../../static/js/cookie_utils.js"></script>
+<script src="/static/js/cookie_utils.js"></script>
 
 <div id="container">
     <el-container>
@@ -22,7 +22,7 @@
     <!--网站图片 + 用户信息-->
     <el-header height="100px">
         <el-col :span="6">
-            <img class="logo" src="../../static/img/server_html/logo.png"/>
+            <img class="logo" src="/static/img/server_html/logo.png"/>
         </el-col>
         <el-col :span="6" :offset="12">
             <br>
@@ -65,7 +65,7 @@
         <el-col :span="10">
             <el-carousel indicator-position="outside" height="300px" style="width:580px; position: relative; top: 20px; left: 50px">
                 <el-carousel-item v-for="imgUrl in circleImgUrl" :key="imgUrl">
-                    <img :src="'static/img/server_html/' + imgUrl" width="100%" height="100%" style="border-radius: 5px"/>
+                    <img :src="'/img/server_html/' + imgUrl" width="100%" height="100%" style="border-radius: 5px"/>
                 </el-carousel-item>
             </el-carousel>
         </el-col>

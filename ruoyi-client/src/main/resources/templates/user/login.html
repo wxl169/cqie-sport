@@ -20,12 +20,12 @@
     <div id="container">
         <el-container>
             <el-header height="100px">
-                <img class="logo" src="/img/server_html/logo.png"/>
+                <img class="logo" src="/img/server_html/sportLogo.jpg"/>
             </el-header>
 
             <el-row style="position: relative; top: 50px">
                 <el-col :span="14">
-                    <img id="xuanchaun" src="/img/server_html/login_bg.png">
+                    <img id="xuanchaun" src="/img/server_html/780.jpg">
                 </el-col>
 
                 <el-col :span="10">
@@ -74,7 +74,7 @@
     </div>
 
     <script>
-        var baseUrl = "http://localhost:8080";
+        var baseUrl = "http://localhost:8080/client/user";
         var vm = new Vue({
             el: '#container',
             data: {
@@ -88,7 +88,7 @@
                 var href = window.location.href;
                 var oneParam = href.split("?");
                 // console.log(oneParam);
-                if (oneParam[1] == 'reason=nologin') {
+                if (oneParam[1] === 'reason=nologin') {
                     this.$notify({
                         title: '警告',
                         message: '拒绝访问，请先登录',
@@ -109,8 +109,7 @@
                         }
                     }).then((res)=>{
                         var vo = res.data;
-                        // console.log(vo);
-                        if (vo.code == 10000) {
+                        if (vo.code == 200) {
                             this.isLogin = true
                             // console.log(vo);
                             //如果登录成功，就把token存储到cookie
@@ -136,7 +135,7 @@
                     });
                 },
                 register() {
-                    window.location.href = "register.html";
+                    window.location.href = baseUrl + '/toRegister';
                 }
             }
         });
