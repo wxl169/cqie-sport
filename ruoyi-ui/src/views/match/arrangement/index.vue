@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="项目名称" prop="projectId">
-        <el-select v-model="form.projectId" placeholder="请选择项目名称" clearable>
+        <el-select v-model="queryParams.projectId" placeholder="请选择项目名称" clearable>
           <el-option
             v-for="dict in dict.type.project_name"
             :key="dict.value"
@@ -180,7 +180,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="是否取消 0：取消，1：未取消" prop="isCancel">
+        <el-form-item label="是否取消" prop="isCancel">
           <el-select v-model="form.isCancel" placeholder="请选择是否取消 0：取消，1：未取消">
             <el-option
               v-for="dict in dict.type.is_cancel"
@@ -190,10 +190,10 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="取消原因 若未取消则为NULL" prop="reason">
+        <el-form-item label="取消原因" prop="reason">
           <el-input v-model="form.reason" placeholder="请输入取消原因 若未取消则为NULL" />
         </el-form-item>
-        <el-form-item label="其他 备用字段" prop="other">
+        <el-form-item label="其他" prop="other">
           <el-input v-model="form.other" placeholder="请输入其他 备用字段" />
         </el-form-item>
       </el-form>

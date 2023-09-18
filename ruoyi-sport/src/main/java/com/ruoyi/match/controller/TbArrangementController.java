@@ -26,7 +26,7 @@ import com.ruoyi.match.service.ITbArrangementService;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 安排 
+ * 安排
  *
  * @author ruoyi
  * @date 2023-09-13
@@ -72,7 +72,7 @@ public class TbArrangementController extends BaseController {
     }
 
     /**
-     * 新增安排 
+     * 新增安排
      */
     @SaCheckPermission("match:arrangement:add")
     @Log(title = "安排 ", businessType = BusinessType.INSERT)
@@ -83,7 +83,7 @@ public class TbArrangementController extends BaseController {
     }
 
     /**
-     * 修改安排 
+     * 修改安排
      */
     @SaCheckPermission("match:arrangement:edit")
     @Log(title = "安排 ", businessType = BusinessType.UPDATE)
@@ -94,7 +94,7 @@ public class TbArrangementController extends BaseController {
     }
 
     /**
-     * 删除安排 
+     * 删除安排
      *
      * @param arrangementIds 主键串
      */
