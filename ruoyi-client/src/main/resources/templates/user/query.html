@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>赛事公布</title>
+    <link rel="stylesheet" type="text/css" href="../../static/css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="../../static/css/mycss.css"/>
+</head>
+<body>
+<!--Vue.js-->
+<script src="../../static/js/vue.js"></script>
+<!--Element-ui-->
+<script src="../../static/js/index.js"></script>
+<!--axios-->
+<script src="../../static/js/axios.min.js"></script>
+<!--cookie工具-->
+<script src="../../static/js/cookie_utils.js"></script>
+<!--工具-->
+<script src="../../static/js/utils.js"></script>
+
+
+<div id="container">
+    <el-container>
+        <!--网站图片 + 用户信息-->
+        <el-header height="100px">
+            <el-col :span="6">
+                <a href="index.html">
+                    <img class="logo" src="../../static/img/server_html/logo.png"/>
+                </a>
+            </el-col>
+            <el-col :span="6" :offset="12">
+                <br>
+                <!--个人用户信息-->
+                <el-col :span="8" :offset="6" class="move-bottom-mini-mini font-size-mid">
+                    <span class="no-attention move-bottom-mini-mini">用户: &nbsp;</span>
+                    <el-link type="primary" class="font-size-big" @click="myPage">{{user.username}}</el-link>
+                </el-col>
+                <!--头像-->
+                <el-col :span="6" :offset="0">
+                    <el-avatar :src="user.userHeadUrl"></el-avatar>
+                </el-col>
+            </el-col>
+        </el-header>
+
+        <el-main>
+
+            <el-col :span="12" :offset="6">
+
+
+                <el-card class="box-card">
+
+                    <div slot="header" class="clearfix">
+                        <center>
+                            <span>信息查询窗口</span>
+                        </center>
+                    </div>
+
+                    <center>
+                        <template>
+                            <el-select v-model="searchType" placeholder="请选择所需查询功能">
+                                <el-option label="运动员报名查询" value="searchsign"></el-option>
+                                <el-option label="运动员成绩查询" value="searchscore"></el-option>
+                                <el-option label="团体成绩查询" value="searchteam"></el-option>
+                            </el-select>
+                        </template>
+                    </center>
+
+                    <!--查询条件区域-->
+
+
+                    <!--运动员报名查询-->
+                    <br>
+                    <div v-if="searchType == 'searchsign'">
+                        <div>
+
+                            <center>
+                                <span style="color: lightskyblue; font-size: 20px">运动员报名查询</span>
+                                <br>
+                                <br>
+                                <el-col :span="24">
+                                    <br>
+                                    <el-col :span="6" style="position: relative; top: 10px">
+                                        您的身份证号:
+                                    </el-col>
+                                    <el-col :span="12">
+                                        <el-input
+                                                placeholder="请输入内容"
+                                                v-model="input"
+                                                clearable>
+                                        </el-input>
+                                    </el-col>
+                                </el-col>
+                            </center>
+                        </div>
+
+                        <el-drawer
+                                title="已报比赛"
+                                :visible.sync="drawer"
+                                :with-header="false">
+
+                            <template v-if="signProjects.length > 0" v-for="signProject in signProjects">
+                                <el-card class="box-card">
+                                    <div slot="header" class="clearfix">
+                                        <span>{{signProject.projectName}}</span>
+                                    </div>
+                                    <div>
+                                        <el-tag>项目编号</el-tag>
+                                        {{signProject.projectNumber}}
+                                        <br>
+                                        <br>
+
+                                        <el-tag>运动员编号</el-tag>
+                                        {{signProject.athleteNumber}}
+                                        <br>
+                                        <br>
+
+                                        <el-tag>学号</el-tag>
+                                        {{signProject.studentIdNumber}}
+                                        <br>
+                                        <br>
+
+                                        <el-tag>姓名</el-tag>
+                                        {{signProject.studentName}}
+                                        <br>
+                                        <br>
+
+
+                                        <el-tag>比赛时间</el-tag>
+                                        {{signProject.arrangementInfoTime}}
+
+                                        <br>
+                                        <br>
+                                        <el-tag>比赛地点</el-tag>
+                                        {{signProject.arrangementInfoPlace}}
+                                        <br>
+                                        <br>
+
+                                    </div>
+                                </el-card>
+                                <br>
+                                <br>
+                            </template>
+
+                            <template v-else>
+                                <center>
+                                    <h3>查无此项</h3>
+                                </center>
+                            </template>
+                        </el-drawer>
+
+                    </div>
+
+
+                    <!--运动员成绩查询-->
+                    <div v-else-if="searchType == 'searchscore'">
+                        <div>
+                            <center>
+                                <span style="color: lightskyblue; font-size: 20px">运动员成绩查询</span>
+                                <br>
+                                <br>
+                                <el-col :span="24">
+                                    <br>
+                                    <el-col :span="6" style="position: relative; top: 10px">
+                                        运动员编号:
+                                    </el-col>
+                                    <el-col :span="12">
+                                        <el-input
+                                                placeholder="请输入内容"
+                                                v-model="input"
+                                                clearable>
+                                        </el-input>
+                                    </el-col>
+                                </el-col>
+
+                            </center>
+
+                            <el-drawer
+                                    title="查询结果"
+                                    :visible.sync="drawer"
+                                    :with-header="false">
+                                <template v-if="resultAthleteResults.length > 0" v-for="resultAthleteResult in resultAthleteResults">
+                                    <el-card class="box-card">
+                                        <div slot="header" class="clearfix">
+                                            <span>{{resultAthleteResult.projectName}}</span>
+                                        </div>
+                                        <div>
+                                            <el-tag>项目编号</el-tag>
+                                            {{resultAthleteResult.projectNumber}}
+                                            <br>
+                                            <br>
+
+                                            <el-tag>运动员编号</el-tag>
+                                            {{resultAthleteResult.athleteNumber}}
+                                            <br>
+                                            <br>
+
+                                            <el-tag>学号</el-tag>
+                                            {{resultAthleteResult.studentIdNumber}}
+                                            <br>
+                                            <br>
+
+                                            <el-tag>姓名</el-tag>
+                                            {{resultAthleteResult.studentName}}
+                                            <br>
+                                            <br>
+
+
+                                            <el-tag>比赛时间</el-tag>
+                                            {{resultAthleteResult.arrangementInfoTime}}
+
+                                            <br>
+                                            <br>
+                                            <el-tag>比赛地点</el-tag>
+                                            {{resultAthleteResult.arrangementInfoPlace}}
+                                            <br>
+                                            <br>
+
+                                            <el-tag>比赛结果</el-tag>
+                                            {{resultAthleteResult.competitionResult}}
+                                            <br>
+                                            <br>
+
+                                            <el-tag>成绩得分</el-tag>
+                                            {{resultAthleteResult.competitionScore}}分
+                                            <br>
+                                            <br>
+                                        </div>
+                                    </el-card>
+                                    <br>
+                                    <br>
+                                </template>
+
+                                <template v-else>
+                                    <center>
+                                        <h3>查无此项</h3>
+                                    </center>
+                                </template>
+                            </el-drawer>
+                        </div>
+                    </div>
+
+                    <!--团体成绩查询-->
+                    <div v-else-if="searchType == 'searchteam'">
+                        <center>
+                            <span style="color: lightskyblue; font-size: 20px">团体成绩查询</span>
+                            <br>
+                            <br>
+
+                            <el-col :span="24">
+                                <br>
+                                <el-col :span="6" style="position: relative; top: 10px">
+                                    团体编号:
+                                </el-col>
+                                <el-col :span="12">
+                                    <el-input
+                                            placeholder="请输入内容"
+                                            v-model="input"
+                                            clearable>
+                                    </el-input>
+                                </el-col>
+
+                            </el-col>
+
+                        </center>
+
+                        <el-drawer
+                                title="查询结果"
+                                :visible.sync="drawer"
+                                :with-header="false">
+                            <template v-if="this.resultTeamResults.length > 0">
+                                <el-card class="box-card">
+                                    <div slot="header" class="clearfix">
+                                        <span>{{oneResultTeamResult.projectName}}</span>
+                                    </div>
+                                    <div>
+                                        <el-tag>项目编号</el-tag>
+                                        {{oneResultTeamResult.projectNumber}}
+                                        <br>
+                                        <br>
+
+                                        <el-tag>团队编号</el-tag>
+                                        {{oneResultTeamResult.teamNumber}}
+                                        <br>
+                                        <br>
+
+                                        <!--团队成员-->
+                                        <div>
+                                            <br>
+                                            <br>
+                                            <el-card class="box-card">
+                                                <div slot="header" class="clearfix">
+                                                    <span>团队成员信息</span>
+                                                </div>
+                                                <div v-for="resultTeamResult in resultTeamResults">
+                                                    <el-tag>运动员编号</el-tag>
+                                                    {{resultTeamResult.athleteNumber}}
+                                                    <br>
+                                                    <br>
+
+                                                    <el-tag>身份证号</el-tag>
+                                                    {{resultTeamResult.studentIdNumber}}
+                                                    <br>
+                                                    <br>
+
+                                                    <el-tag>姓名</el-tag>
+                                                    {{resultTeamResult.studentName}}
+                                                    <br>
+                                                    <br>
+                                                </div>
+                                            </el-card>
+                                            <br>
+                                            <br>
+                                        </div>
+
+                                        <el-tag>比赛时间</el-tag>
+                                        {{oneResultTeamResult.arrangementInfoTime}}
+
+                                        <br>
+                                        <br>
+                                        <el-tag>比赛地点</el-tag>
+                                        {{oneResultTeamResult.arrangementInfoPlace}}
+                                        <br>
+                                        <br>
+
+                                        <el-tag>比赛结果</el-tag>
+                                        {{oneResultTeamResult.competitionResult}}
+                                        <br>
+                                        <br>
+
+                                        <el-tag>成绩得分</el-tag>
+                                        {{oneResultTeamResult.competitionScore}}分
+                                        <br>
+                                        <br>
+                                    </div>
+                                </el-card>
+                                <br>
+                                <br>
+                            </template>
+
+                            <template v-else>
+                                <center>
+                                    <h3>查无此项</h3>
+                                </center>
+                            </template>
+
+                        </el-drawer>
+
+                    </div>
+
+                    <template v-if="searchType != ''">
+                        <br>
+                        <br>
+                        <center>
+                            <el-button type="primary" @click="query" style="position: relative; top: 20px">查询
+                            </el-button>
+                            <br>
+                            <br>
+                        </center>
+
+                    </template>
+
+                </el-card>
+
+
+            </el-col>
+
+
+        </el-main>
+
+        <el-footer>
+            <div class="foot2">
+                &copy;2021 by Zhou_LC
+            </div>
+        </el-footer>
+    </el-container>
+
+
+</div>
+
+<script>
+    //登录验证
+    if (getCookieValue("userId") == null) {
+        window.location.href = 'login.html?reason=nologin';
+    }
+</script>
+
+<script>
+    var baseUrl = "http://localhost:8080";
+    var vm = new Vue({
+        el: '#container',
+        data: {
+            user: {
+                userId: '',
+                username: '',
+                userHeadUrl: ''
+            },
+
+            searchType: '',
+
+            input: '',
+
+            resultAthleteResults: [], //运动员成绩查询结果
+
+            resultTeamResults: [], //团体成绩查询结果
+            oneResultTeamResult: {},
+
+            resultAthleteSigns: [], //运动员报名查询结果
+
+            drawer: false,
+
+            urlIndex: '',
+            signProjects: []
+        },
+
+        created: function () {
+
+
+            this.user.userId = getCookieValue("userId");
+            this.user.username = getCookieValue("username");
+            this.user.userHeadUrl = './static/img/user_upload/' + getCookieValue("img");
+            this.searchType = getUrlParam("index");
+            // console.log(this.urlIndex);
+
+        },
+
+        methods: {
+            query() {
+                console.log(this.searchType);
+                if (this.searchType == 'searchsign') {
+
+                    axios({
+                        method: 'get',
+                        url: baseUrl + '/searchsign',
+                        params: {
+                            studentIdNumber: this.input
+                        }
+                    }).then((res)=>{
+                        console.log(res.data);
+                        this.signProjects = res.data.data;
+                    });
+                    this.drawer = true;
+
+                } else if (this.searchType == 'searchscore') {
+                    axios({
+                        method: 'get',
+                        url: baseUrl + '/searchscore',
+                        params: {
+                            athleteNumber: this.input
+                        }
+                    }).then((res) => {
+                        this.resultAthleteResults = res.data.data;
+                        for (var i = 0; i < this.resultAthleteResults.length; i++) {
+                            this.resultAthleteResults[i].arrangementInfoTime =
+                                timeChange(this.resultAthleteResults[i].arrangementInfoTime);
+                        }
+
+                        console.log(this.resultAthleteResults)
+                    });
+                        this.drawer = true;
+                } else if (this.searchType == 'searchteam') {
+                    axios({
+                        method: 'get',
+                        url: baseUrl + '/searchteam',
+                        params: {
+                            teamNumber: this.input
+                        }
+                    }).then((res) => {
+                        this.resultTeamResults = res.data.data;
+                        this.oneResultTeamResult = this.resultTeamResults[0];
+                        console.log(this.oneResultTeamResult);
+                        console.log(this.resultTeamResults);
+
+                    });
+                        this.drawer = true;
+                }
+
+                if (this.input == '') {
+                    this.$alert('请输入查询所需内容', '查询失败', {
+                        confirmButtonText: '确定',
+                    });
+                }
+            },
+
+            myPage() {
+                window.location.href = 'my.html';
+            }
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../../static/css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="../../static/css/mycss.css"/>
+</head>
+<body>
+<!--Vue.js-->
+<script src="../../static/js/vue.js"></script>
+<!--Element-ui-->
+<script src="../../static/js/index.js"></script>
+<!--axios-->
+<script src="../../static/js/axios.min.js"></script>
+<!--cookie工具类-->
+<script src="../../static/js/cookie_utils.js"></script>
+
+<div id="container">
+    <el-container>
+
+    <!--网站图片 + 用户信息-->
+    <el-header height="100px">
+        <el-col :span="6">
+            <img class="logo" src="../../static/img/server_html/logo.png"/>
+        </el-col>
+        <el-col :span="6" :offset="12">
+            <br>
+            <!--个人用户信息-->
+            <el-col :span="8" :offset="6" class="move-bottom-mini-mini font-size-mid">
+                <span class="no-attention move-bottom-mini-mini">用户: &nbsp;</span>
+                <el-link type="primary" class="font-size-big" @click="myPage">{{user.username}}</el-link>
+                <el-link type="primary" class="font-size-mid" @click="zhuxiao">注销</el-link>
+            </el-col>
+            <!--头像-->
+            <el-col :span="6" :offset="0">
+                <el-avatar :src="user.userHeadUrl"></el-avatar>
+            </el-col>
+        </el-col>
+    </el-header>
+
+    <el-main>
+        <!--导航栏-->
+        <el-col :span="17" :offset="3">
+            <el-menu id="nav" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                <el-menu-item index="1" @click="sportsIPage">赛事公布</el-menu-item>
+                <el-menu-item index="2" style="margin-left: 85px" @click="signupPage">申请报名</el-menu-item>
+                <el-submenu index="3" style="margin-left: 85px">
+                    <template slot="title" >成绩查询</template>
+                    <el-menu-item index="3-1" @click="queryIPage('searchsign')">报名查询</el-menu-item>
+                    <el-submenu index="3-2">
+                        <template slot="title">成绩查询</template>
+                        <el-menu-item index="3-2-1" @click="queryIPage('searchscore')">单项成绩查询</el-menu-item>
+                        <el-menu-item index="3-2-2" @click="queryIPage('searchteam')">团体成绩查询</el-menu-item>
+                    </el-submenu>
+                    <el-menu-item index="3-3">班级总分查询</el-menu-item>
+                    <el-menu-item index="3-4">学院总分查询</el-menu-item>
+                </el-submenu>
+                <el-menu-item index="4" style="margin-left: 85px" @click="scorePage">成绩公布</el-menu-item>
+                <el-menu-item index="5" style="margin-left: 85px">投诉与检举</el-menu-item>
+            </el-menu>
+        </el-col>
+
+        <!--轮播图-->
+        <el-col :span="10">
+            <el-carousel indicator-position="outside" height="300px" style="width:580px; position: relative; top: 20px; left: 50px">
+                <el-carousel-item v-for="imgUrl in circleImgUrl" :key="imgUrl">
+                    <img :src="'static/img/server_html/' + imgUrl" width="100%" height="100%" style="border-radius: 5px"/>
+                </el-carousel-item>
+            </el-carousel>
+        </el-col>
+
+        <!--文字资讯-->
+        <el-col :span="11" :offset="3" >
+            <el-card class="box-card" style="position: relative; top: 20px;">
+                <div slot="header" class="clearfix">
+                    <span>运动会资讯</span>
+                </div>
+                <div v-for="o in 4" :key="o" class="text item">
+                    {{'列表内容 ' + o }}
+                </div>
+            </el-card>
+        </el-col>
+
+
+
+    </el-main>
+
+    <el-footer class="foot">
+        <br>
+        <br>
+        &copy;2021 by Zhou_LC
+    </el-footer>
+    </el-container>
+</div>
+
+
+<script>
+    //登录验证
+    if (getCookieValue("userId") == null || getCookieValue("userId") == '') {
+        window.location.href = 'login.html?reason=nologin';
+    }
+</script>
+
+<script>
+
+    var vm = new Vue({
+        el: '#container',
+        data: {
+            user: {
+                userId: '',
+                username: '',
+                userHeadUrl: ''
+            },
+            activeIndex: '0',
+            circleImgUrl: ['circle1.jpg', 'circle2.jpg', 'circle3.jpg', 'circle4.jpg']
+        },
+        created: function () {
+            this.user.userId = getCookieValue("userId");
+            this.user.username = getCookieValue("username");
+            this.user.userHeadUrl = './static/img/user_upload/' + getCookieValue("img");
+
+            var param = window.location.href.split("?");
+            if (param[1] == 'reason=successlogin') {
+                this.$notify({
+                    title: '登录成功',
+                    message: '欢迎您: ' + this.user.username,
+                    type: 'success'
+                });
+            }
+
+        },
+        methods: {
+            handleSelect(key, keyPath) {
+                console.log(key, keyPath);
+            },
+            signupPage() {
+                window.location.href = "signup.html";
+            },
+            sportsIPage() {
+                window.location.href = "sports.html";
+            },
+            queryIPage(byType) {
+                window.location.href = "query.html?index=" + byType;
+            },
+            myPage() {
+                window.location.href = "my.html";
+            },
+            scorePage() {
+                window.location.href = "score.html";
+            },
+            zhuxiao() {
+                setCookieValue("token", "");
+                setCookieValue("userId", "");
+                setCookieValue("username","" );
+                setCookieValue("img", "");
+                setCookieValue("type", "");
+                setCookieValue("typeId", "");
+                setCookieValue("gender", "");
+                window.location.href = 'index.html?reason=nologin'
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
