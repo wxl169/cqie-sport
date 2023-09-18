@@ -94,14 +94,12 @@ public class TbProjectServiceImpl implements ITbProjectService {
         boolean flag = baseMapper.insert(add) > 0;
         if (flag) {
             bo.setProjectId(add.getProjectId());
-
             //添加项目信息到字典
             SysDictData sysDictData = new SysDictData();
             sysDictData.setDictLabel(bo.getName());
             sysDictData.setDictValue(String.valueOf(bo.getProjectId()));
             sysDictData.setDictType("project_name");
             sysDictDataMapper.insert(sysDictData);
-
         }
         return flag;
     }
@@ -134,6 +132,12 @@ public class TbProjectServiceImpl implements ITbProjectService {
      */
     private void validEntityBeforeSave(TbProject entity) {
         //TODO 做一些数据校验,如唯一约束
+        LambdaQueryWrapper<TbProject> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(TbProject::getName, entity.getName());
+        TbProject tbProject = baseMapper.selectOne(queryWrapper);
+        if (tbProject!= null){
+            throw new BaseException("项目已存在");
+        }
     }
 
     /**
