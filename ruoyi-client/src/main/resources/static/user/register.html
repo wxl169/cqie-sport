@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/mycss.css"/>
+</head>
+<body>
+<!--Vue.js-->
+<script src="../js/vue.js"></script>
+<!--Element-ui-->
+<script src="../js/index.js"></script>
+<!--axios-->
+<script src="../js/axios.min.js"></script>
+<!--cookie工具类-->
+<script src="../js/cookie_utils.js"></script>
+
+
+<div id="container">
+    <el-container>
+        <el-header height="100px">
+            <a href="index.html">
+                <img class="logo" src="../img/server_html/logo.png"/>
+            </a>
+        </el-header>
+
+        <el-main>
+            <el-col :span="10" style="position: relative; left: 30%">
+                <el-card class="box-card">
+                    <div slot="header" class="clearfix" style="position: relative; left: 36%">
+                        <span>请填写注册信息</span>
+                    </div>
+                    <div>
+                        <el-form ref="form" :model="formInfo" label-width="80px">
+                            <el-form-item label="身份选择">
+                                <el-select v-model="formInfo.identity" placeholder="请首先声明您的身份">
+                                    <el-option label="学生" value="0"></el-option>
+                                    <el-option label="教师" value="1"></el-option>
+                                    <el-option label="裁判员" value="2"></el-option>
+                                    <el-option label="校内其他工作人员" value="3"></el-option>
+                                    <el-option label="非本校人员" value="4"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="用户名">
+                                <el-input v-model="formInfo.username"></el-input>
+                            </el-form-item>
+
+                            <el-form-item label="密码">
+                                <el-input v-model="formInfo.password" show-password></el-input>
+                            </el-form-item>
+
+                            <el-form-item label="确认密码">
+                                <el-input v-model="formInfo.rePassword" show-password></el-input>
+                            </el-form-item>
+
+
+                            <el-form-item label="邮箱">
+                                <el-input type="email" v-model="formInfo.email"></el-input>
+                            </el-form-item>
+
+                            <template v-if="formInfo.identity == '0'">
+                                <el-form-item label="学号">
+                                    <el-input v-model="formInfo.number"></el-input>
+                                </el-form-item>
+                            </template>
+
+                            <template v-if="formInfo.identity == '2'">
+                                <el-form-item label="工号">
+                                    <el-input v-model="formInfo.number"></el-input>
+                                </el-form-item>
+                            </template>
+
+                            <template v-if="formInfo.identity != '0' && formInfo.identity != '2'">
+                                <!--非学生身份需要额外填写的内容-->
+                                <el-form-item label="真实姓名">
+                                    <el-input v-model="formInfo.realname"></el-input>
+                                </el-form-item>
+
+                                <el-form-item label="性别">
+                                    <el-radio-group v-model="formInfo.gender">
+                                        <el-radio label="1">男</el-radio>
+                                        <el-radio label="0">女</el-radio>
+                                    </el-radio-group>
+                                </el-form-item>
+
+                                <el-form-item label="身份证号">
+                                    <el-input v-model="formInfo.idnumber"></el-input>
+                                </el-form-item>
+
+                                <el-form-item label="出生日期">
+                                    <el-col :span="11">
+                                        <el-date-picker type="date" placeholder="选择日期" v-model="formInfo.birthday"
+                                                        style="width: 100%;"></el-date-picker>
+                                    </el-col>
+                                </el-form-item>
+
+                                <el-form-item label="联系电话">
+                                    <el-input v-model="formInfo.phoneNumber"></el-input>
+                                </el-form-item>
+                            </template>
+
+
+                            <el-form-item>
+                                <el-button type="primary" @click="onSubmit" class="move-right-mid">注册</el-button>
+                                <el-button @click="reWrite" class="move-right-large">重置</el-button>
+                            </el-form-item>
+                        </el-form>
+                    </div>
+                </el-card>
+            </el-col>
+
+
+        </el-main>
+
+
+        <el-footer>
+            <div class="foot2">
+                &copy;2021 by Zhou_LC
+            </div>
+        </el-footer>
+    </el-container>
+
+
+</div>
+
+<script>
+    var baseUrl = "http://localhost:8080";
+    var vm = new Vue({
+        el: '#container',
+        data: {
+            formInfo: {
+                identity: '',
+                username: '',
+                password: '',
+                rePassword: '',
+                email: '',
+
+                number: '', //学号或工号
+
+                realname: '',
+                gender: '',
+                idnumber: '',
+                birthday: '',
+                phoneNumber: ''
+            },
+
+            isStudent: false,
+            isReferee: false
+        },
+
+        created: function () {
+
+        },
+
+        watch: {},
+
+        methods: {
+            onSubmit() {
+                // console.log('submit!');
+                console.log(this.formInfo);
+
+                //进行输入校验
+                if (this.formInfo.username.length == 0 || this.formInfo.password.length == 0
+                    || this.formInfo.email.length == 0) {
+                    this.$alert('请填写空缺信息', '提交失败', {
+                        confirmButtonText: '确定',
+                    });
+                    return;
+                }
+                //校验密码
+                if (this.formInfo.password != this.formInfo.rePassword) {
+                    this.$alert('两次密码输入不一致', '提交失败', {
+                        confirmButtonText: '确定',
+                    });
+                    return;
+                }
+
+                //校验邮箱
+                var reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+                if (!reg.test(this.formInfo.email)) {
+                    this.$alert('邮箱格式错误', '提交失败', {
+                        confirmButtonText: '确定',
+                    });
+                    return;
+                }
+
+                // 发送 POST 请求
+                axios({
+                    method: 'post',
+                    url: baseUrl + '/register',
+                    data: {
+                        number: this.formInfo.number,
+                        type: this.formInfo.identity,
+                        username: this.formInfo.username,
+                        password: this.formInfo.password,
+                        email: this.formInfo.email,
+
+                        realname: this.formInfo.realname,
+                        gender: this.formInfo.gender,
+                        idnumber: this.formInfo.idnumber,
+                        birthday: this.formInfo.birthday,
+                        phoneNumber: this.formInfo.phoneNumber
+                    }
+                }).then((res)=>{
+                    var vo = res.data;
+                    console.log(vo);
+                    if (vo.code == 10000) {
+                        // console.log(vo);
+                        window.location.href = "login.html";
+                    } else {
+                        this.$alert('请确认学号是否正确', '注册失败', {
+                            confirmButtonText: '确定',
+                        });
+                    }
+                });
+            },
+            reWrite() {
+                this.formInfo.identity = '';
+                this.formInfo.username = '';
+                this.formInfo.password = '';
+                this.formInfo.rePassword = '';
+                this.formInfo.email = '';
+                this.formInfo.studentNumber = '';
+                this.formInfo.realname = '';
+                this.formInfo.gender = '';
+                this.formInfo.idnumber = '';
+                this.formInfo.birthday = '';
+                this.formInfo.phoneNumber = '';
+                // console.log(this.form);
+            }
+        }
+    });
+</script>
+</body>
+</html>

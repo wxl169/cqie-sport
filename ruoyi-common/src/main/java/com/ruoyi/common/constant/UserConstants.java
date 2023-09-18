@@ -134,4 +134,14 @@ public interface UserConstants {
      */
     String ADMIN_ROLE_KEY = "admin";
 
+    //--------------------------------------------------用户端--------------------------------------------------------------
+    /**
+     * 用户类型：学生
+     */
+    String USER_TYPE_STUDENT = "0";
+    /**
+     * 用户类型：裁判员
+     */
+    String USER_TYPE_REFEREE = "2";
+
 }
