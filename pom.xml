@@ -323,7 +323,12 @@
                 <artifactId>ruoyi-sport</artifactId>
                 <version>${ruoyi-vue-plus.version}</version>
             </dependency>
-
+            <!-- 用戶端模块-->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-client</artifactId>
+                <version>${ruoyi-vue-plus.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
