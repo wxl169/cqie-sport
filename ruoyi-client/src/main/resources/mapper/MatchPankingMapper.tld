@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.client.mapper.MatchPankingMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="MatchPanking" type="com.ruoyi.client.domain.vo.MatchPankingVO">
+<!--        <id column="referee_id" property="refereeId" />-->
+<!--        <result column="number" property="number" />-->
+<!--        <result column="name" property="name" />-->
+<!--        <result column="gender" property="gender" />-->
+<!--        <result column="idnumber" property="idnumber" />-->
+<!--        <result column="phone_number" property="phoneNumber" />-->
+<!--        <result column="birthday" property="birthday" />-->
+<!--        <result column="create_time" property="createTime" />-->
+<!--        <result column="update_time" property="updateTime" />-->
+<!--        <result column="other" property="other" />-->
+    </resultMap>
+    <select id="find" resultMap="MatchPanking" resultType="com.ruoyi.client.domain.vo.MatchPankingVO">
+        select
+    </select>
+
+
+</mapper>
