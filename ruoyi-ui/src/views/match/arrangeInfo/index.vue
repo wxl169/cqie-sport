@@ -2,13 +2,13 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="项目名称" prop="projectId">
-        <el-select v-model="queryParams.projectId" placeholder="请选择项目名称" clearable>
+        <el-select v-model="form.projectId" placeholder="请选择项目名称" clearable>
           <el-option
             v-for="dict in dict.type.project_name"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
-          />
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="比赛时间" prop="time">
@@ -81,7 +81,7 @@
 
     <el-table v-loading="loading" :data="arrangeInfoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="安排信息单元id 安排信息单元表的主键" align="center" prop="arrangeInfoId" v-if="true"/>
+      <el-table-column label="安排信息单元id" align="center" prop="arrangeInfoId" v-if="true"/>
       <el-table-column label="项目名称" align="center" prop="projectId">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.project_name" :value="scope.row.projectId"/>

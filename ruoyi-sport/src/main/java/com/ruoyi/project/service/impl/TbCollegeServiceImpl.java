@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.constant.CacheNames;
 import com.ruoyi.common.core.domain.PageQuery;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -15,6 +16,7 @@ import com.ruoyi.project.mapper.TbCollegeMapper;
 import com.ruoyi.project.service.ITbCollegeService;
 import com.ruoyi.system.mapper.SysDictDataMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -73,6 +75,7 @@ public class TbCollegeServiceImpl implements ITbCollegeService {
      * 新增学院管理
      */
     @Override
+    @CacheEvict(cacheNames = CacheNames.SYS_DICT, key = "'college_name'")
     public Boolean insertByBo(TbCollegeBo bo) {
         TbCollege add = BeanUtil.toBean(bo, TbCollege.class);
         validEntityBeforeSave(add);
@@ -94,6 +97,7 @@ public class TbCollegeServiceImpl implements ITbCollegeService {
      * 修改学院管理
      */
     @Override
+    @CacheEvict(cacheNames = CacheNames.SYS_DICT, key = "'college_name'")
     public Boolean updateByBo(TbCollegeBo bo) {
         TbCollege update = BeanUtil.toBean(bo, TbCollege.class);
         validEntityBeforeSave(update);
@@ -111,6 +115,7 @@ public class TbCollegeServiceImpl implements ITbCollegeService {
      * 批量删除学院管理
      */
     @Override
+    @CacheEvict(cacheNames = CacheNames.SYS_DICT, key = "'college_name'")
     public Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {
         if (isValid) {
             //TODO 做一些业务上的校验,判断是否需要校验
