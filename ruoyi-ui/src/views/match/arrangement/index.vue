@@ -1,13 +1,15 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="项目id" prop="projectId">
-        <el-input
-          v-model="queryParams.projectId"
-          placeholder="请输入项目id"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="项目名称" prop="projectId">
+        <el-select v-model="form.projectId" placeholder="请选择项目名称" clearable>
+          <el-option
+            v-for="dict in dict.type.project_name"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="裁判员id" prop="refereeId">
         <el-input
@@ -33,29 +35,15 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="是否取消 0：取消，1：未取消" prop="isCancel">
-        <el-input
-          v-model="queryParams.isCancel"
-          placeholder="请输入是否取消 0：取消，1：未取消"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="取消原因 若未取消则为NULL" prop="reason">
-        <el-input
-          v-model="queryParams.reason"
-          placeholder="请输入取消原因 若未取消则为NULL"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="其他 备用字段" prop="other">
-        <el-input
-          v-model="queryParams.other"
-          placeholder="请输入其他 备用字段"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="类别" prop="type">
+        <el-select v-model="queryParams.type" placeholder="请选择类别" clearable>
+          <el-option
+            v-for="dict in dict.type.match_type"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -111,15 +99,27 @@
 
     <el-table v-loading="loading" :data="arrangementList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="安排id 安排表的主键" align="center" prop="arrangementId" v-if="true"/>
-      <el-table-column label="项目id" align="center" prop="projectId" />
+      <el-table-column label="安排id" align="center" prop="arrangementId" v-if="true"/>
+      <el-table-column label="项目名称" align="center" prop="projectId">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.project_name" :value="scope.row.projectId"/>
+        </template>
+      </el-table-column>
       <el-table-column label="裁判员id" align="center" prop="refereeId" />
       <el-table-column label="运动员id / 团体id" align="center" prop="typeId" />
       <el-table-column label="安排信息单元id" align="center" prop="infoId" />
-      <el-table-column label="类别 0：个人赛，1：团体赛" align="center" prop="type" />
-      <el-table-column label="是否取消 0：取消，1：未取消" align="center" prop="isCancel" />
-      <el-table-column label="取消原因 若未取消则为NULL" align="center" prop="reason" />
-      <el-table-column label="其他 备用字段" align="center" prop="other" />
+      <el-table-column label="类别" align="center" prop="type">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.match_type" :value="scope.row.type"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="是否取消" align="center" prop="isCancel">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.is_cancel" :value="scope.row.isCancel"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="取消原因" align="center" prop="reason" />
+      <el-table-column label="其他备用字段" align="center" prop="other" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -151,8 +151,15 @@
     <!-- 添加或修改安排 对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="项目id" prop="projectId">
-          <el-input v-model="form.projectId" placeholder="请输入项目id" />
+        <el-form-item label="项目名称" prop="projectId">
+          <el-select v-model="form.projectId" placeholder="请选择项目名称">
+            <el-option
+              v-for="dict in dict.type.project_name"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="裁判员id" prop="refereeId">
           <el-input v-model="form.refereeId" placeholder="请输入裁判员id" />
@@ -163,8 +170,25 @@
         <el-form-item label="安排信息单元id" prop="infoId">
           <el-input v-model="form.infoId" placeholder="请输入安排信息单元id" />
         </el-form-item>
+        <el-form-item label="类别" prop="type">
+          <el-select v-model="form.type" placeholder="请选择类别">
+            <el-option
+              v-for="dict in dict.type.match_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="是否取消 0：取消，1：未取消" prop="isCancel">
-          <el-input v-model="form.isCancel" placeholder="请输入是否取消 0：取消，1：未取消" />
+          <el-select v-model="form.isCancel" placeholder="请选择是否取消 0：取消，1：未取消">
+            <el-option
+              v-for="dict in dict.type.is_cancel"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="取消原因 若未取消则为NULL" prop="reason">
           <el-input v-model="form.reason" placeholder="请输入取消原因 若未取消则为NULL" />
@@ -186,6 +210,7 @@ import { listArrangement, getArrangement, delArrangement, addArrangement, update
 
 export default {
   name: "Arrangement",
+  dicts: ['is_cancel', 'project_name', 'match_type'],
   data() {
     return {
       // 按钮loading
@@ -217,19 +242,13 @@ export default {
         typeId: undefined,
         infoId: undefined,
         type: undefined,
-        isCancel: undefined,
-        reason: undefined,
-        other: undefined
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        arrangementId: [
-          { required: true, message: "安排id 安排表的主键不能为空", trigger: "blur" }
-        ],
         projectId: [
-          { required: true, message: "项目id不能为空", trigger: "blur" }
+          { required: true, message: "项目名称不能为空", trigger: "change" }
         ],
         refereeId: [
           { required: true, message: "裁判员id不能为空", trigger: "blur" }
@@ -241,23 +260,11 @@ export default {
           { required: true, message: "安排信息单元id不能为空", trigger: "blur" }
         ],
         type: [
-          { required: true, message: "类别 0：个人赛，1：团体赛不能为空", trigger: "change" }
+          { required: true, message: "类别不能为空", trigger: "change" }
         ],
         isCancel: [
-          { required: true, message: "是否取消 0：取消，1：未取消不能为空", trigger: "blur" }
+          { required: true, message: "是否取消 0：取消，1：未取消不能为空", trigger: "change" }
         ],
-        reason: [
-          { required: true, message: "取消原因 若未取消则为NULL不能为空", trigger: "blur" }
-        ],
-        createTime: [
-          { required: true, message: "录入时间不能为空", trigger: "blur" }
-        ],
-        updateTime: [
-          { required: true, message: "更新时间不能为空", trigger: "blur" }
-        ],
-        other: [
-          { required: true, message: "其他 备用字段不能为空", trigger: "blur" }
-        ]
       }
     };
   },

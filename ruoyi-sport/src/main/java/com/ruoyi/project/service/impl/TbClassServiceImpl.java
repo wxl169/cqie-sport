@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.constant.CacheNames;
 import com.ruoyi.common.core.domain.PageQuery;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -16,6 +17,7 @@ import com.ruoyi.project.mapper.TbClassMapper;
 import com.ruoyi.project.service.ITbClassService;
 import com.ruoyi.system.mapper.SysDictDataMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -75,6 +77,7 @@ public class TbClassServiceImpl implements ITbClassService {
      * 新增班级管理
      */
     @Override
+    @CacheEvict(cacheNames = CacheNames.SYS_DICT, key = "'class_name'")
     public Boolean insertByBo(TbClassBo bo) {
         TbClass add = BeanUtil.toBean(bo, TbClass.class);
         validEntityBeforeSave(add);
@@ -95,6 +98,7 @@ public class TbClassServiceImpl implements ITbClassService {
      * 修改班级管理
      */
     @Override
+    @CacheEvict(cacheNames = CacheNames.SYS_DICT, key = "'class_name'")
     public Boolean updateByBo(TbClassBo bo) {
         TbClass update = BeanUtil.toBean(bo, TbClass.class);
         validEntityBeforeSave(update);
@@ -112,6 +116,7 @@ public class TbClassServiceImpl implements ITbClassService {
      * 批量删除班级管理
      */
     @Override
+    @CacheEvict(cacheNames = CacheNames.SYS_DICT, key = "'class_name'")
     public Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {
         if (isValid) {
             //TODO 做一些业务上的校验,判断是否需要校验

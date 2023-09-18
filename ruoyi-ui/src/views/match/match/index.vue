@@ -1,13 +1,15 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="安排id" prop="arrangementId">
-        <el-input
-          v-model="queryParams.arrangementId"
-          placeholder="请输入安排id"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="项目名称" prop="projectId">
+        <el-select v-model="form.projectId" placeholder="请选择项目名称" clearable>
+          <el-option
+            v-for="dict in dict.type.project_name"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="运动员id / 团体id" prop="typeId">
         <el-input
@@ -17,45 +19,25 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="比赛结果" prop="result">
-        <el-input
-          v-model="queryParams.result"
-          placeholder="请输入比赛结果"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="成绩" prop="score">
-        <el-input
-          v-model="queryParams.score"
-          placeholder="请输入成绩"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="类别 0：个人赛，1：团体赛" prop="type">
+        <el-select v-model="queryParams.type" placeholder="请选择类别 0：个人赛，1：团体赛" clearable>
+          <el-option
+            v-for="dict in dict.type.match_type"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="成绩是否有效 0：无效，1：有效" prop="isEffective">
-        <el-input
-          v-model="queryParams.isEffective"
-          placeholder="请输入成绩是否有效 0：无效，1：有效"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="成绩无效原因 若有效则为NULL" prop="reason">
-        <el-input
-          v-model="queryParams.reason"
-          placeholder="请输入成绩无效原因 若有效则为NULL"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="其他 备用字段" prop="other">
-        <el-input
-          v-model="queryParams.other"
-          placeholder="请输入其他 备用字段"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.isEffective" placeholder="请选择成绩是否有效 0：无效，1：有效" clearable>
+          <el-option
+            v-for="dict in dict.type.is_effective"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -111,14 +93,26 @@
 
     <el-table v-loading="loading" :data="matchList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="比赛id 比赛表的主键" align="center" prop="competitionId" v-if="true"/>
-      <el-table-column label="安排id" align="center" prop="arrangementId" />
+      <el-table-column label="比赛id" align="center" prop="competitionId" v-if="false"/>
+      <el-table-column label="安排项目名称" align="center" prop="arrangementId">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.project_name" :value="scope.row.arrangementId"/>
+        </template>
+      </el-table-column>
       <el-table-column label="运动员id / 团体id" align="center" prop="typeId" />
-      <el-table-column label="类别 0：个人赛，1：团体赛" align="center" prop="type" />
+      <el-table-column label="类别 0：个人赛，1：团体赛" align="center" prop="type">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.match_type" :value="scope.row.type"/>
+        </template>
+      </el-table-column>
       <el-table-column label="比赛结果" align="center" prop="result" />
       <el-table-column label="成绩" align="center" prop="score" />
-      <el-table-column label="成绩是否有效 0：无效，1：有效" align="center" prop="isEffective" />
-      <el-table-column label="成绩无效原因 若有效则为NULL" align="center" prop="reason" />
+      <el-table-column label="成绩是否有效" align="center" prop="isEffective">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.is_effective" :value="scope.row.isEffective"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="成绩无效原因" align="center" prop="reason" />
       <el-table-column label="其他 备用字段" align="center" prop="other" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -151,11 +145,28 @@
     <!-- 添加或修改比赛记录 对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="安排id" prop="arrangementId">
-          <el-input v-model="form.arrangementId" placeholder="请输入安排id" />
+        <el-form-item label="安排项目名称" prop="arrangementId">
+          <el-select v-model="form.arrangementId" placeholder="请选择安排项目名称">
+            <el-option
+              v-for="dict in dict.type.project_name"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="运动员id / 团体id" prop="typeId">
           <el-input v-model="form.typeId" placeholder="请输入运动员id / 团体id" />
+        </el-form-item>
+        <el-form-item label="类别 0：个人赛，1：团体赛" prop="type">
+          <el-select v-model="form.type" placeholder="请选择类别 0：个人赛，1：团体赛">
+            <el-option
+              v-for="dict in dict.type.match_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="比赛结果" prop="result">
           <el-input v-model="form.result" placeholder="请输入比赛结果" />
@@ -164,7 +175,14 @@
           <el-input v-model="form.score" placeholder="请输入成绩" />
         </el-form-item>
         <el-form-item label="成绩是否有效 0：无效，1：有效" prop="isEffective">
-          <el-input v-model="form.isEffective" placeholder="请输入成绩是否有效 0：无效，1：有效" />
+          <el-select v-model="form.isEffective" placeholder="请选择成绩是否有效 0：无效，1：有效">
+            <el-option
+              v-for="dict in dict.type.is_effective"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="成绩无效原因 若有效则为NULL" prop="reason">
           <el-input v-model="form.reason" placeholder="请输入成绩无效原因 若有效则为NULL" />
@@ -186,6 +204,7 @@ import { listMatch, getMatch, delMatch, addMatch, updateMatch } from "@/api/matc
 
 export default {
   name: "Match",
+  dicts: ['project_name', 'match_type', 'is_effective'],
   data() {
     return {
       // 按钮loading
@@ -215,21 +234,14 @@ export default {
         arrangementId: undefined,
         typeId: undefined,
         type: undefined,
-        result: undefined,
-        score: undefined,
         isEffective: undefined,
-        reason: undefined,
-        other: undefined
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        competitionId: [
-          { required: true, message: "比赛id 比赛表的主键不能为空", trigger: "blur" }
-        ],
         arrangementId: [
-          { required: true, message: "安排id不能为空", trigger: "blur" }
+          { required: true, message: "安排id不能为空", trigger: "change" }
         ],
         typeId: [
           { required: true, message: "运动员id / 团体id不能为空", trigger: "blur" }
@@ -244,20 +256,8 @@ export default {
           { required: true, message: "成绩不能为空", trigger: "blur" }
         ],
         isEffective: [
-          { required: true, message: "成绩是否有效 0：无效，1：有效不能为空", trigger: "blur" }
+          { required: true, message: "成绩是否有效 0：无效，1：有效不能为空", trigger: "change" }
         ],
-        reason: [
-          { required: true, message: "成绩无效原因 若有效则为NULL不能为空", trigger: "blur" }
-        ],
-        createTime: [
-          { required: true, message: "录入时间不能为空", trigger: "blur" }
-        ],
-        updateTime: [
-          { required: true, message: "更新时间不能为空", trigger: "blur" }
-        ],
-        other: [
-          { required: true, message: "其他 备用字段不能为空", trigger: "blur" }
-        ]
       }
     };
   },
