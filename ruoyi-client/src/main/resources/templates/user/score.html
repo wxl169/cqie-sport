@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>赛事公布</title>
+    <link rel="stylesheet" type="text/css" href="../../static/css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="../../static/css/mycss.css"/>
+</head>
+<body>
+<!--Vue.js-->
+<script src="../../static/js/vue.js"></script>
+<!--Element-ui-->
+<script src="../../static/js/index.js"></script>
+<!--axios-->
+<script src="../../static/js/axios.min.js"></script>
+<!--cookie工具-->
+<script src="../../static/js/cookie_utils.js"></script>
+<!--工具-->
+<script src="../../static/js/utils.js"></script>
+
+
+<div id="container">
+    <el-container>
+        <!--网站图片 + 用户信息-->
+        <el-header height="100px">
+            <el-col :span="6">
+                <a href="index.html">
+                    <img class="logo" src="../../static/img/server_html/logo.png"/>
+                </a>
+            </el-col>
+            <el-col :span="6" :offset="12">
+                <br>
+                <!--个人用户信息-->
+                <el-col :span="8" :offset="6" class="move-bottom-mini-mini font-size-mid">
+                    <span class="no-attention move-bottom-mini-mini">用户: &nbsp;</span>
+                    <el-link type="primary" class="font-size-big" @click="myPage">{{user.username}}</el-link>
+                </el-col>
+                <!--头像-->
+                <el-col :span="6" :offset="0">
+                    <el-avatar :src="user.userHeadUrl"></el-avatar>
+                </el-col>
+            </el-col>
+        </el-header>
+
+        <el-main>
+            <br>
+            <br>
+            <!--赛事信息展示区域-->
+            <h3>个人赛</h3>
+            <template v-for="competitions in competitionArray">
+                <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <span>赛事名称: {{competitions[0].projectName}}</span>
+                    </div>
+                    <template v-for="(person, index) in competitions">
+
+                        <el-card class="box-card">
+                            <div slot="header" class="clearfix">
+                                <span>第{{index+1}}名</span>
+                            </div>
+                        <div>
+                            <el-tag>赛事编号</el-tag>
+                            {{person.projectNumber}}
+                            <el-tag>时间</el-tag>
+                            {{person.arrangementInfoTime}}
+                            <el-tag>地点</el-tag>
+                            {{person.arrangementInfoPlace}}
+                            <el-tag>内容</el-tag>
+                            {{person.arrangementInfoContent}}
+                            <el-tag>运动员编号</el-tag>
+                            {{person.athleteNumber}}
+                            <br>
+                            <br>
+                            <el-tag>学院</el-tag>
+                            {{person.collegeName}}
+                            <el-tag>班级</el-tag>
+                            {{person.className}}
+                            <el-tag>姓名</el-tag>
+                            {{person.studentName}}
+                            <el-tag>成绩</el-tag>
+                            {{person.competitionResult}}
+                            <el-tag>得分</el-tag>
+                            {{person.competitionScore}}
+                            <el-tag>裁判员编号</el-tag>
+                            {{person.refereeNumber}}
+                        </div>
+                        </el-card>
+                        <br>
+                        <br>
+
+                        <!--<h3>团体赛</h3>-->
+                        <!--<template v-for="competition in competitions">-->
+                        <!--    <el-card class="box-card">-->
+                        <!--        <div slot="header" class="clearfix">-->
+                        <!--            <span>赛事名称: {{competition.projectName}}</span>-->
+                        <!--        </div>-->
+                        <!--        <div>-->
+                        <!--        </div>-->
+                        <!--    </el-card>-->
+                        <!--    <br>-->
+                        <!--    <br>-->
+                        <!--</template>-->
+
+                    </template>
+                </el-card>
+
+                <el-divider></el-divider>
+
+            </template>
+
+        </el-main>
+
+        <el-footer>
+            <div class="foot2">
+                &copy;2021 by Zhou_LC
+            </div>
+        </el-footer>
+    </el-container>
+
+
+</div>
+
+<script>
+    //登录验证
+    if (getCookieValue("userId") == null || getCookieValue("userId").length == 0) {
+        window.location.href = 'login.html?reason=nologin';
+    }
+</script>
+
+<script>
+    var baseUrl = "http://localhost:8080";
+    var vm = new Vue({
+        el: '#container',
+        data: {
+            user: {
+                userId: '',
+                username: '',
+                userHeadUrl: ''
+            },
+
+            competitions: [],
+            competitionArray: []
+        },
+
+        created: function () {
+
+
+            this.user.userId = getCookieValue("userId");
+            this.user.username = getCookieValue("username");
+            this.user.userHeadUrl = './static/img/user_upload/' + getCookieValue("img");
+
+            axios({
+                method: 'get',
+                url: baseUrl + "/listcompetitions"
+            }).then((res) => {
+                console.log(res.data);
+                this.competitionArray = res.data.data;
+                console.log(this.competitionArray)
+                // for (var i = 0; i < this.competitions.length; i++) {
+                //     this.competitions[i].arrangementInfoTime = timeChange(this.competitions[i].arrangementInfoTime);
+                // }
+            });
+
+        },
+
+        methods: {
+            myPage() {
+                window.location.href = 'my.html';
+            }
+        }
+    });
+</script>
+</body>
+</html>
