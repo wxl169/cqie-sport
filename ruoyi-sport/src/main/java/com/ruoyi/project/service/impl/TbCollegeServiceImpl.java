@@ -8,6 +8,7 @@ import com.ruoyi.common.constant.CacheNames;
 import com.ruoyi.common.core.domain.PageQuery;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.exception.base.BaseException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.project.domain.TbCollege;
 import com.ruoyi.project.domain.bo.TbCollegeBo;
@@ -109,6 +110,12 @@ public class TbCollegeServiceImpl implements ITbCollegeService {
      */
     private void validEntityBeforeSave(TbCollege entity) {
         //TODO 做一些数据校验,如唯一约束
+        LambdaQueryWrapper<TbCollege> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(TbCollege::getName, entity.getName());
+        TbCollege tbCollege = baseMapper.selectOne(queryWrapper);
+        if (tbCollege != null) {
+            throw new BaseException("学院已存在");
+        }
     }
 
     /**

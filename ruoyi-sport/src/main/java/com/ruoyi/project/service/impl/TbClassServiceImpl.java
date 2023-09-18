@@ -8,6 +8,7 @@ import com.ruoyi.common.constant.CacheNames;
 import com.ruoyi.common.core.domain.PageQuery;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.exception.base.BaseException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.project.domain.TbClass;
 import com.ruoyi.project.domain.TbCollege;
@@ -110,6 +111,12 @@ public class TbClassServiceImpl implements ITbClassService {
      */
     private void validEntityBeforeSave(TbClass entity) {
         //TODO 做一些数据校验,如唯一约束
+        LambdaQueryWrapper<TbClass> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(TbClass::getName, entity.getName());
+        TbClass tbClass = baseMapper.selectOne(queryWrapper);
+        if (tbClass!=null){
+            throw new BaseException("班级已存在");
+        }
     }
 
     /**
