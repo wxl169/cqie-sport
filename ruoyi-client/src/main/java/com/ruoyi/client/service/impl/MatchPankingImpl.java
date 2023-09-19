@@ -18,7 +18,7 @@ public class MatchPankingImpl implements MatchRankingService {
     @Resource
     MatchPankingMapper matchPankingMapper;
     @Override
-    public List<MatchPankingVO> find(String arrangement,int type) {
-        return matchPankingMapper.find(arrangement,type);
+    public List<MatchPankingVO> find(String arrangement,int type,String projectName) {
+        return matchPankingMapper.find(arrangement,type,projectName);
     }
 }

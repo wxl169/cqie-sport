@@ -13,4 +13,5 @@ public class MatchPankingVO {
     private String score;//学生成绩
     private String studentClass;//学生班级
     private String college;//所在学院
+    private String projectName;//项目名称
 }

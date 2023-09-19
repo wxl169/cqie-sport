@@ -18,7 +18,7 @@ public class MatchRankingController {
     @Resource
     private MatchRankingService matchRankingService;
     @RequestMapping("/user/matchRanking")
-    public void matchRanking(String arrangement,int type,Model model){
-        matchRankingService.find(arrangement,type);
+    public void matchRanking(String arrangement,String projectName,int type,Model model){
+        matchRankingService.find(arrangement,type,projectName);
     }
 }

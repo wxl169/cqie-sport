@@ -12,5 +12,5 @@ import java.util.List;
  */
 @Mapper
 public interface MatchPankingMapper {
-    List<MatchPankingVO> find(String arrangement,int type);
+    List<MatchPankingVO> find(String arrangement,int type,String projectName);
 }

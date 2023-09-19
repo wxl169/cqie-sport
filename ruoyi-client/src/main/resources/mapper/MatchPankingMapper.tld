@@ -16,7 +16,26 @@
 <!--        <result column="other" property="other" />-->
     </resultMap>
     <select id="find" resultMap="MatchPanking" resultType="com.ruoyi.client.domain.vo.MatchPankingVO">
-        select
+        SELECT s.name studentName
+             ,class.`name` studentClass
+             ,college.`name` college
+             ,c.score score
+             ,p.`name` projectName
+        FROM tb_competition c
+                 JOIN tb_athlete a
+                      ON c.type_id = a.athlete_id
+                 JOIN tb_student s
+                      ON a.student_id = s.student_id
+                 JOIN tb_class class
+                      ON s.class_id = class.class_id
+                 JOIN tb_college college
+                      ON s.college_id = college.college_id
+                 JOIN tb_arrangement arrangement
+                      ON c.arrangement_id = arrangement.arrangement_id
+                 JOIN tb_project p
+                      ON arrangement.project_id = p.project_id
+        WHERE c.is_effective = 1 AND c.type = #{type}
+        <if test="projectName != null">AND p.`name` = #{projectName}</if>
     </select>
 
 
