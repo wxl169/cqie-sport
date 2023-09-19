@@ -17,10 +17,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -50,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getEmail, email)
-            .eq(User::getPassword, password);
+            .eq(User::getPassword, MD5.create().digestHex(password));
         User user = userMapper.selectOne(queryWrapper);
         if (user != null) {
             //如果登录验证成功，则生成令牌token

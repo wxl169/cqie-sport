@@ -64,7 +64,7 @@
 
             <el-footer>
                 <div class="foot">
-                    &copy;2021 by Zhou_LC
+                    &copy;2023 by 第三组
                 </div>
             </el-footer>
         </el-container>
@@ -128,6 +128,12 @@
                             setCookieValue("gender", vo.data.gender);
                             // console.log(document.cookie);
                             window.location.href = baseUrl + "/toIndex?reason=successlogin";
+                        }else {
+                            this.$notify({
+                                title: '警告',
+                                message: vo.msg,
+                                type: 'warning'
+                            });
                         }
                     });
                 },
