@@ -20,5 +20,11 @@
         <result column="update_time" property="updateTime" />
         <result column="other" property="other" />
     </resultMap>
+    <select id="selectUserByEmail" resultType="com.ruoyi.client.domain.entity.User">
+        select id from tb_user where email = #{email};
+    </select>
+    <select id="selectUserByType" resultType="com.ruoyi.client.domain.entity.User">
+        select id from tb_user where type_id = #{studentId} and type = #{userTypeStudent}
+    </select>
 
 </mapper>

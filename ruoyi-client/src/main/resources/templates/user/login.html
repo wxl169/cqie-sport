@@ -75,7 +75,10 @@
 
     <script>
         var baseUrl = "http://localhost:8080/client/user";
-
+        //登录验证
+        // if (getCookieValue("token") != null || getCookieValue("token") !== '') {
+        //     window.location.href = baseUrl + '/toIndex?reason=successLogin';
+        // }
         var vm = new Vue({
             el: '#container',
             data: {
@@ -126,17 +129,9 @@
                             // console.log(document.cookie);
                             window.location.href = baseUrl + "/toIndex?reason=successlogin";
                         }
-
-                        if (!this.isLogin) {
-                            this.$notify.error({
-                                title: '登录失败',
-                                message: '账号或密码错误'
-                            });
-                        }
                     });
                 },
-                register() {
-                    window.location.href = baseUrl + '/toRegister';
+                register() {window.location.href = baseUrl + '/toRegister';
                 }
             }
         });
