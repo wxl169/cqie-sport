@@ -342,6 +342,7 @@
         <module>ruoyi-oss</module>
         <module>ruoyi-sms</module>
         <module>ruoyi-sport</module>
+        <module>ruoyi-client</module>
     </modules>
     <packaging>pom</packaging>
 

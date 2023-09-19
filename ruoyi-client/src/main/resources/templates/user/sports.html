@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>赛事公布</title>
+    <link rel="stylesheet" type="text/css" href="../../static/css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="../../static/css/mycss.css"/>
+</head>
+<body>
+<!--Vue.js-->
+<script src="../../static/js/vue.js"></script>
+<!--Element-ui-->
+<script src="../../static/js/index.js"></script>
+<!--axios-->
+<script src="../../static/js/axios.min.js"></script>
+<!--cookie工具-->
+<script src="../../static/js/cookie_utils.js"></script>
+<!--工具-->
+<script src="../../static/js/utils.js"></script>
+
+
+<div id="container">
+    <el-container>
+        <!--网站图片 + 用户信息-->
+        <el-header height="100px">
+            <el-col :span="6">
+                <a href="index.html">
+                    <img class="logo" src="../../static/img/server_html/logo.png"/>
+                </a>
+            </el-col>
+            <el-col :span="6" :offset="12">
+                <br>
+                <!--个人用户信息-->
+                <el-col :span="8" :offset="6" class="move-bottom-mini-mini font-size-mid">
+                    <span class="no-attention move-bottom-mini-mini">用户: &nbsp;</span>
+                    <el-link type="primary" class="font-size-big" @click="myPage">{{user.username}}</el-link>
+                </el-col>
+                <!--头像-->
+                <el-col :span="6" :offset="0">
+                    <el-avatar :src="user.userHeadUrl"></el-avatar>
+                </el-col>
+            </el-col>
+        </el-header>
+
+        <el-main>
+            <br>
+            <br>
+            <!--赛事信息展示区域-->
+            <el-col :span="10" :offset="1">
+                <template v-for="project in projects">
+                    <el-card class="box-card">
+                        <div slot="header" class="clearfix">
+                            <center>
+
+                                <span>项目名: {{project.projectName}}</span>
+                            </center>
+                        </div>
+                        <div>
+                            <el-tag>项目编号</el-tag>
+                            {{project.projectNumber}}
+                            <br>
+                            <br>
+
+                            <el-tag>项目介绍</el-tag>
+                            {{project.projectIntroduction}}
+                            <br>
+                            <br>
+
+
+                            <el-tag>项目类型</el-tag>
+                            <template v-if="project.projectType == 0">
+                                个人赛
+                            </template>
+                            <template v-else>
+                                团体赛
+                            </template>
+
+
+                            <br>
+                            <br>
+                            <el-tag>项目招收人数/队数</el-tag>
+                            {{project.projectNeedNum}}
+                            <br>
+                            <br>
+                            <el-tag>招收裁判员人数</el-tag>
+                            {{project.projectNeedReNum}}
+                            <br>
+                            <br>
+
+                            <el-tag>比赛时间</el-tag>
+                            {{project.arrangeInfoTime}}
+
+                            <br>
+                            <br>
+                            <el-tag>比赛地点</el-tag>
+                            {{project.arrangeInfoPlace}}
+                            <br>
+                            <br>
+                            <el-tag>其他说明内容</el-tag>
+                            {{project.arrangeInfoContent}}
+                        </div>
+                    </el-card>
+                    <br>
+                    <br>
+                </template>
+
+            </el-col>
+
+            <!--查询区域-->
+            <div style="position: fixed; width: 800px; height: 200px; left: 60%">
+            <el-col :span="10" :offset="3">
+                <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <center>
+                            <span>赛事信息查询</span>
+                        </center>
+                    </div>
+                    <div>
+                        <template>
+                            <el-select v-model="searchType" placeholder="请选择查询方式" @change="searchChange">
+                                <el-option label="根据赛事编号" value="bynumber"></el-option>
+                                <el-option label="根据赛事名" value="byname"></el-option>
+                                <el-option label="根据赛事类别" value="bytype"></el-option>
+                            </el-select>
+                        </template>
+                        <br>
+                        <br>
+
+                        <template v-if="isSelect">
+                            <el-select v-model="inputType" placeholder="请选择类别">
+                                <el-option label="个人赛" value="personal"></el-option>
+                                <el-option label="团体赛" value="team"></el-option>
+                            </el-select>
+                        </template>
+                        <el-input v-else
+                                placeholder="请输入内容"
+                                v-model="searchInput"
+                                prefix-icon="el-icon-search"
+                                clearable>
+                        </el-input>
+
+
+                        <br>
+                        <br>
+
+                        <center>
+                        <el-button type="primary"
+                                   @click="searchProject">查询</el-button>
+                        </center>
+                    </div>
+                </el-card>
+            </el-col>
+            </div>
+
+            <el-drawer
+                    title="查询成功"
+                    :visible.sync="drawer"
+                    @close="closeDrawer"
+                    :with-header="false">
+
+
+                <template v-if="resultProjects.length > 0">
+                    <el-card class="box-card"  v-for="project in resultProjects">
+                        <div slot="header" class="clearfix">
+                            <span>{{project.projectName}}</span>
+                        </div>
+                        <div>
+                            <el-tag>项目编号</el-tag>
+                            {{project.projectNumber}}
+                            <br>
+                            <br>
+
+                            <el-tag>项目介绍</el-tag>
+                            {{project.projectIntroduction}}
+                            <br>
+                            <br>
+
+
+                            <el-tag>项目类型</el-tag>
+                            <template v-if="project.projectType == 0">
+                                个人赛
+                            </template>
+                            <template v-else-if="projectType == 1">
+                                团体赛
+                            </template>
+                            <template v-else>
+
+                            </template>
+
+
+                            <br>
+                            <br>
+                            <el-tag>项目招收人数/队数</el-tag>
+                            {{project.projectNeedNum}}
+                            <br>
+                            <br>
+                            <el-tag>招收裁判员人数</el-tag>
+                            {{project.projectNeedReNum}}
+                            <br>
+                            <br>
+
+                            <el-tag>比赛时间</el-tag>
+                            {{project.arrangeInfoTime}}
+
+                            <br>
+                            <br>
+                            <el-tag>比赛地点</el-tag>
+                            {{project.arrangeInfoPlace}}
+                            <br>
+                            <br>
+                            <el-tag>其他说明内容</el-tag>
+                            {{project.arrangeInfoContent}}
+                        </div>
+                    </el-card>
+                    <br>
+                    <br>
+                </template>
+                <center v-else><h3>查无此项</h3></center>
+
+            </el-drawer>
+
+
+        </el-main>
+
+        <el-footer>
+            <div class="foot2">
+                &copy;2021 by Zhou_LC
+            </div>
+        </el-footer>
+    </el-container>
+
+
+</div>
+
+<script>
+    //登录验证
+    if (getCookieValue("userId") == null || getCookieValue("userId").length == 0) {
+        window.location.href = 'login.html?reason=nologin';
+    }
+</script>
+
+<script>
+    var baseUrl = "http://localhost:8080";
+    var vm = new Vue({
+        el: '#container',
+        data: {
+            user: {
+                userId: '',
+                username: '',
+                userHeadUrl: ''
+            },
+            searchInput: '',
+            projects: [],
+            searchType: '',
+
+            resultProjects: [],
+
+            drawer: false,
+            isok: true, //查询成功与否
+            inputType: '', //按类别查找时，下拉框中每项的参数
+            isSelect: false, //是否显示类别查询下拉框
+            typeValue: '' //axios中传递的类别值 0个人，1团体
+        },
+
+        created: function () {
+
+            // console.log(this.isok);
+
+            this.user.userId = getCookieValue("userId");
+            this.user.username = getCookieValue("username");
+            this.user.userHeadUrl = './static/img/user_upload/' + getCookieValue("img");
+
+            axios.get(baseUrl + "/signup").then((res)=>{
+                // console.log(res.data);
+                this.projects = res.data.data;
+                // console.log(this.projects);
+            });
+        },
+
+        methods: {
+            searchProject() {
+
+                console.log('---'+this.searchInput);
+
+                if (this.searchInput.length == 0) {
+                    this.$alert('请输入查询所需内容', '查询失败', {
+                        confirmButtonText: '确定',
+                    });
+                    return;
+                }
+
+                /**
+                 * 说明：此处也可用vue和js来做模糊查询，但此处以优先练习后端的原则，将此功能的实现放在后端
+                 */
+                // console.log(this.searchInput);
+                // var resultIndex = -1;
+
+                //根据赛事名查询-------
+                // if (this.searchType == 'byname') {
+                //     for (var i = 0; i < this.projects.length; i++) {
+                //         // console.log(this.projects[i].projectName);
+                //         if (this.searchInput == this.projects[i].projectName) {
+                //             // console.log("yes");
+                //             // resultIndex = i;
+                //             this.project = this.projects[i];
+                //             this.isOk = 1;
+                //             // console.log(this.project);
+                //             break;
+                //         }
+                //     }
+                //
+                //     // this.projects[resultIndex]
+                //     if(this.project == {}) { //查询失败，无结果
+                //         this.isOk = 0;
+                //     }
+                //     this.drawer = true;
+                //
+                // } else if (this.searchType == 'bytype') {
+                //     // 根据赛事类别查询
+                //
+                // } else {
+                //     this.$alert('请选择查询方式', '查询失败', {
+                //         confirmButtonText: '确定',
+                //     });
+                // }
+                //......
+
+                // console.log(this.searchInput);
+
+                console.log(this.isok);
+
+                // console.log('input:' + this.searchInput.length);
+
+                var flag = 1;
+
+                if (this.searchType == 'bynumber') { //按赛事编号查询--------
+                    axios({
+                        method: 'get',
+                        url: baseUrl + "/searchbynumber",
+                        params: {
+                            projectNumber: this.searchInput
+                        }
+                    }).then((res)=>{
+                        console.log(res.data);
+                        this.resultProjects = new Array(res.data.data);
+                    });
+                } else if (this.searchType == 'byname') { //按赛事名查询
+                    axios({
+                        method: 'get',
+                        url: baseUrl + "/searchbyname",
+                        params: {
+                            projectName: this.searchInput
+                        }
+                    }).then((res)=>{
+                        console.log(res.data);
+                        this.resultProjects = res.data.data;
+                    });
+                } else if (this.searchType == 'bytype') { //按类别查询
+
+                    if (this.inputType == 'personal') {
+                        this.typeValue = '0'
+                    } else if (this.inputType == 'team') {
+                        this.typeValue = '1'
+                    }
+
+                    axios({
+                        method: 'get',
+                        url: baseUrl + "/searchbytype",
+                        params: {
+                            projectType: this.typeValue
+                        }
+                    }).then((res)=>{
+                        // console.log(res.data);
+                        this.resultProjects = res.data.data;
+                    });
+                } else if (this.searchType.length == 0) {
+                    flag = 0;
+                    this.isok = false;
+                    this.$alert('请选择查询条件', '查询失败', {
+                        confirmButtonText: '确定',
+                    });
+                } else if (this.searchInput == '') {
+                    flag = 0;
+                    this.isok = false;
+                    this.$alert('请输入查询所需内容', '查询失败', {
+                        confirmButtonText: '确定',
+                    });
+                }
+
+                // console.log('xia: ' + this.resultProjects);
+
+                if (flag == 1) {
+                    //显示结果
+                    this.drawer = true;
+                }
+
+                flag = 1;
+            },
+
+            searchChange() {
+                if (this.searchType == 'bytype') {
+                    this.isSelect = true;
+
+                } else {
+                    this.isSelect = false;
+                }
+            },
+
+            closeDrawer() {
+                // this.project = {};
+                this.resultProjects = [];
+            },
+
+            myPage() {
+                window.location.href = 'my.html';
+            }
+        }
+    });
+</script>
+</body>
+</html>
