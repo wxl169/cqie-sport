@@ -37,6 +37,8 @@
         WHERE c.is_effective = 1 AND c.type = #{type}
         <if test="projectName != null">AND p.`name` = #{projectName}</if>
     </select>
-
+    <select id="findTerms" resultType="java.util.HashMap">
+        select `name` from tb_project
+    </select>
 
 </mapper>

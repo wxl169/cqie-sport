@@ -19,6 +19,9 @@ public class MatchRankingController {
     private MatchRankingService matchRankingService;
     @RequestMapping("/user/matchRanking")
     public void matchRanking(String arrangement,String projectName,int type,Model model){
+        //查询排行
         matchRankingService.find(arrangement,type,projectName);
+        //查询筛选条件
+        matchRankingService.findTerms();
     }
 }

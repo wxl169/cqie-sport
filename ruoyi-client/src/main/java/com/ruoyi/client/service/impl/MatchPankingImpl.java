@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther 邬文莱
@@ -20,5 +21,10 @@ public class MatchPankingImpl implements MatchRankingService {
     @Override
     public List<MatchPankingVO> find(String arrangement,int type,String projectName) {
         return matchPankingMapper.find(arrangement,type,projectName);
+    }
+
+    @Override
+    public Map<String,Object> findTerms() {
+        return matchPankingMapper.findTerms();
     }
 }
