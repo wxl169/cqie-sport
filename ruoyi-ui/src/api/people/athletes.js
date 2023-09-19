@@ -17,7 +17,7 @@ export function getAthletes(athleteId) {
   })
 }
 
-// 新增运动员管理 
+// 新增运动员管理
 export function addAthletes(data) {
   return request({
     url: '/people/athletes',
@@ -26,7 +26,7 @@ export function addAthletes(data) {
   })
 }
 
-// 修改运动员管理 
+// 修改运动员管理
 export function updateAthletes(data) {
   return request({
     url: '/people/athletes',
@@ -35,7 +35,7 @@ export function updateAthletes(data) {
   })
 }
 
-// 删除运动员管理 
+// 删除运动员管理
 export function delAthletes(athleteId) {
   return request({
     url: '/people/athletes/' + athleteId,

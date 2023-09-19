@@ -8,7 +8,7 @@ import com.ruoyi.common.core.mapper.BaseMapperPlus;
  * 运动员管理 Mapper接口
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-19
  */
 public interface TbAthleteMapper extends BaseMapperPlus<TbAthleteMapper, TbAthlete, TbAthleteVo> {
 

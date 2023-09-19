@@ -7,6 +7,7 @@ import com.ruoyi.common.core.domain.PageQuery;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.ruoyi.people.mapper.TbStudentMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.ruoyi.people.domain.bo.TbAthleteBo;
@@ -23,16 +24,17 @@ import java.util.Collection;
  * 运动员管理 Service业务层处理
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-19
  */
 @RequiredArgsConstructor
 @Service
 public class TbAthleteServiceImpl implements ITbAthleteService {
 
     private final TbAthleteMapper baseMapper;
+    private final TbStudentMapper studentMapper;
 
     /**
-     * 查询运动员管理 
+     * 查询运动员管理
      */
     @Override
     public TbAthleteVo queryById(Long athleteId){
@@ -46,6 +48,9 @@ public class TbAthleteServiceImpl implements ITbAthleteService {
     public TableDataInfo<TbAthleteVo> queryPageList(TbAthleteBo bo, PageQuery pageQuery) {
         LambdaQueryWrapper<TbAthlete> lqw = buildQueryWrapper(bo);
         Page<TbAthleteVo> result = baseMapper.selectVoPage(pageQuery.build(), lqw);
+        for (TbAthleteVo entityVo: result.getRecords()){
+            entityVo.setStudentName(studentMapper.selectById(entityVo.getStudentId()).getName());
+        }
         return TableDataInfo.build(result);
     }
 
@@ -63,12 +68,11 @@ public class TbAthleteServiceImpl implements ITbAthleteService {
         LambdaQueryWrapper<TbAthlete> lqw = Wrappers.lambdaQuery();
         lqw.eq(bo.getStudentId() != null, TbAthlete::getStudentId, bo.getStudentId());
         lqw.eq(StringUtils.isNotBlank(bo.getNumber()), TbAthlete::getNumber, bo.getNumber());
-        lqw.eq(StringUtils.isNotBlank(bo.getOther()), TbAthlete::getOther, bo.getOther());
         return lqw;
     }
 
     /**
-     * 新增运动员管理 
+     * 新增运动员管理
      */
     @Override
     public Boolean insertByBo(TbAthleteBo bo) {
@@ -82,7 +86,7 @@ public class TbAthleteServiceImpl implements ITbAthleteService {
     }
 
     /**
-     * 修改运动员管理 
+     * 修改运动员管理
      */
     @Override
     public Boolean updateByBo(TbAthleteBo bo) {
@@ -99,7 +103,7 @@ public class TbAthleteServiceImpl implements ITbAthleteService {
     }
 
     /**
-     * 批量删除运动员管理 
+     * 批量删除运动员管理
      */
     @Override
     public Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {

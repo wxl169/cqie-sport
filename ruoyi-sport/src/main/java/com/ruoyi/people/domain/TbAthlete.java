@@ -13,7 +13,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 运动员管理 对象 tb_athlete
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-19
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -39,8 +39,5 @@ public class TbAthlete extends BaseEntity {
      * 其他 备用字段
      */
     private String other;
-
-
-    private Long teamId;
 
 }

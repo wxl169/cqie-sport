@@ -13,7 +13,7 @@ import java.util.List;
  * 运动员管理 Service接口
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-19
  */
 public interface ITbAthleteService {
 

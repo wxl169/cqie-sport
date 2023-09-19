@@ -16,7 +16,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 裁判员管理业务对象 tb_referee
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-19
  */
 
 @Data
@@ -26,7 +26,6 @@ public class TbRefereeBo extends BaseEntity {
     /**
      * 裁判员id 裁判员表的主键
      */
-    @NotNull(message = "裁判员id 裁判员表的主键不能为空", groups = { EditGroup.class })
     private Long refereeId;
 
     /**
@@ -42,15 +41,15 @@ public class TbRefereeBo extends BaseEntity {
     private String name;
 
     /**
-     * 性别 1：男，0：女
+     * 性别
      */
-    @NotBlank(message = "性别 1：男，0：女不能为空", groups = { AddGroup.class, EditGroup.class })
+    @NotBlank(message = "性别不能为空", groups = { AddGroup.class, EditGroup.class })
     private String gender;
 
     /**
      * 身份证号 18位号码
      */
-    @NotBlank(message = "身份证号 18位号码不能为空", groups = { AddGroup.class, EditGroup.class })
+    @NotBlank(message = "身份证号不能为空", groups = { AddGroup.class, EditGroup.class })
     private String idnumber;
 
     /**
@@ -64,12 +63,6 @@ public class TbRefereeBo extends BaseEntity {
      */
     @NotNull(message = "出生日期不能为空", groups = { AddGroup.class, EditGroup.class })
     private Date birthday;
-
-    /**
-     * 其他 备用字段
-     */
-    @NotBlank(message = "其他 备用字段不能为空", groups = { AddGroup.class, EditGroup.class })
-    private String other;
 
 
 }

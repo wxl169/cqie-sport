@@ -17,14 +17,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="其他 备用字段" prop="other">
-        <el-input
-          v-model="queryParams.other"
-          placeholder="请输入其他 备用字段"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -79,10 +71,8 @@
 
     <el-table v-loading="loading" :data="athletesList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="运动员id 运动员表的主键" align="center" prop="athleteId" v-if="true"/>
-      <el-table-column label="学生id" align="center" prop="studentId" />
       <el-table-column label="运动员编号" align="center" prop="number" />
-      <el-table-column label="其他 备用字段" align="center" prop="other" />
+      <el-table-column label="学生姓名" align="center" prop="studentName" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -119,9 +109,6 @@
         </el-form-item>
         <el-form-item label="运动员编号" prop="number">
           <el-input v-model="form.number" placeholder="请输入运动员编号" />
-        </el-form-item>
-        <el-form-item label="其他 备用字段" prop="other">
-          <el-input v-model="form.other" placeholder="请输入其他 备用字段" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -165,15 +152,11 @@ export default {
         pageSize: 10,
         studentId: undefined,
         number: undefined,
-        other: undefined
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        athleteId: [
-          { required: true, message: "运动员id 运动员表的主键不能为空", trigger: "blur" }
-        ],
         studentId: [
           { required: true, message: "学生id不能为空", trigger: "blur" }
         ],
@@ -186,9 +169,6 @@ export default {
         updateTime: [
           { required: true, message: "更新时间不能为空", trigger: "blur" }
         ],
-        other: [
-          { required: true, message: "其他 备用字段不能为空", trigger: "blur" }
-        ]
       }
     };
   },
