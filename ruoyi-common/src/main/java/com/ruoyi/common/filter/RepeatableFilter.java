@@ -26,11 +26,13 @@ public class RepeatableFilter implements Filter {
             && StringUtils.startsWithIgnoreCase(request.getContentType(), MediaType.APPLICATION_JSON_VALUE)) {
             requestWrapper = new RepeatedlyRequestWrapper((HttpServletRequest) request, response);
         }
-        if (null == requestWrapper) {
+
+         if (null == requestWrapper) {
             chain.doFilter(request, response);
         } else {
             chain.doFilter(requestWrapper, response);
         }
+
     }
 
     @Override

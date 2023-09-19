@@ -11,7 +11,6 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.exception.base.BaseException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.project.domain.TbClass;
-import com.ruoyi.project.domain.TbCollege;
 import com.ruoyi.project.domain.bo.TbClassBo;
 import com.ruoyi.project.domain.vo.TbClassVo;
 import com.ruoyi.project.mapper.TbClassMapper;

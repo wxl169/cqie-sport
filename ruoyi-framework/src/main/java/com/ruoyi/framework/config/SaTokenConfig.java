@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -30,7 +31,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class SaTokenConfig implements WebMvcConfigurer {
 
     private final SecurityProperties securityProperties;
-
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/**");
+    }
     /**
      * 注册sa-token的拦截器
      */
@@ -57,6 +61,7 @@ public class SaTokenConfig implements WebMvcConfigurer {
                 });
         })).addPathPatterns("/**")
             // 排除不需要拦截的路径
+            .excludePathPatterns("/client/**")
             .excludePathPatterns(securityProperties.getExcludes());
     }
 

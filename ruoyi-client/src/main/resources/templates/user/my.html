@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>赛事公布</title>
+    <link rel="stylesheet" type="text/css" href="../../static/css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="../../static/css/mycss.css"/>
+</head>
+<body>
+<!--Vue.js-->
+<script src="../../static/js/vue.js"></script>
+<!--Element-ui-->
+<script src="../../static/js/index.js"></script>
+<!--axios-->
+<script src="../../static/js/axios.min.js"></script>
+<!--cookie工具-->
+<script src="../../static/js/cookie_utils.js"></script>
+<!--工具-->
+<script src="../../static/js/utils.js"></script>
+
+
+<div id="container">
+    <el-container>
+        <!--网站图片 + 用户信息-->
+        <el-header height="100px">
+            <el-col :span="6">
+                <a href="index.html">
+                    <img class="logo" src="../../static/img/server_html/logo.png"/>
+                </a>
+            </el-col>
+            <el-col :span="6" :offset="12">
+                <br>
+                <!--个人用户信息-->
+                <el-col :span="8" :offset="6" class="move-bottom-mini-mini font-size-mid">
+                    <span class="no-attention move-bottom-mini-mini">用户: &nbsp;</span>
+                    <el-link type="primary" class="font-size-big">{{user.username}}</el-link>
+                </el-col>
+                <!--头像-->
+                <el-col :span="6" :offset="0">
+                    <el-avatar :src="user.userHeadUrl"></el-avatar>
+                </el-col>
+            </el-col>
+        </el-header>
+
+        <el-main>
+
+
+            <el-col :span="10" :offset="1">
+                <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <span>您的基本个人信息</span>
+                    </div>
+                    <div>
+                        <el-tag>用户名</el-tag>
+                        {{this.username}}
+                        <br>
+                        <br>
+
+                        <el-tag>邮箱</el-tag>
+                        {{this.email}}
+                        <br>
+                        <br>
+
+                        <el-tag>电话号码</el-tag>
+                        {{this.phoneNumber}}
+                        <br>
+                        <br>
+
+                        <el-tag>性别</el-tag>
+                        <span v-if="this.gender == '1'">
+                            男
+                        </span>
+                        <span v-else>
+                            女
+                        </span>
+                        <br>
+                        <br>
+
+                        <el-tag>身份证号</el-tag>
+                        {{this.idnumber}}
+                        <br>
+                        <br>
+
+                        <el-tag>运动会编号</el-tag>
+                        {{this.number}}
+                        <br>
+                        <br>
+
+                    </div>
+                </el-card>
+            </el-col>
+
+            <el-col :span="8" :offset="3">
+                <center>
+                    <el-select v-model="changeSelect" placeholder="请选择更改需求">
+                        <el-option label="更改用户名" value="username"></el-option>
+                        <el-option label="更改邮箱地址" value="email"></el-option>
+                        <el-option label="更改密码" value="password"></el-option>
+                        <el-option label="更改联系电话" value="phonenumber"></el-option>
+                    </el-select>
+
+                </center>
+                <br>
+                <br>
+
+                <!--更改用户名-->
+                <el-card class="box-card" v-if="changeSelect == 'username'">
+                    <div slot="header" class="clearfix">
+                        <span>更改用户名</span>
+                    </div>
+                    <div>
+
+                        <el-input
+                                placeholder="请输入新的用户名"
+                                v-model="userInput"
+                                clearable>
+                        </el-input>
+                        <br>
+                        <br>
+                        <center>
+                            <el-button @click="changeBtn" type="primary">提交</el-button>
+                        </center>
+                    </div>
+                </el-card>
+
+
+                <!--更改邮箱地址-->
+                <el-card class="box-card" v-if="changeSelect == 'email'">
+                    <div slot="header" class="clearfix">
+                        <span>更改邮箱地址</span>
+                    </div>
+                    <div>
+                        <el-input
+                                placeholder="请输入新的邮箱地址"
+                                v-model="userInput"
+                                clearable>
+                        </el-input>
+                        <br>
+                        <br>
+                        <center>
+                            <el-button @click="changeBtn" type="primary">提交</el-button>
+                        </center>
+                    </div>
+                </el-card>
+
+                <!--更改密码-->
+                <el-card class="box-card" v-if="changeSelect == 'password'">
+                    <div slot="header" class="clearfix">
+                        <span>更改密码</span>
+                    </div>
+                    <div>
+                        <el-input show-password
+                                placeholder="请输入新的密码"
+                                v-model="userInput"
+                                clearable>
+                        </el-input>
+                        <br>
+                        <br>
+                        <el-input show-password
+                                placeholder="请重复输入新密码"
+                                v-model="reuserInput"
+                                clearable>
+                        </el-input>
+                        <br>
+                        <br>
+                        <center>
+                            <el-button @click="changeBtn" type="primary">提交</el-button>
+                        </center>
+                    </div>
+                </el-card>
+                <!--更改联系电话-->
+                <el-card class="box-card" v-if="changeSelect == 'phonenumber'">
+                    <div slot="header" class="clearfix">
+                        <span>更改联系电话</span>
+                    </div>
+                    <div>
+
+                        <el-input
+                                placeholder="请输入新的联系电话"
+                                v-model="userInput"
+                                clearable>
+                        </el-input>
+                        <br>
+                        <br>
+                        <center>
+                            <el-button @click="changeBtn" type="primary">提交</el-button>
+                        </center>
+                    </div>
+                </el-card>
+
+
+            </el-col>
+
+
+
+        </el-main>
+
+        <el-footer>
+            <div class="foot2">
+                &copy;2021 by Zhou_LC
+            </div>
+        </el-footer>
+    </el-container>
+
+
+</div>
+
+</body>
+</html>
+
+<script>
+    //登录验证
+    if (getCookieValue("userId") == null || getCookieValue("userId").length == 0) {
+        window.location.href = 'login.html?reason=nologin';
+    }
+</script>
+
+
+<script>
+    var baseUrl = "http://localhost:8080";
+    var vm = new Vue({
+        el: '#container',
+        data: {
+            user: {
+                userId: '',
+                username: '',
+                userHeadUrl: '',
+                type: '',
+                typeId: ''
+            },
+            userId: '',
+            username: '',
+            email: '',
+            password: '',
+            rePassword: '',
+            phoneNumber: '',
+            gender: '',
+            idnumber: '',
+            number: '',
+
+            info: {},
+
+            changeSelect: '',
+            userInput: '',
+            reuserInput: '',
+            type: '',
+            typeId: ''
+        },
+
+        created: function () {
+
+
+            this.user.userId = getCookieValue("userId");
+            this.user.username = getCookieValue("username");
+            this.user.userHeadUrl = './static/img/user_upload/' + getCookieValue("img");
+            this.user.type = getCookieValue("type");
+            this.user.typeId = getCookieValue("typeId");
+
+            axios({
+                method: 'get',
+                url: baseUrl + "/myinfo",
+                params: {
+                    userId: this.user.userId,
+                    type:this.user.type,
+                    typeId:this.user.typeId
+                }
+            }).then((res)=>{
+                // console.log(res.data);
+                this.info = res.data.data;
+                // console.log(this.info);
+
+                this.type = this.info.type;
+                this.typeId = this.info.typeId;
+                this.userId = this.info.userId;
+                this.username = this.info.username;
+                this.email = this.info.email;
+                this.password = this.info.password;
+                this.phoneNumber = this.info.phoneNumber;
+                this.gender = this.info.gender;
+                this.idnumber = this.info.idnumber;
+                this.number = this.info.other;
+            });
+
+        },
+
+        methods: {
+            changeBtn() {
+                // console.log(this.changeSelect);
+
+                //验证输入内容是否为空
+                if (this.userInput.length == 0) {
+                    this.$alert('请在输入框中输入内容', '更改失败', {
+                        confirmButtonText: '确定',
+                    });
+                    return;
+                }
+
+                //若为修改密码，需要验证两次密码是否一致
+                if (this.changeSelect == 'password') {
+                    if (this.userInput != this.reuserInput) {
+                        this.$alert('两次密码输入不一致', '更改失败', {
+                            confirmButtonText: '确定',
+                        });
+                        return;
+                    }
+                }
+
+                console.log(this.type);
+                console.log(this.typeId);
+                axios({
+                    method: 'post',
+                    url: baseUrl + '/myinfochange',
+                    data: {
+                        userId: this.userId,
+                        type: this.type,
+                        typeId: this.typeId,
+                        changeType: this.changeSelect,
+                        value: this.userInput
+                    }
+                }).then((res)=>{
+                    // console.log(res.data);
+                    console.log(this.userInput);
+                    if (this.changeSelect == 'username') {
+                        this.user.username = this.userInput;
+                        setCookieValue("username", this.user.username);
+                    }
+                    this.$alert('更改成功', '更改成功', {
+                        confirmButtonText: '确定',
+                    });
+                    this.userInput = '';
+                });
+            }
+        }
+    });
+</script>

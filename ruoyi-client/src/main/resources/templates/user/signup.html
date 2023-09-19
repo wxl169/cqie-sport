@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../../static/css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="../../static/css/mycss.css"/>
+</head>
+<body>
+<!--Vue.js-->
+<script src="../../static/js/vue.js"></script>
+<!--Element-ui-->
+<script src="../../static/js/index.js"></script>
+<!--axios-->
+<script src="../../static/js/axios.min.js"></script>
+<!--cookie工具-->
+<script src="../../static/js/cookie_utils.js"></script>
+<!--工具-->
+<script src="../../static/js/utils.js"></script>
+
+
+<div id="container">
+    <el-container>
+        <!--网站图片 + 用户信息-->
+        <el-header height="100px">
+            <el-col :span="6">
+                <a href="index.html">
+                    <img class="logo" src="../../static/img/server_html/logo.png"/>
+                </a>
+            </el-col>
+            <el-col :span="6" :offset="12">
+                <br>
+                <!--个人用户信息-->
+                <el-col :span="8" :offset="6" class="move-bottom-mini-mini font-size-mid">
+                    <span class="no-attention move-bottom-mini-mini">用户: &nbsp;</span>
+                    <el-link type="primary" class="font-size-big" @click="myPage">{{user.username}}</el-link>
+                </el-col>
+                <!--头像-->
+                <el-col :span="6" :offset="0">
+                    <el-avatar :src="user.userHeadUrl"></el-avatar>
+                </el-col>
+            </el-col>
+        </el-header>
+
+        <el-main>
+            <el-col :span="10" :offset="7">
+                <el-card class="box-card">
+                    <div slot="header" class="clearfix" style="position: relative; left: 36%">
+                        <span>{{title[parseInt(this.userType)]}}</span>
+                    </div>
+                    <div>
+                        <template>
+                            <el-select v-model="projectIndex" filterable placeholder="请选择比赛项目" @change="changeProject">
+                                <el-option v-for="(project, index) in projects"
+                                           :label="project.projectName"
+                                            :key="index"
+                                            :value="index">
+                                </el-option>
+                            </el-select>
+                        </template>
+
+                        <template v-if="projectIndex.length != 0">
+                            <div class="text item">
+                                <br>
+                                <el-tag>项目编号</el-tag>
+                                {{projectNumber}}
+                                <br>
+                                <br>
+                                <el-tag>项目名</el-tag>
+                                {{projectName}}
+                                <br>
+                                <br>
+                                <el-tag>项目介绍</el-tag>
+                                {{projectIntroduction}}
+                                <br>
+                                <br>
+
+
+                                <el-tag>项目类型</el-tag>
+                                <template v-if="projectType == 0">
+                                    个人赛
+                                </template>
+                                <template v-else-if="projectType == 1">
+                                    团体赛
+                                </template>
+                                <template v-else>
+
+                                </template>
+
+
+                                <br>
+                                <br>
+                                <el-tag>项目招收人数/队数</el-tag>
+                                {{projectNeedNum}}
+                                <br>
+                                <br>
+                                <el-tag>招收裁判员人数</el-tag>
+                                {{projectNeedReNum}}
+                                <br>
+                                <br>
+
+                                <el-tag>比赛时间</el-tag>
+                                {{arrangeInfoTime}}
+
+                                <br>
+                                <br>
+                                <el-tag>比赛地点</el-tag>
+                                {{arrangeInfoPlace}}
+                                <br>
+                                <br>
+                                <el-tag>其他说明内容</el-tag>
+                                {{arrangeInfoContent}}
+                            </div>
+
+                            <br>
+                            <br>
+                            <el-col :offset="9">
+                                <el-button type="primary" @click="onSubmit">
+                                    申请报名
+                                </el-button>
+                                <br>
+                                <br>
+                            </el-col>
+
+
+                        </template>
+
+                    </div>
+                </el-card>
+            </el-col>
+        </el-main>
+
+
+        <el-footer>
+            <div class="foot2">
+                &copy;2021 by Zhou_LC
+            </div>
+        </el-footer>
+    </el-container>
+
+
+</div>
+
+<script>
+    //登录验证
+    if (getCookieValue("userId") == null || getCookieValue("userId").length == 0) {
+        window.location.href = 'login.html?reason=nologin';
+    }
+</script>
+
+<script>
+    var baseUrl = "http://localhost:8080";
+    var vm = new Vue({
+        el: '#container',
+        data: {
+            user: {
+                userId: '',
+                username: '',
+                userHeadUrl: ''
+            },
+
+            title: ['运动员报名窗口', '', '裁判员报名窗口'],
+
+            projects: [],
+            projectName: '',
+
+            value: '',
+
+            projectIndex: '',
+
+            arrangeInfoContent: '',
+            arrangeInfoPlace: '',
+            arrangeInfoTime: '',
+            projectIntroduction: '',
+            projectName: '',
+            projectNeedNum: '',
+            projectNeedReNum: '',
+            projectNumber: '',
+            projectType: '',
+            projectGType: '',
+
+            projectId: '',
+            arrangeInfoId: '',
+
+            userType: ''
+
+        },
+
+        created: function () {
+            this.user.userId = getCookieValue("userId");
+            this.user.username = getCookieValue("username");
+            this.user.userHeadUrl = './static/img/user_upload/' + getCookieValue("img");
+            this.userType = getCookieValue("type");
+            // console.log(this.projectIndex);
+            // console.log(parseInt(this.userType));
+            // console.log(this.userType);
+            axios.get(baseUrl + "/signup").then((res)=>{
+                // console.log(res.data);
+                this.projects = res.data.data;
+                // console.log(this.projects);
+            });
+        },
+
+        methods: {
+            changeProject(index) {
+                // console.log(this.projects);
+                // var index = event.srcElement.dataset.index;
+                // console.log(index);
+                // console.log(event.srcElement.dataset.num);
+
+                this.projectNumber = this.projects[this.projectIndex].projectNumber;
+                this.projectName = this.projects[this.projectIndex].projectName;
+                this.projectNeedNum = this.projects[this.projectIndex].projectNeedNum;
+                this.projectNeedReNum = this.projects[this.projectIndex].projectNeedReNum;
+                this.projectIntroduction = this.projects[this.projectIndex].projectIntroduction;
+                this.projectType = this.projects[this.projectIndex].projectType;
+                this.projectGType = this.projects[this.projectIndex].projectGType;
+                this.arrangeInfoContent = this.projects[this.projectIndex].arrangeInfoContent;
+                this.arrangeInfoPlace = this.projects[this.projectIndex].arrangeInfoPlace;
+                this.arrangeInfoTime = timeChange(this.projects[this.projectIndex].arrangeInfoTime);
+
+
+                this.projectId = this.projects[this.projectIndex].projectId;
+                this.arrangeInfoId = this.projects[this.projectIndex].arrangeInfoId;
+
+                // var artime = this.arrangeInfoTime;
+                // var nowtime = timeChange(new Date());
+
+                // var artime = new Date(this.arrangeInfoTime);
+                // var nowtime = new Date();
+                // console.log(artime)
+                // console.log(nowtime)
+                // console.log(artime > nowtime)
+            },
+
+            onSubmit() {
+                //输入校验
+
+                var artime = new Date(this.arrangeInfoTime);
+                var nowtime = new Date();
+                if (nowtime > artime) {
+                    this.$alert('比赛时间已过', '报名失败', {
+                        confirmButtonText: '确定',
+                    });
+                    return;
+                }
+
+                var gender = getCookieValue("gender");
+                var type = getCookieValue("type");
+                if (gender != this.projectGType && type == '0') { // 只校验学生性别
+                    this.$alert('请确认您的性别是否与比赛要求一致', '报名失败', {
+                        confirmButtonText: '确定',
+                    });
+                    return;
+                }
+
+
+                axios({
+                    method: 'post',
+                    url: baseUrl + "/sign",
+                    data: {
+                        projectId: this.projectId,
+                        projectType: this.projectType,
+                        arrangeInfoId: this.arrangeInfoId,
+                        typeId: getCookieValue("typeId"),
+                        type: getCookieValue("type")
+                    }
+                }).then((res)=>{
+                    // console.log(res.data);
+                    if (res.data.msg == 'yibaoming') {
+                        //之前已报名
+                        this.$alert('原因：之前已报名', '报名失败', {
+                            confirmButtonText: '确定',
+                        });
+                    } else if (res.data.msg = 'success') {
+                        //报名成功
+                        this.$alert('可前往信息查询页面，查询报名详情', '报名成功', {
+                            confirmButtonText: '确定',
+                        });
+                    } else {
+                        //报名失败
+                        this.$alert('原因：未知错误', '报名失败', {
+                            confirmButtonText: '确定',
+                        });
+                    }
+                });
+            },
+            myPage() {
+                window.location.href = "my.html";
+            }
+        }
+    });
+</script>
+</body>
+</html>
