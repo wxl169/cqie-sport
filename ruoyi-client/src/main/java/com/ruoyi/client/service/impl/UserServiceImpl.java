@@ -1,5 +1,6 @@
 package com.ruoyi.client.service.impl;
 
+import cn.dev33.satoken.secure.BCrypt;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.digest.MD5;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -44,12 +45,9 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isBlank(email) || StringUtils.isBlank(password)) {
             return R.fail("请输入邮箱或密码");
         }
-
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(User::getEmail, email)
-            .eq(User::getPassword, MD5.create().digestHex(password));
-        User user = userMapper.selectOne(queryWrapper);
-        if (user != null) {
+        User user = userMapper.selectUserByEmail(email);
+        if (BCrypt.checkpw(password,user.getPassword())){
+//        if (user != null) {
             //如果登录验证成功，则生成令牌token
             //还需传入用户性别，若用户为学生，则需要根据学生id去学生表中查询-----
             //因为之后在前端需要将学生性别传入，从而在报名界面可用根据性别和项目进行校验
@@ -115,7 +113,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setType(type);
         user.setUsername(username);
-        user.setPassword(MD5.create().digestHex(password));
+        user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
         user.setEmail(email);
         user.setImg("default.png");
 
