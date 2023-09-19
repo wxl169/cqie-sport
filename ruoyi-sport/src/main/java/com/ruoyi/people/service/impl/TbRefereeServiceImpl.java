@@ -67,7 +67,6 @@ public class TbRefereeServiceImpl implements ITbRefereeService {
         lqw.eq(StringUtils.isNotBlank(bo.getIdnumber()), TbReferee::getIdnumber, bo.getIdnumber());
         lqw.eq(StringUtils.isNotBlank(bo.getPhoneNumber()), TbReferee::getPhoneNumber, bo.getPhoneNumber());
         lqw.eq(bo.getBirthday() != null, TbReferee::getBirthday, bo.getBirthday());
-        lqw.eq(StringUtils.isNotBlank(bo.getOther()), TbReferee::getOther, bo.getOther());
         return lqw;
     }
 

@@ -2,18 +2,18 @@ package com.ruoyi.people.domain.vo;
 
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.ruoyi.common.annotation.ExcelDictFormat;
-import com.ruoyi.common.convert.ExcelDictConvert;
+import com.ruoyi.common.core.validate.AddGroup;
+import com.ruoyi.common.core.validate.EditGroup;
 import lombok.Data;
-import java.util.Date;
 
+import javax.validation.constraints.NotNull;
 
 
 /**
  * 运动员管理 视图对象 tb_athlete
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-19
  */
 @Data
 @ExcelIgnoreUnannotated
@@ -34,18 +34,16 @@ public class TbAthleteVo {
     private Long studentId;
 
     /**
+     * 学生姓名
+     */
+    @ExcelProperty(value = "学生姓名")
+    private String studentName;
+
+    /**
      * 运动员编号
      */
     @ExcelProperty(value = "运动员编号")
     private String number;
-
-    /**
-     * 其他 备用字段
-     */
-    @ExcelProperty(value = "其他 备用字段")
-    private String other;
-
-    private Long teamId;
 
 
 }
