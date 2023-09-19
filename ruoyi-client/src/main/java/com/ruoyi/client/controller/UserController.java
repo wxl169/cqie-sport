@@ -7,6 +7,7 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.utils.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -29,7 +30,13 @@ public class UserController extends BaseController {
     public String toRegister(){
         return "user/register";
     }
-
+    @RequestMapping("/toIndex")
+    public ModelAndView toIndex(String reason){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("reason",reason);
+        modelAndView.setViewName("user/index");
+        return  modelAndView;
+    }
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     @ResponseBody
     public R checkLogin(@RequestBody UserLoginDTO userLoginDTO) {
@@ -48,6 +55,9 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     @ResponseBody
     public R register(@RequestBody Map<String, String> info) {
+        if (info == null){
+            return R.fail("请输入邮箱和密码");
+        }
         return userService.addUserToRegister(info);
     }
 

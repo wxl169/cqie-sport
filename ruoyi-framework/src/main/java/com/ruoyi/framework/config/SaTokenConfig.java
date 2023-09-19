@@ -61,7 +61,7 @@ public class SaTokenConfig implements WebMvcConfigurer {
                 });
         })).addPathPatterns("/**")
             // 排除不需要拦截的路径
-            .excludePathPatterns("/client/user/**")
+            .excludePathPatterns("/client/**")
             .excludePathPatterns(securityProperties.getExcludes());
     }
 
