@@ -40,5 +40,4 @@
     <select id="findTerms" resultType="java.util.HashMap">
         select `name` from tb_project
     </select>
-
 </mapper>
