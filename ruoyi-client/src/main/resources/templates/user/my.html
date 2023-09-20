@@ -64,7 +64,24 @@
                         {{this.username}}
                         <br>
                         <br>
-
+                        <el-tag>身份</el-tag>
+                        <span v-if="this.type == '0'">
+                            学生
+                        </span>
+                        <span v-else-if="this.type == '1'">
+                            班级老师
+                        </span>
+                        <span v-if="this.type == '2'">
+                            裁判
+                        </span>
+                        <span v-if="this.type == '3'">
+                            校内工作人员
+                        </span>
+                        <span v-else>
+                            非本校人员
+                        </span>
+                        <br>
+                        <br>
                         <el-tag>邮箱</el-tag>
                         {{this.email}}
                         <br>
@@ -86,12 +103,18 @@
                         <br>
 
                         <el-tag>出生日期</el-tag>
-                        {{this.idnumber}}
+                        {{this.birthday}}
                         <br>
                         <br>
 
                         <el-tag>运动会编号</el-tag>
-                        {{this.number}}
+                        <span v-if="this.number != null">
+                            {{this.number}}
+                        </span>
+                        <span v-else>
+                            暂未参赛
+                        </span>
+
                         <br>
                         <br>
 
@@ -206,7 +229,7 @@
 
         <el-footer>
             <div class="foot2">
-                &copy;2021 by Zhou_LC
+                &copy;2023 by 第三组
             </div>
         </el-footer>
     </el-container>
@@ -258,7 +281,7 @@
         created: function () {
             this.user.userId = getCookieValue("userId");
             this.user.username = getCookieValue("username");
-            this.user.userHeadUrl = './static/img/user_upload/' + getCookieValue("img");
+            this.user.userHeadUrl = '/img/user_upload/' + getCookieValue("img");
             this.user.type = getCookieValue("type");
             this.user.typeId = getCookieValue("typeId");
             this.user.token = getCookieValue("token")
@@ -268,7 +291,8 @@
                 params: {
                     userId: this.user.userId,
                     type:this.user.type,
-                    typeId:this.user.typeId
+                    typeId:this.user.typeId,
+                    token: this.user.token
                 }
             }).then((res)=>{
                 this.info = res.data.data;
@@ -277,7 +301,6 @@
                 this.userId = this.info.userId;
                 this.username = this.info.username;
                 this.email = this.info.email;
-                this.password = this.info.password;
                 this.phoneNumber = this.info.phoneNumber;
                 this.gender = this.info.gender;
                 this.birthday = this.info.birthday;
@@ -307,12 +330,9 @@
                         return;
                     }
                 }
-
-                console.log(this.type);
-                console.log(this.typeId);
                 axios({
                     method: 'post',
-                    url: baseUrl + '/myinfochange',
+                    url: baseUrl + '/update',
                     data: {
                         userId: this.userId,
                         type: this.type,

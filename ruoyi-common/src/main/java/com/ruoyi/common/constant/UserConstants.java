@@ -143,5 +143,14 @@ public interface UserConstants {
      * 用户类型：裁判员
      */
     String USER_TYPE_REFEREE = "2";
+    /**
+     * 用户类型：非本校人员
+     */
+    String USER_TYPE_NOT_SCHOOL = "4";
+
+    /**
+     * 数据为空
+     */
+    String USER_NULL = "null";
 
 }

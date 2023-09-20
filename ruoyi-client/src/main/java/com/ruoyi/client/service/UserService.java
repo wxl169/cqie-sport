@@ -2,6 +2,7 @@ package com.ruoyi.client.service;
 
 
 import com.ruoyi.client.domain.dto.UserInfoDTO;
+import com.ruoyi.client.domain.dto.UserUpdateDTO;
 import com.ruoyi.client.domain.entity.User;
 import com.ruoyi.client.domain.vo.UserInfoVO;
 import com.ruoyi.common.core.domain.R;
@@ -49,5 +50,13 @@ public interface UserService {
      * @param userInfoDTO 用户的id和类型
      * @return 用户信息
      */
-    UserInfoVO getUserInfo(UserInfoDTO userInfoDTO);
+    R getUserInfo(UserInfoDTO userInfoDTO);
+
+    /**
+     * 修改用户信息
+     *
+     * @param userUpdateDTO 传入的信息参数
+     * @return 修改是否成功
+     */
+    R updateUserInfo(UserUpdateDTO userUpdateDTO);
 }
