@@ -5,9 +5,11 @@ import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.digest.MD5;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.ruoyi.client.domain.dto.UserInfoDTO;
 import com.ruoyi.client.domain.entity.Referee;
 import com.ruoyi.client.domain.entity.Student;
 import com.ruoyi.client.domain.entity.User;
+import com.ruoyi.client.domain.vo.UserInfoVO;
 import com.ruoyi.client.mapper.RefereeMapper;
 import com.ruoyi.client.mapper.StudentMapper;
 import com.ruoyi.client.mapper.UserMapper;
@@ -206,11 +208,13 @@ public class UserServiceImpl implements UserService {
         }
         String value = (String) redisTemplate.opsForValue().get(token);
         //该账号已登录
-        if(value !=null){
-            return true;
-        }else {
-            return false;
-        }
+        return value != null;
+    }
+
+    @Override
+    public UserInfoVO getUserInfo(UserInfoDTO userInfoDTO) {
+
+        return null;
     }
 
 }

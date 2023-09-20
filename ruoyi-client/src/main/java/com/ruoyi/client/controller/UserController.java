@@ -1,6 +1,7 @@
 package com.ruoyi.client.controller;
 
 import com.ruoyi.client.domain.dto.LogoutDTO;
+import com.ruoyi.client.domain.dto.UserInfoDTO;
 import com.ruoyi.client.domain.dto.UserLoginDTO;
 import com.ruoyi.client.service.UserService;
 import com.ruoyi.client.service.impl.UserServiceImpl;
@@ -47,6 +48,16 @@ public class UserController extends BaseController {
     @RequestMapping("/toRegister")
     public String toRegister(){
         return "user/register";
+    }
+
+    /**
+     * 前往个人详情页
+     *
+     * @return 个人详情页
+     */
+    @RequestMapping("/toMyInfo")
+    public String toMyInfo(){
+        return "user/my";
     }
 
     /**
@@ -115,4 +126,22 @@ public class UserController extends BaseController {
         }
         return userService.logout(logoutDTO.getToken());
     }
+
+    /**
+     * 获取当前登陆用户信息
+     *
+     * @param userInfoDTO 用户的id和类型
+     * @return 用户信息
+     */
+    @RequestMapping(value = "/myInfo",method = RequestMethod.GET)
+    @ResponseBody
+    public R myInfo(@RequestBody UserInfoDTO userInfoDTO) {
+        //判断当前用户是否登录
+        boolean judgeLogin = userService.judgeLogin(userInfoDTO.getToken());
+        if (!judgeLogin){
+            return R.fail("请登录账号");
+        }
+        return R.ok(userService.getUserInfo(userInfoDTO));
+    }
+
 }
