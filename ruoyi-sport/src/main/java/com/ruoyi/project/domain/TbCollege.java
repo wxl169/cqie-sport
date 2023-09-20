@@ -13,7 +13,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 学院管理对象 tb_college
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-14
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

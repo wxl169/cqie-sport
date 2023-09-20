@@ -73,6 +73,7 @@ public class SysDictDataController extends BaseController {
     @GetMapping(value = "/type/{dictType}")
     public R<List<SysDictData>> dictType(@PathVariable String dictType) {
         List<SysDictData> data = dictTypeService.selectDictDataByType(dictType);
+        System.out.println("data = " + data);
         if (ObjectUtil.isNull(data)) {
             data = new ArrayList<>();
         }

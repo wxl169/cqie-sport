@@ -1,13 +1,15 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="项目id" prop="projectId">
-        <el-input
-          v-model="queryParams.projectId"
-          placeholder="请输入项目id"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="项目名称" prop="projectId">
+        <el-select v-model="queryParams.projectId" placeholder="请选择项目名称" clearable>
+          <el-option
+            v-for="dict in dict.type.project_name"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="比赛时间" prop="time">
         <el-date-picker clearable
@@ -21,14 +23,6 @@
         <el-input
           v-model="queryParams.place"
           placeholder="请输入比赛地点"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="其他 备用字段" prop="other">
-        <el-input
-          v-model="queryParams.other"
-          placeholder="请输入其他 备用字段"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -88,15 +82,17 @@
     <el-table v-loading="loading" :data="arrangeInfoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="安排信息单元id 安排信息单元表的主键" align="center" prop="arrangeInfoId" v-if="true"/>
-      <el-table-column label="项目id" align="center" prop="projectId" />
+      <el-table-column label="项目名称" align="center" prop="projectId">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.project_name" :value="scope.row.projectId"/>
+        </template>
+      </el-table-column>
       <el-table-column label="比赛时间" align="center" prop="time" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.time, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="比赛地点" align="center" prop="place" />
-      <el-table-column label="其他安排信息" align="center" prop="content" />
-      <el-table-column label="其他 备用字段" align="center" prop="other" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -128,8 +124,15 @@
     <!-- 添加或修改安排信息单元 对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="项目id" prop="projectId">
-          <el-input v-model="form.projectId" placeholder="请输入项目id" />
+        <el-form-item label="项目名称" prop="projectId">
+          <el-select v-model="form.projectId" placeholder="请选择项目名称">
+            <el-option
+              v-for="dict in dict.type.project_name"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="比赛时间" prop="time">
           <el-date-picker clearable
@@ -142,11 +145,8 @@
         <el-form-item label="比赛地点" prop="place">
           <el-input v-model="form.place" placeholder="请输入比赛地点" />
         </el-form-item>
-        <el-form-item label="其他安排信息">
+        <el-form-item label="备注">
           <editor v-model="form.content" :min-height="192"/>
-        </el-form-item>
-        <el-form-item label="其他 备用字段" prop="other">
-          <el-input v-model="form.other" placeholder="请输入其他 备用字段" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -162,6 +162,7 @@ import { listArrangeInfo, getArrangeInfo, delArrangeInfo, addArrangeInfo, update
 
 export default {
   name: "ArrangeInfo",
+  dicts: ['project_name'],
   data() {
     return {
       // 按钮loading
@@ -191,18 +192,13 @@ export default {
         projectId: undefined,
         time: undefined,
         place: undefined,
-        content: undefined,
-        other: undefined
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        arrangeInfoId: [
-          { required: true, message: "安排信息单元id 安排信息单元表的主键不能为空", trigger: "blur" }
-        ],
         projectId: [
-          { required: true, message: "项目id不能为空", trigger: "blur" }
+          { required: true, message: "项目名称不能为空", trigger: "change" }
         ],
         time: [
           { required: true, message: "比赛时间不能为空", trigger: "blur" }
@@ -210,18 +206,6 @@ export default {
         place: [
           { required: true, message: "比赛地点不能为空", trigger: "blur" }
         ],
-        content: [
-          { required: true, message: "其他安排信息不能为空", trigger: "blur" }
-        ],
-        createTime: [
-          { required: true, message: "录入时间不能为空", trigger: "blur" }
-        ],
-        updateTime: [
-          { required: true, message: "更新时间不能为空", trigger: "blur" }
-        ],
-        other: [
-          { required: true, message: "其他 备用字段不能为空", trigger: "blur" }
-        ]
       }
     };
   },

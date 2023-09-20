@@ -23,7 +23,7 @@ import java.util.Collection;
  * 学生管理Service业务层处理
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-14
  */
 @RequiredArgsConstructor
 @Service
@@ -67,11 +67,10 @@ public class TbStudentServiceImpl implements ITbStudentService {
         lqw.eq(StringUtils.isNotBlank(bo.getStudentNumber()), TbStudent::getStudentNumber, bo.getStudentNumber());
         lqw.like(StringUtils.isNotBlank(bo.getName()), TbStudent::getName, bo.getName());
         lqw.eq(StringUtils.isNotBlank(bo.getGender()), TbStudent::getGender, bo.getGender());
-        lqw.eq(StringUtils.isNotBlank(bo.getIdnumber()), TbStudent::getIdnumber, bo.getIdnumber());
-        lqw.eq(StringUtils.isNotBlank(bo.getPhoneNumber()), TbStudent::getPhoneNumber, bo.getPhoneNumber());
-        lqw.eq(bo.getBirthday() != null, TbStudent::getBirthday, bo.getBirthday());
-        lqw.eq(bo.getCreditScore() != null, TbStudent::getCreditScore, bo.getCreditScore());
-        lqw.eq(StringUtils.isNotBlank(bo.getOther()), TbStudent::getOther, bo.getOther());
+        lqw.between(params.get("beginBirthday") != null && params.get("endBirthday") != null,
+            TbStudent::getBirthday ,params.get("beginBirthday"), params.get("endBirthday"));
+        lqw.between(params.get("beginCreditScore") != null && params.get("endCreditScore") != null,
+            TbStudent::getCreditScore ,params.get("beginCreditScore"), params.get("endCreditScore"));
         return lqw;
     }
 

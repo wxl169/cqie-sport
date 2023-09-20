@@ -1,8 +1,6 @@
 package com.ruoyi.people.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
-import com.ruoyi.common.annotation.Sensitive;
-import com.ruoyi.common.enums.SensitiveStrategy;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import java.io.Serializable;
@@ -14,45 +12,43 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 学生管理对象 tb_student
+ * 用户管理对象 tb_user
  *
  * @author ruoyi
- * @date 2023-09-14
+ * @date 2023-09-15
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("tb_student")
-public class TbStudent extends BaseEntity {
+@TableName("tb_user")
+public class TbUser extends BaseEntity {
 
     private static final long serialVersionUID=1L;
 
     /**
-     * 学生id 学生表的主键
+     * 用户id 用户表的主键
      */
-    @TableId(value = "student_id")
-    private Long studentId;
+    @TableId(value = "user_id")
+    private Long userId;
     /**
-     * 班级id
+     * 身份id
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private Long classId;
+    private Long typeId;
     /**
-     * 学院id
+     * 身份类型
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private Long collegeId;
+    private String type;
     /**
-     * 运动员类型
+     * 用户名
      */
-    private String isAthlete;
+    private String username;
     /**
-     * 学号
+     * 密码
      */
-    private String studentNumber;
+    private String password;
     /**
-     * 姓名
+     * 真实姓名
      */
-    private String name;
+    private String realname;
     /**
      * 性别
      */
@@ -60,7 +56,6 @@ public class TbStudent extends BaseEntity {
     /**
      * 身份证号 18位号码
      */
-    @Sensitive(strategy = SensitiveStrategy.ID_CARD)
     private String idnumber;
     /**
      * 联系电话
@@ -71,9 +66,13 @@ public class TbStudent extends BaseEntity {
      */
     private Date birthday;
     /**
-     * 信用值
+     * 头像 存储图片相对地址，初始应指定默认头像
      */
-    private Long creditScore;
+    private String img;
+    /**
+     * 邮箱地址
+     */
+    private String email;
     /**
      * 其他 备用字段
      */

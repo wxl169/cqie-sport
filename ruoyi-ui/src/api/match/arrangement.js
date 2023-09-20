@@ -17,7 +17,7 @@ export function getArrangement(arrangementId) {
   })
 }
 
-// 新增安排 
+// 新增安排
 export function addArrangement(data) {
   return request({
     url: '/match/arrangement',
@@ -26,7 +26,7 @@ export function addArrangement(data) {
   })
 }
 
-// 修改安排 
+// 修改安排
 export function updateArrangement(data) {
   return request({
     url: '/match/arrangement',
@@ -35,7 +35,7 @@ export function updateArrangement(data) {
   })
 }
 
-// 删除安排 
+// 删除安排
 export function delArrangement(arrangementId) {
   return request({
     url: '/match/arrangement/' + arrangementId,
