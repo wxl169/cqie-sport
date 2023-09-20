@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>成绩公布</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-image:url("/img/match_img/aaa.webp") ;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      background-color: #cfffd7;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd951;
+    }
+
+    th {
+      background-color: #f2d52c;
+    }
+
+    .filter {
+      margin-bottom: 10px;
+    }
+
+    .filter label {
+      font-weight: bold;
+    }
+
+    .filter select {
+      padding: 5px;
+    }
+
+  </style>
+</head>
+<body>
+  <h2>成绩公布</h2>
+
+  <div class="filter">
+    <label for="type">筛选类型：</label>
+    <input type="radio" value="个人" name="type"/>个人
+    <input type="radio" value="团体" name="type"/>团体<br />
+
+    <label for="event-filter">筛选项目：</label>
+    <select id="event-filter">
+      <option value="">全部</option>
+      <option value="800m">800米</option>
+      <option value="400m">400米</option>
+      <option value="long-jump">跳远</option>
+      <option value="high-jump">跳高</option>
+    </select>
+  </div>
+
+  <table>
+    <tr>
+      <th>排名</th>
+      <th>学生姓名</th>
+      <th>成绩</th>
+      <th>班级</th>
+      <th>学院</th>
+	  <th>项目</th>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>小明</td>
+      <td>95</td>
+      <td>1班</td>
+      <td>软件与人工智能学院</td>
+	   <td>立定跳远</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>小红</td>
+      <td>87</td>
+      <td>2班</td>
+      <td>软件与人工智能学院</td>
+	   <td>立定跳远</td>
+    </tr>
+    <!-- 添加更多成绩行 -->
+  </table>
+</body>
+</html>

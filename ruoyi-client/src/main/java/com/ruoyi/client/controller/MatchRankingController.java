@@ -17,11 +17,12 @@ import javax.annotation.Resource;
 public class MatchRankingController {
     @Resource
     private MatchRankingService matchRankingService;
-    @RequestMapping("/user/matchRanking")
-    public void matchRanking(String arrangement,String projectName,int type,Model model){
+    @RequestMapping("/client/matchRanking")
+    public String matchRanking(String projectName,int type,Model model){
         //查询排行
-        matchRankingService.find(arrangement,type,projectName);
+        model.addAttribute("matchPanking",matchRankingService.find(type,projectName));
         //查询筛选条件
-        matchRankingService.findTerms();
+        model.addAttribute("matchType",matchRankingService.findTerms());
+        return "match/matchRanking";
     }
 }

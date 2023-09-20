@@ -1,5 +1,6 @@
 package com.ruoyi.client.service.impl;
 
+import com.ruoyi.client.domain.dto.MatchTypeDTO;
 import com.ruoyi.client.domain.vo.MatchPankingVO;
 import com.ruoyi.client.mapper.MatchPankingMapper;
 import com.ruoyi.client.service.MatchRankingService;
@@ -19,12 +20,12 @@ public class MatchPankingImpl implements MatchRankingService {
     @Resource
     MatchPankingMapper matchPankingMapper;
     @Override
-    public List<MatchPankingVO> find(String arrangement,int type,String projectName) {
-        return matchPankingMapper.find(arrangement,type,projectName);
+    public List<MatchPankingVO> find(int type,String projectName) {
+        return matchPankingMapper.find(type,projectName);
     }
 
     @Override
-    public Map<String,Object> findTerms() {
+    public List<MatchTypeDTO> findTerms() {
         return matchPankingMapper.findTerms();
     }
 }
