@@ -1,6 +1,9 @@
 package com.ruoyi.client.service;
 
 
+import com.ruoyi.client.domain.dto.UserInfoDTO;
+import com.ruoyi.client.domain.entity.User;
+import com.ruoyi.client.domain.vo.UserInfoVO;
 import com.ruoyi.common.core.domain.R;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,4 +42,12 @@ public interface UserService {
      * @return
      */
      boolean judgeLogin(String token);
+
+    /**
+     * 获取当前登陆用户信息
+     *
+     * @param userInfoDTO 用户的id和类型
+     * @return 用户信息
+     */
+    UserInfoVO getUserInfo(UserInfoDTO userInfoDTO);
 }

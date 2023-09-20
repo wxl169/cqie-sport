@@ -38,10 +38,10 @@
 
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item >
-                            <el-button @click="myPage" style="width: 100px;text-align: center;">个人信息</el-button>
+                            <el-button @click="myPage" style="width: 100px;text-align: center;border: none;font-size: 15px">个人信息</el-button>
                         </el-dropdown-item>
                         <el-dropdown-item>
-                            <el-button @click="logout" style="width: 100px;text-align: center">注销</el-button>
+                            <el-button @click="logout" style="width: 100px;text-align: center;border: none;font-size: 15px">注销</el-button>
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -171,7 +171,7 @@
                 window.location.href = "query.html?index=" + byType;
             },
             myPage() {
-                window.location.href = "my.html";
+                window.location.href = baseUrl + "/toMyInfo";
             },
             scorePage() {
                 window.location.href = "score.html";
