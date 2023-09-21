@@ -8,11 +8,13 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.client.domain.dto.UserInfoDTO;
+import com.ruoyi.client.domain.dto.UserLoginDTO;
 import com.ruoyi.client.domain.dto.UserUpdateDTO;
 import com.ruoyi.client.domain.entity.Referee;
 import com.ruoyi.client.domain.entity.Student;
 import com.ruoyi.client.domain.entity.User;
 import com.ruoyi.client.domain.vo.UserInfoVO;
+import com.ruoyi.client.domain.vo.UserLoginVO;
 import com.ruoyi.client.mapper.RefereeMapper;
 import com.ruoyi.client.mapper.StudentMapper;
 import com.ruoyi.client.mapper.UserMapper;
@@ -275,6 +277,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             return R.fail("修改失败");
         }
         return R.ok("修改成功");
+    }
+
+    @Override
+    public R getLoginUserInfo(String token) {
+        String email = redisTemplate.opsForValue().get(token);
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(User::getUserId,User::getUsername,User::getImg,User::getType,User::getTypeId);
+        queryWrapper.eq(User::getEmail,email);
+        User user = this.getOne(queryWrapper);
+        UserLoginVO copy = BeanCopyUtils.copy(user, UserLoginVO.class);
+        return R.ok(copy);
     }
 
 

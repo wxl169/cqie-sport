@@ -135,27 +135,41 @@
             user: {
                 userId: '',
                 username: '',
-                userHeadUrl: ''
+                userHeadUrl: '',
+                token: '',
             },
+            img:'',
             activeIndex: '0',
             circleImgUrl: ['http://i.cqie.edu.cn/resources/style/pc/images/newicon/bg_1.jpg',
                 'http://i.cqie.edu.cn/resources/style/pc/images/newicon/bg_2.jpg',
                 'http://i.cqie.edu.cn/resources/style/pc/images/newicon/bg_3.jpg']
         },
         created: function () {
-            this.user.userId = getCookieValue("userId");
-            this.user.username = getCookieValue("username");
-            this.user.userHeadUrl = './static/img/user_upload/' + getCookieValue("img");
-
+            // this.user.userId = getCookieValue("userId");
+            // this.user.username = getCookieValue("username");
+            // this.user.userHeadUrl = './static/img/user_upload/' + getCookieValue("img");
+            this.user.token = getCookieValue("token");
+            console.log(this.user.token)
             var param = window.location.href.split("?");
-            if (param[1] == 'reason=successlogin') {
+            if (param[1] === 'reason=successlogin') {
                 this.$notify({
                     title: '登录成功',
                     message: '欢迎您: ' + this.user.username,
                     type: 'success'
                 });
             }
-
+            axios({
+                method: 'get',
+                url: baseUrl + '/getLoginUserInfo' + '/' + this.user.token,
+                // data: {
+                //     token: this.user.token,
+                // },
+            }).then((res)=>{
+                this.user.userId = res.data.data.userId;
+                this.user.username = res.data.data.username;
+                this.user.gender = res.data.data.gender;
+                this.user.userHeadUrl = '/img/user_upload/' + res.data.data.img;
+            });
         },
         methods: {
             handleSelect(key, keyPath) {
@@ -177,22 +191,20 @@
                 window.location.href = "score.html";
             },
             logout() {
-                const token = getCookieValue("token");
-                console.log(token)
                 axios({
                     method: 'post',
                     url: baseUrl + '/logout',
                     data: {
-                        token: token,
+                        token: this.user.token,
                     },
                 }).then((res)=>{
                     setCookieValue("token", "");
-                    setCookieValue("userId", "");
-                    setCookieValue("username", "");
-                    setCookieValue("img", "");
-                    setCookieValue("type", "");
-                    setCookieValue("typeId", "");
-                    setCookieValue("gender", "");
+                    // setCookieValue("userId", "");
+                    // setCookieValue("username", "");
+                    // setCookieValue("img", "");
+                    // setCookieValue("type", "");
+                    // setCookieValue("typeId", "");
+                    // setCookieValue("gender", "");
                     window.location.href = baseUrl + '/toLogin'
                 });
             }
