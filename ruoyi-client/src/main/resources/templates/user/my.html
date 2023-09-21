@@ -129,6 +129,7 @@
                         <el-option label="更改邮箱地址" value="email"></el-option>
                         <el-option label="更改密码" value="password"></el-option>
                         <el-option label="更改联系电话" value="phonenumber"></el-option>
+                        <el-option label="更换头像" value="image"></el-option>
                     </el-select>
 
                 </center>
@@ -219,7 +220,32 @@
                         </center>
                     </div>
                 </el-card>
+                <!-- 更换头像-->
+                <el-card class="box-card" v-if="changeSelect == 'image'">
+                    <div slot="header" class="clearfix">
+                        <span>更换头像</span>
+                    </div>
+                    <div>
+                        <el-input>
+                            <el-upload
+                                class="avatar-uploader"
+                                action="https://jsonplaceholder.typicode.com/posts/"
+                                :show-file-list="false"
+                                :on-success="handleAvatarSuccess"
+                                :before-upload="beforeAvatarUpload">
+                                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                            </el-upload>
+                        </el-input>
 
+
+                        <br>
+                        <br>
+                        <center>
+                            <el-button @click="changeBtn" type="primary">提交</el-button>
+                        </center>
+                    </div>
+                </el-card>
 
             </el-col>
 
@@ -381,7 +407,6 @@
                 window.location.href = baseUrl + "/toIndex";
             },
             logout() {
-                console.log(token)
                 axios({
                     method: 'post',
                     url: baseUrl + '/logout',
@@ -399,6 +424,21 @@
                     window.location.href = baseUrl + '/toLogin'
                 });
             },
+            handleAvatarSuccess(res, file) {
+                this.imageUrl = URL.createObjectURL(file.raw);
+            },
+            beforeAvatarUpload(file) {
+                const isJPG = file.type === 'image/jpeg';
+                const isLt2M = file.size / 1024 / 1024 < 2;
+
+                if (!isJPG) {
+                    this.$message.error('上传头像图片只能是 JPG 格式!');
+                }
+                if (!isLt2M) {
+                    this.$message.error('上传头像图片大小不能超过 2MB!');
+                }
+                return isJPG && isLt2M;
+            }
         }
     });
 </script>
