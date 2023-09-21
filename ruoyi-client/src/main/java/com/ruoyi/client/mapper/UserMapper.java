@@ -2,6 +2,7 @@ package com.ruoyi.client.mapper;
 
 import com.ruoyi.client.domain.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ruoyi.client.domain.vo.UserInfoVO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -29,4 +30,11 @@ public interface UserMapper extends BaseMapper<User> {
      * @return 用户数据
      */
     User selectUserByType(Integer studentId, String userTypeStudent);
+
+    /**
+     * 查找学生信息
+     * @param userId 学生id
+     * @return 学生信息
+     */
+    UserInfoVO selectStudentInfo(Long userId);
 }

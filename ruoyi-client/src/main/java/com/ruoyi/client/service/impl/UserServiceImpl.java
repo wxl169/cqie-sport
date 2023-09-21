@@ -4,8 +4,11 @@ import cn.dev33.satoken.secure.BCrypt;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.digest.MD5;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.client.domain.dto.UserInfoDTO;
+import com.ruoyi.client.domain.dto.UserUpdateDTO;
 import com.ruoyi.client.domain.entity.Referee;
 import com.ruoyi.client.domain.entity.Student;
 import com.ruoyi.client.domain.entity.User;
@@ -16,6 +19,7 @@ import com.ruoyi.client.mapper.UserMapper;
 import com.ruoyi.client.service.UserService;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.utils.BeanCopyUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +32,7 @@ import java.util.concurrent.TimeUnit;
  * @author 16956
  */
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements UserService{
 
     @Resource
     private UserMapper userMapper;
@@ -48,6 +52,7 @@ public class UserServiceImpl implements UserService {
             return R.fail("请输入邮箱或密码");
         }
         User user = userMapper.selectUserByEmail(email);
+        System.out.println(BCrypt.hashpw(password,BCrypt.gensalt()));
         if (BCrypt.checkpw(password,user.getPassword())){
 //        if (user != null) {
             //如果登录验证成功，则生成令牌token
@@ -212,9 +217,79 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInfoVO getUserInfo(UserInfoDTO userInfoDTO) {
+    public R getUserInfo(UserInfoDTO userInfoDTO) {
+        //判断传入数据是否为空
+        if (!judgeUserInfo(userInfoDTO.getUserId(),userInfoDTO.getType())){
+            return R.fail("请求参数错误");
+        }
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        UserInfoVO copy ;
+        if (UserConstants.USER_TYPE_STUDENT.equals(userInfoDTO.getType()) && userInfoDTO.getTypeId() != null){
+            //如果查找本校学生的信息，需要查学生表信息
+            copy = userMapper.selectStudentInfo(userInfoDTO.getUserId());
+        }else{
+            //如果不是学生查用户表的信息
+            queryWrapper.eq(User::getUserId,userInfoDTO.getUserId());
+            User user = userMapper.selectOne(queryWrapper);
+            copy = BeanCopyUtils.copy(user, UserInfoVO.class);
+        }
+        return R.ok(copy);
+    }
 
-        return null;
+    @Override
+    public R updateUserInfo(UserUpdateDTO userUpdateDTO) {
+        if (!judgeUserInfo(userUpdateDTO.getUserId(),userUpdateDTO.getType())){
+            return R.fail("请求参数错误");
+        }
+        if (userUpdateDTO.getValue() == null || userUpdateDTO.getChangeType() == null){
+            return R.fail("请求参数错误");
+        }
+        //判断如果是本校学生，则修改学生表信息
+        boolean judge = false;
+        if (UserConstants.USER_TYPE_STUDENT.equals(userUpdateDTO.getType()) && userUpdateDTO.getTypeId() != null && "phonenumber".equals(userUpdateDTO.getChangeType())){
+            //如果是修改学生手机号的信息，需要修改学生表的信息
+            judge = studentMapper.updateSutdentPhone(userUpdateDTO.getTypeId(),userUpdateDTO.getValue());
+        }else {
+            //如果是其他信息，则修改信息表
+            LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
+            //更改用户名
+        if ("username".equals(userUpdateDTO.getChangeType())){
+            updateWrapper.set(User::getUsername,userUpdateDTO.getValue());
+        }
+        //更改邮箱
+        if ("email".equals(userUpdateDTO.getChangeType())){
+            updateWrapper.set(User::getEmail,userUpdateDTO.getValue());
+        }
+        //更改密码
+        if ("password".equals(userUpdateDTO.getChangeType())){
+            updateWrapper.set(User::getPassword,userUpdateDTO.getValue());
+        }
+        //更改手机号
+        if ("phonenumber".equals(userUpdateDTO.getChangeType())){
+            updateWrapper.set(User::getPhoneNumber,userUpdateDTO.getValue());
+        }
+            updateWrapper.eq(User::getUserId,userUpdateDTO.getUserId());
+            judge = this.update(updateWrapper);
+        }
+        if (!judge){
+            return R.fail("修改失败");
+        }
+        return R.ok("修改成功");
+    }
+
+
+    /**
+     * 判断用户的id和类型是否符合要求
+     *
+     * @param userId 用户id
+     * @param type 用户类型
+     * @return 是否正确
+     */
+    private boolean judgeUserInfo(Long userId,String type){
+        if (userId == null || userId <= 0){
+            return false;
+        }
+        return type != null && Integer.parseInt(type) <= Integer.parseInt(UserConstants.USER_TYPE_NOT_SCHOOL);
     }
 
 }

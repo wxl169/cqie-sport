@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
+/**
+ * @author 16956
+ */
 @Data
 public class UserInfoVO {
     /**
