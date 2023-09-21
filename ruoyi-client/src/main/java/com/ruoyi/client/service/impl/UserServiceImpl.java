@@ -54,7 +54,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             return R.fail("请输入邮箱或密码");
         }
         User user = userMapper.selectUserByEmail(email);
-        System.out.println(BCrypt.hashpw(password,BCrypt.gensalt()));
+        System.out.println(BCrypt.hashpw(password));
         if (BCrypt.checkpw(password,user.getPassword())){
 //        if (user != null) {
             //如果登录验证成功，则生成令牌token
@@ -122,7 +122,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         User user = new User();
         user.setType(type);
         user.setUsername(username);
-        user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+        user.setPassword(BCrypt.hashpw(password));
         user.setEmail(email);
         user.setImg("default.png");
 
