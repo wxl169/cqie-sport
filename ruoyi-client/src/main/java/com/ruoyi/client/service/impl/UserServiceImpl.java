@@ -254,12 +254,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         }else {
             //如果是其他信息，则修改信息表
             LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
+            LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
             //更改用户名
         if ("username".equals(userUpdateDTO.getChangeType())){
             updateWrapper.set(User::getUsername,userUpdateDTO.getValue());
         }
         //更改邮箱
         if ("email".equals(userUpdateDTO.getChangeType())){
+            queryWrapper.eq(User::getEmail,userUpdateDTO.getValue());
+            User user = this.getOne(queryWrapper);
+            if (user != null){
+                return R.fail("该邮箱已注册");
+            }
             updateWrapper.set(User::getEmail,userUpdateDTO.getValue());
         }
         //更改密码
@@ -268,6 +274,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         }
         //更改手机号
         if ("phonenumber".equals(userUpdateDTO.getChangeType())){
+            queryWrapper.eq(User::getPhoneNumber,userUpdateDTO.getValue());
+            User user = this.getOne(queryWrapper);
+            if (user != null){
+                return R.fail("该手机号已注册");
+            }
             updateWrapper.set(User::getPhoneNumber,userUpdateDTO.getValue());
         }
             updateWrapper.eq(User::getUserId,userUpdateDTO.getUserId());

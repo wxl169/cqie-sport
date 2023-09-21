@@ -328,8 +328,6 @@
                 });
             },
             changeBtn() {
-                // console.log(this.changeSelect);
-
                 //验证输入内容是否为空
                 if (this.userInput.length === 0) {
                     this.$alert('请在输入框中输入内容', '更改失败', {
@@ -359,15 +357,24 @@
                     }
                 }).then((res)=>{
                     // console.log(res.data);
-                    console.log(this.userInput);
-                    if (this.changeSelect === 'username') {
-                        this.user.username = this.userInput;
-                        this.getUserInfo();
+                    if (res.data.code == 200){
+                        console.log(this.userInput);
+                        if (this.changeSelect === 'username') {
+                            this.user.username = this.userInput;
+                            this.getUserInfo();
+                        }
+                        this.$alert('更改成功', '更改成功', {
+                            confirmButtonText: '确定',
+                        });
+                        this.userInput = '';
+                    }else {
+                        this.$notify({
+                            title: '警告',
+                            message: res.data.msg,
+                            type: 'warning'
+                        });
                     }
-                    this.$alert('更改成功', '更改成功', {
-                        confirmButtonText: '确定',
-                    });
-                    this.userInput = '';
+
                 });
             },
             myIndex() {
