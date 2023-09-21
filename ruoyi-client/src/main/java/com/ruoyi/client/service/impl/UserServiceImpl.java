@@ -248,6 +248,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         }
         //判断如果是本校学生，则修改学生表信息
         boolean judge = false;
+        //判断选择的是否为系统提供的修改字段
+        boolean pd  = false;
         if (UserConstants.USER_TYPE_STUDENT.equals(userUpdateDTO.getType()) && userUpdateDTO.getTypeId() != null && "phonenumber".equals(userUpdateDTO.getChangeType())){
             //如果是修改学生手机号的信息，需要修改学生表的信息
             judge = studentMapper.updateSutdentPhone(userUpdateDTO.getTypeId(),userUpdateDTO.getValue());
@@ -258,6 +260,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             //更改用户名
         if ("username".equals(userUpdateDTO.getChangeType())){
             updateWrapper.set(User::getUsername,userUpdateDTO.getValue());
+            pd = true;
         }
         //更改邮箱
         if ("email".equals(userUpdateDTO.getChangeType())){
@@ -267,10 +270,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
                 return R.fail("该邮箱已注册");
             }
             updateWrapper.set(User::getEmail,userUpdateDTO.getValue());
+            pd = true;
         }
         //更改密码
         if ("password".equals(userUpdateDTO.getChangeType())){
             updateWrapper.set(User::getPassword,userUpdateDTO.getValue());
+            pd = true;
         }
         //更改手机号
         if ("phonenumber".equals(userUpdateDTO.getChangeType())){
@@ -280,6 +285,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
                 return R.fail("该手机号已注册");
             }
             updateWrapper.set(User::getPhoneNumber,userUpdateDTO.getValue());
+            pd = true;
+        }
+        if ("image".equals(userUpdateDTO.getChangeType())){
+            updateWrapper.set(User::getImg,userUpdateDTO.getValue());
+            pd = true;
+        }
+        if (!pd){
+            return  R.fail("请选择提供的修改字段");
         }
             updateWrapper.eq(User::getUserId,userUpdateDTO.getUserId());
             judge = this.update(updateWrapper);
