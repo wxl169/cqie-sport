@@ -9,6 +9,7 @@ import lombok.Data;
  */
 @Data
 public class UserLoginVO {
+    private Integer userId;
     /**
      * 用户名
      */
@@ -23,4 +24,12 @@ public class UserLoginVO {
      * 头像 存储图片相对地址，初始应指定默认头像
      */
     private String img;
+    /**
+     * 类型
+     */
+    private String type;
+    /**
+     * 学生id
+     */
+    private Integer typeId;
 }

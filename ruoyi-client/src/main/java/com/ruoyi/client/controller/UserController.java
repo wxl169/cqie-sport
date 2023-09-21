@@ -157,6 +157,22 @@ public class UserController extends BaseController {
     }
 
     /**
+     * 通过token获取登录用户信息
+     *
+     * @param token 密匙
+     * @return 用户信息
+     */
+    @RequestMapping(value = "/getLoginUserInfo/{token}")
+    @ResponseBody
+    public R getLoginUserInfo(@PathVariable("token") String token) {
+        //判断当前用户是否登录
+        if (!userService.judgeLogin(token)){
+            return R.fail("请登录账号");
+        }
+        return userService.getLoginUserInfo(token);
+    }
+
+    /**
      * 修改用户信息
      *
      * @param userUpdateDTO 传入的信息参数
