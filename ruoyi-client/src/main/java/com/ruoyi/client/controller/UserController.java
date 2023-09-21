@@ -3,10 +3,12 @@ package com.ruoyi.client.controller;
 import com.ruoyi.client.domain.dto.LogoutDTO;
 import com.ruoyi.client.domain.dto.UserInfoDTO;
 import com.ruoyi.client.domain.dto.UserLoginDTO;
+import com.ruoyi.client.domain.dto.UserUpdateDTO;
 import com.ruoyi.client.service.UserService;
 import com.ruoyi.client.service.impl.UserServiceImpl;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.annotation.RepeatSubmit;
+import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.enums.BusinessType;
@@ -20,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 用户端：用户模块
@@ -130,18 +133,42 @@ public class UserController extends BaseController {
     /**
      * 获取当前登陆用户信息
      *
-     * @param userInfoDTO 用户的id和类型
+     * @param userId 用户的id和类型
+     * @param type 用戶類型
+     * @param typeId 是否為本校學生
+     * @param token token
      * @return 用户信息
      */
-    @RequestMapping(value = "/myInfo",method = RequestMethod.GET)
+    @RequestMapping(value = "/myInfo")
     @ResponseBody
-    public R myInfo(@RequestBody UserInfoDTO userInfoDTO) {
+    public R myInfo(@RequestParam("userId") String userId,@RequestParam("type") String type,
+                    @RequestParam(value = "typeId",required = false) String typeId,@RequestParam("token")String token) {
         //判断当前用户是否登录
-        boolean judgeLogin = userService.judgeLogin(userInfoDTO.getToken());
-        if (!judgeLogin){
+        if (!userService.judgeLogin(token)){
             return R.fail("请登录账号");
         }
-        return R.ok(userService.getUserInfo(userInfoDTO));
+        UserInfoDTO userInfoDTO  = new UserInfoDTO();
+        userInfoDTO.setUserId(Long.valueOf(userId));
+        userInfoDTO.setType(type);
+        if (!UserConstants.USER_NULL.equals(typeId)){
+            userInfoDTO.setTypeId(Integer.valueOf(typeId));
+        }
+        return userService.getUserInfo(userInfoDTO);
+    }
+
+    /**
+     * 修改用户信息
+     *
+     * @param userUpdateDTO 传入的信息参数
+     * @return 修改是否成功
+     */
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    @ResponseBody
+    public R updateUserInfo(@RequestBody UserUpdateDTO userUpdateDTO){
+        if (userUpdateDTO == null){
+            return R.fail("请求参数错误");
+        }
+        return userService.updateUserInfo(userUpdateDTO);
     }
 
 }
