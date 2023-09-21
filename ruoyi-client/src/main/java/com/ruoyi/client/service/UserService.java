@@ -59,4 +59,12 @@ public interface UserService {
      * @return 修改是否成功
      */
     R updateUserInfo(UserUpdateDTO userUpdateDTO);
+
+    /**
+     * 通过token获取登录用户信息
+     *
+     * @param token 密匙
+     * @return 用户信息
+     */
+    R getLoginUserInfo(String token);
 }

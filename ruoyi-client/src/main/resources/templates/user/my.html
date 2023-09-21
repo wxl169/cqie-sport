@@ -242,7 +242,7 @@
 
 <script>
     //登录验证
-    if (getCookieValue("userId") == null || getCookieValue("userId").length == 0) {
+    if (getCookieValue("token") == null || getCookieValue("token").length == 0) {
         window.location.href = 'login.html?reason=nologin';
     }
 </script>
@@ -258,9 +258,9 @@
                 username: '',
                 userHeadUrl: '',
                 type: '',
-                typeId: ''
+                typeId: '',
+                token: ''
             },
-            userId: '',
             username: '',
             email: '',
             password: '',
@@ -270,51 +270,66 @@
             number: '',
             birthday:'',
             info: {},
-
+            img:'',
             changeSelect: '',
             userInput: '',
             reuserInput: '',
-            type: '',
-            typeId: ''
         },
 
         created: function () {
-            this.user.userId = getCookieValue("userId");
-            this.user.username = getCookieValue("username");
-            this.user.userHeadUrl = '/img/user_upload/' + getCookieValue("img");
-            this.user.type = getCookieValue("type");
-            this.user.typeId = getCookieValue("typeId");
+            // this.user.userId = getCookieValue("userId");
+            // this.user.username = getCookieValue("username");
+            // this.user.userHeadUrl = '/img/user_upload/' + getCookieValue("img");
+            // this.user.type = getCookieValue("type");
+            // this.user.typeId = getCookieValue("typeId");
             this.user.token = getCookieValue("token")
             axios({
                 method: 'get',
-                url: baseUrl + "/myInfo",
-                params: {
-                    userId: this.user.userId,
-                    type:this.user.type,
-                    typeId:this.user.typeId,
-                    token: this.user.token
-                }
+                url: baseUrl + '/getLoginUserInfo' + '/' + this.user.token,
+                data: {
+                    token: this.user.token,
+                },
             }).then((res)=>{
-                this.info = res.data.data;
-                this.type = this.info.type;
-                this.typeId = this.info.typeId;
-                this.userId = this.info.userId;
-                this.username = this.info.username;
-                this.email = this.info.email;
-                this.phoneNumber = this.info.phoneNumber;
-                this.gender = this.info.gender;
-                this.birthday = this.info.birthday;
-                this.number = this.info.other;
+                this.user.userId = res.data.data.userId;
+                this.user.username = res.data.data.username;
+                this.user.userHeadUrl = '/img/user_upload/' + res.data.data.img;
+                this.user.gender = res.data.data.gender;
+                this.user.type = res.data.data.type;
+                this.user.typeId = res.data.data.typeId;
+                console.log(this.user.userId)
+                //
+                this.getUserInfo();
             });
 
         },
 
         methods: {
+            getUserInfo(){
+                axios({
+                    method: 'get',
+                    url: baseUrl + "/myInfo",
+                    params: {
+                        userId: this.user.userId,
+                        type:this.user.type,
+                        typeId:this.user.typeId,
+                        token: this.user.token
+                    }
+                }).then((res)=>{
+                    this.info = res.data.data;
+                    this.type = this.info.type;
+                    this.typeId = this.info.typeId;
+                    this.userId = this.info.userId;
+                    this.username = this.info.username;
+                    this.email = this.info.email;
+                    this.phoneNumber = this.info.phoneNumber;
+                    this.gender = this.info.gender;
+                    this.birthday = this.info.birthday;
+                    this.number = this.info.other;
+                });
+            },
             changeBtn() {
-                // console.log(this.changeSelect);
-
                 //验证输入内容是否为空
-                if (this.userInput.length == 0) {
+                if (this.userInput.length === 0) {
                     this.$alert('请在输入框中输入内容', '更改失败', {
                         confirmButtonText: '确定',
                     });
@@ -322,8 +337,8 @@
                 }
 
                 //若为修改密码，需要验证两次密码是否一致
-                if (this.changeSelect == 'password') {
-                    if (this.userInput != this.reuserInput) {
+                if (this.changeSelect === 'password') {
+                    if (this.userInput !== this.reuserInput) {
                         this.$alert('两次密码输入不一致', '更改失败', {
                             confirmButtonText: '确定',
                         });
@@ -342,40 +357,48 @@
                     }
                 }).then((res)=>{
                     // console.log(res.data);
-                    console.log(this.userInput);
-                    if (this.changeSelect == 'username') {
-                        this.user.username = this.userInput;
-                        setCookieValue("username", this.user.username);
+                    if (res.data.code == 200){
+                        console.log(this.userInput);
+                        if (this.changeSelect === 'username') {
+                            this.user.username = this.userInput;
+                            this.getUserInfo();
+                        }
+                        this.$alert('更改成功', '更改成功', {
+                            confirmButtonText: '确定',
+                        });
+                        this.userInput = '';
+                    }else {
+                        this.$notify({
+                            title: '警告',
+                            message: res.data.msg,
+                            type: 'warning'
+                        });
                     }
-                    this.$alert('更改成功', '更改成功', {
-                        confirmButtonText: '确定',
-                    });
-                    this.userInput = '';
+
                 });
             },
             myIndex() {
                 window.location.href = baseUrl + "/toIndex";
             },
             logout() {
-                const token = getCookieValue("token");
                 console.log(token)
                 axios({
                     method: 'post',
                     url: baseUrl + '/logout',
                     data: {
-                        token: token,
+                        token: this.user.token,
                     },
                 }).then((res)=>{
                     setCookieValue("token", "");
-                    setCookieValue("userId", "");
-                    setCookieValue("username", "");
-                    setCookieValue("img", "");
-                    setCookieValue("type", "");
-                    setCookieValue("typeId", "");
-                    setCookieValue("gender", "");
+                    // setCookieValue("userId", "");
+                    // setCookieValue("username", "");
+                    // setCookieValue("img", "");
+                    // setCookieValue("type", "");
+                    // setCookieValue("typeId", "");
+                    // setCookieValue("gender", "");
                     window.location.href = baseUrl + '/toLogin'
                 });
-            }
+            },
         }
     });
 </script>

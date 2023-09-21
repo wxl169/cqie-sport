@@ -8,11 +8,13 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.client.domain.dto.UserInfoDTO;
+import com.ruoyi.client.domain.dto.UserLoginDTO;
 import com.ruoyi.client.domain.dto.UserUpdateDTO;
 import com.ruoyi.client.domain.entity.Referee;
 import com.ruoyi.client.domain.entity.Student;
 import com.ruoyi.client.domain.entity.User;
 import com.ruoyi.client.domain.vo.UserInfoVO;
+import com.ruoyi.client.domain.vo.UserLoginVO;
 import com.ruoyi.client.mapper.RefereeMapper;
 import com.ruoyi.client.mapper.StudentMapper;
 import com.ruoyi.client.mapper.UserMapper;
@@ -252,12 +254,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         }else {
             //如果是其他信息，则修改信息表
             LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
+            LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
             //更改用户名
         if ("username".equals(userUpdateDTO.getChangeType())){
             updateWrapper.set(User::getUsername,userUpdateDTO.getValue());
         }
         //更改邮箱
         if ("email".equals(userUpdateDTO.getChangeType())){
+            queryWrapper.eq(User::getEmail,userUpdateDTO.getValue());
+            User user = this.getOne(queryWrapper);
+            if (user != null){
+                return R.fail("该邮箱已注册");
+            }
             updateWrapper.set(User::getEmail,userUpdateDTO.getValue());
         }
         //更改密码
@@ -266,6 +274,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         }
         //更改手机号
         if ("phonenumber".equals(userUpdateDTO.getChangeType())){
+            queryWrapper.eq(User::getPhoneNumber,userUpdateDTO.getValue());
+            User user = this.getOne(queryWrapper);
+            if (user != null){
+                return R.fail("该手机号已注册");
+            }
             updateWrapper.set(User::getPhoneNumber,userUpdateDTO.getValue());
         }
             updateWrapper.eq(User::getUserId,userUpdateDTO.getUserId());
@@ -275,6 +288,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             return R.fail("修改失败");
         }
         return R.ok("修改成功");
+    }
+
+    @Override
+    public R getLoginUserInfo(String token) {
+        String email = redisTemplate.opsForValue().get(token);
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(User::getUserId,User::getUsername,User::getImg,User::getType,User::getTypeId);
+        queryWrapper.eq(User::getEmail,email);
+        User user = this.getOne(queryWrapper);
+        UserLoginVO copy = BeanCopyUtils.copy(user, UserLoginVO.class);
+        return R.ok(copy);
     }
 
 
