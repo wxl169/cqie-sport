@@ -37,7 +37,7 @@ public class TbArrangementBo extends BaseEntity {
      * 裁判员id
      */
     @NotNull(message = "裁判员id不能为空", groups = { AddGroup.class, EditGroup.class })
-    private Long refereeId;
+    private String refereeId;
 
     /**
      * 运动员id / 团体id
