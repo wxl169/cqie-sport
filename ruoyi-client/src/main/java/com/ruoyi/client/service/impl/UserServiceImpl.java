@@ -24,9 +24,16 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.utils.BeanCopyUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.xml.crypto.Data;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -95,6 +102,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
 
 
     @Override
+    @Transactional
     public R addUserToRegister(Map<String, String> info) {
         if (StringUtils.isBlank(info.get("type"))) {
             return R.fail("请选择角色");
@@ -120,10 +128,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         }
 
         User user = new User();
+        Date date = new Date();
+        Timestamp timestamp = new Timestamp(date.getTime());
         user.setType(type);
         user.setUsername(username);
         user.setPassword(BCrypt.hashpw(password));
         user.setEmail(email);
+        user.setCreateTime(timestamp);
+        user.setUpdateTime(timestamp);
         user.setImg("default.png");
 
         //若是学生注册
@@ -178,8 +190,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             user.setIdnumber(info.get("idnumber"));
             user.setPhoneNumber(info.get("phoneNumber"));
             String birthday = info.get("birthday");
-            birthday = birthday.substring(0, 10);
-            user.setBirthday(LocalDate.parse(birthday));
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
+            if (birthday!=null){
+                Date birth= null;
+                try {
+                    birth = sdf.parse(birthday);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                user.setBirthday(birth);
+            }
         }
         int i = userMapper.insert(user);
         if (i > 0) {

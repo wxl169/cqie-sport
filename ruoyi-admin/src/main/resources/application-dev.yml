@@ -158,4 +158,3 @@ spring:
     suffix: .html
     mode: HTML
     encoding: UTF-8
-    prefix: classpath:/templates

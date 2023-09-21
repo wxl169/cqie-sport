@@ -20,7 +20,7 @@
 <div id="container">
     <el-container>
         <el-header height="100px">
-            <a href="index.html">
+            <a href="/client/user/toIndex">
                 <img class="logo" src="/img/server_html/sportLogo.jpg"/>
             </a>
         </el-header>
@@ -210,7 +210,7 @@
                         // console.log(vo);
                         window.location.href = baseUrl +"/toLogin";
                     } else {
-                        this.$alert('请确认信息是否正确', '注册失败', {
+                        this.$alert(res.data.msg, '注册失败', {
                             confirmButtonText: '确定',
                         });
                     }
