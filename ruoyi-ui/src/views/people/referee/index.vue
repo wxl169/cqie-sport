@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
       <el-form-item label="裁判员编号" prop="number">
         <el-input
           v-model="queryParams.number"
@@ -17,45 +17,15 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="性别 1：男，0：女" prop="gender">
-        <el-input
-          v-model="queryParams.gender"
-          placeholder="请输入性别 1：男，0：女"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="身份证号 18位号码" prop="idnumber">
-        <el-input
-          v-model="queryParams.idnumber"
-          placeholder="请输入身份证号 18位号码"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="联系电话" prop="phoneNumber">
-        <el-input
-          v-model="queryParams.phoneNumber"
-          placeholder="请输入联系电话"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="出生日期" prop="birthday">
-        <el-date-picker clearable
-          v-model="queryParams.birthday"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择出生日期">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="其他 备用字段" prop="other">
-        <el-input
-          v-model="queryParams.other"
-          placeholder="请输入其他 备用字段"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="性别" prop="gender">
+        <el-select v-model="queryParams.gender" placeholder="请选择性别" clearable>
+          <el-option
+            v-for="dict in dict.type.sys_user_sex"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -111,18 +81,19 @@
 
     <el-table v-loading="loading" :data="refereeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="裁判员id 裁判员表的主键" align="center" prop="refereeId" v-if="true"/>
       <el-table-column label="裁判员编号" align="center" prop="number" />
       <el-table-column label="姓名" align="center" prop="name" />
-      <el-table-column label="性别 1：男，0：女" align="center" prop="gender" />
-      <el-table-column label="身份证号 18位号码" align="center" prop="idnumber" />
+      <el-table-column label="性别" align="center" prop="gender">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.gender"/>
+        </template>
+      </el-table-column>
       <el-table-column label="联系电话" align="center" prop="phoneNumber" />
       <el-table-column label="出生日期" align="center" prop="birthday" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.birthday, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="其他 备用字段" align="center" prop="other" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -153,18 +124,25 @@
 
     <!-- 添加或修改裁判员管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="裁判员编号" prop="number">
           <el-input v-model="form.number" placeholder="请输入裁判员编号" />
         </el-form-item>
         <el-form-item label="姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入姓名" />
         </el-form-item>
-        <el-form-item label="性别 1：男，0：女" prop="gender">
-          <el-input v-model="form.gender" placeholder="请输入性别 1：男，0：女" />
+        <el-form-item label="性别" prop="gender">
+          <el-select v-model="form.gender" placeholder="请选择性别">
+            <el-option
+              v-for="dict in dict.type.sys_user_sex"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="身份证号 18位号码" prop="idnumber">
-          <el-input v-model="form.idnumber" placeholder="请输入身份证号 18位号码" />
+        <el-form-item label="身份证号" prop="idnumber">
+          <el-input v-model="form.idnumber" placeholder="请输入身份证号" />
         </el-form-item>
         <el-form-item label="联系电话" prop="phoneNumber">
           <el-input v-model="form.phoneNumber" placeholder="请输入联系电话" />
@@ -176,9 +154,6 @@
             value-format="yyyy-MM-dd HH:mm:ss"
             placeholder="请选择出生日期">
           </el-date-picker>
-        </el-form-item>
-        <el-form-item label="其他 备用字段" prop="other">
-          <el-input v-model="form.other" placeholder="请输入其他 备用字段" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -194,6 +169,7 @@ import { listReferee, getReferee, delReferee, addReferee, updateReferee } from "
 
 export default {
   name: "Referee",
+  dicts: ['sys_user_sex'],
   data() {
     return {
       // 按钮loading
@@ -224,17 +200,11 @@ export default {
         name: undefined,
         gender: undefined,
         idnumber: undefined,
-        phoneNumber: undefined,
-        birthday: undefined,
-        other: undefined
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        refereeId: [
-          { required: true, message: "裁判员id 裁判员表的主键不能为空", trigger: "blur" }
-        ],
         number: [
           { required: true, message: "裁判员编号不能为空", trigger: "blur" }
         ],
@@ -242,10 +212,10 @@ export default {
           { required: true, message: "姓名不能为空", trigger: "blur" }
         ],
         gender: [
-          { required: true, message: "性别 1：男，0：女不能为空", trigger: "blur" }
+          { required: true, message: "性别不能为空", trigger: "change" }
         ],
         idnumber: [
-          { required: true, message: "身份证号 18位号码不能为空", trigger: "blur" }
+          { required: true, message: "身份证号", trigger: "blur" }
         ],
         phoneNumber: [
           { required: true, message: "联系电话不能为空", trigger: "blur" }
@@ -259,9 +229,6 @@ export default {
         updateTime: [
           { required: true, message: "更新时间不能为空", trigger: "blur" }
         ],
-        other: [
-          { required: true, message: "其他 备用字段不能为空", trigger: "blur" }
-        ]
       }
     };
   },

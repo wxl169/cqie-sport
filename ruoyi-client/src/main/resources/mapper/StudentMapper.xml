@@ -19,5 +19,9 @@
         <result column="update_time" property="updateTime" />
         <result column="other" property="other" />
     </resultMap>
+    <update id="updateSutdentPhone">
+        update tb_student set phone_number = #{phoneNumber}
+            where student_id = #{studentId};
+    </update>
 
 </mapper>

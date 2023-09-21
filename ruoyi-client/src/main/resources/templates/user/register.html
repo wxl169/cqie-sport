@@ -117,7 +117,7 @@
 
         <el-footer>
             <div class="foot2">
-                &copy;2021 by Zhou_LC
+                &copy;2023 by 第三组
             </div>
         </el-footer>
     </el-container>
@@ -126,7 +126,7 @@
 </div>
 
 <script>
-    var baseUrl = "http://localhost:8080";
+    var baseUrl = "http://localhost:8080/client/user";
     var vm = new Vue({
         el: '#container',
         data: {
@@ -206,11 +206,11 @@
                 }).then((res)=>{
                     var vo = res.data;
                     console.log(vo);
-                    if (vo.code == 10000) {
+                    if (vo.code === 200) {
                         // console.log(vo);
-                        window.location.href = "login.html";
+                        window.location.href = baseUrl +"/toLogin";
                     } else {
-                        this.$alert('请确认学号是否正确', '注册失败', {
+                        this.$alert('请确认信息是否正确', '注册失败', {
                             confirmButtonText: '确定',
                         });
                     }

@@ -310,20 +310,29 @@
                 <version>${ruoyi-vue-plus.version}</version>
             </dependency>
 
-            <!-- SMS短信模块 -->
+            <!-- sport模块 -->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-sport</artifactId>
+                <version>${ruoyi-vue-plus.version}</version>
+            </dependency>
+<<<<<<<<< Temporary merge branch 1
+
+            <!-- sms对象存储模块 -->
             <dependency>
                 <groupId>com.ruoyi</groupId>
                 <artifactId>ruoyi-sms</artifactId>
                 <version>${ruoyi-vue-plus.version}</version>
             </dependency>
 
-            <!-- demo模块 -->
+=========
+            <!-- 用戶端模块-->
             <dependency>
                 <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-sport</artifactId>
+                <artifactId>ruoyi-client</artifactId>
                 <version>${ruoyi-vue-plus.version}</version>
             </dependency>
-
+>>>>>>>>> Temporary merge branch 2
         </dependencies>
     </dependencyManagement>
 
@@ -335,8 +344,12 @@
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
         <module>ruoyi-oss</module>
-        <module>ruoyi-sms</module>
         <module>ruoyi-sport</module>
+<<<<<<<<< Temporary merge branch 1
+        <module>ruoyi-sms</module>
+=========
+        <module>ruoyi-client</module>
+>>>>>>>>> Temporary merge branch 2
     </modules>
     <packaging>pom</packaging>
 

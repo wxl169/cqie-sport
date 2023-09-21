@@ -7,7 +7,10 @@ import com.ruoyi.common.core.domain.PageQuery;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.ruoyi.match.domain.TbCompetition;
+import com.ruoyi.match.mapper.TbCompetitionMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.match.domain.bo.TbArrangementBo;
 import com.ruoyi.match.domain.vo.TbArrangementVo;
@@ -31,8 +34,10 @@ public class TbArrangementServiceImpl implements ITbArrangementService {
 
     private final TbArrangementMapper baseMapper;
 
+    private final TbCompetitionMapper competitionMapper;
+
     /**
-     * 查询安排 
+     * 查询安排
      */
     @Override
     public TbArrangementVo queryById(Long arrangementId){
@@ -73,7 +78,7 @@ public class TbArrangementServiceImpl implements ITbArrangementService {
     }
 
     /**
-     * 新增安排 
+     * 新增安排
      */
     @Override
     public Boolean insertByBo(TbArrangementBo bo) {
@@ -82,12 +87,18 @@ public class TbArrangementServiceImpl implements ITbArrangementService {
         boolean flag = baseMapper.insert(add) > 0;
         if (flag) {
             bo.setArrangementId(add.getArrangementId());
+            TbCompetition addComptition = new TbCompetition();
+            addComptition.setArrangementId(bo.getArrangementId());
+            addComptition.setType(bo.getType());
+            addComptition.setTypeId(bo.getTypeId().toString());
+            addComptition.setIsEffective("1");
+            competitionMapper.insert(addComptition);
         }
         return flag;
     }
 
     /**
-     * 修改安排 
+     * 修改安排
      */
     @Override
     public Boolean updateByBo(TbArrangementBo bo) {
@@ -104,7 +115,7 @@ public class TbArrangementServiceImpl implements ITbArrangementService {
     }
 
     /**
-     * 批量删除安排 
+     * 批量删除安排
      */
     @Override
     public Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {

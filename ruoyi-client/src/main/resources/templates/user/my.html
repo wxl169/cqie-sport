@@ -3,38 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>赛事公布</title>
-    <link rel="stylesheet" type="text/css" href="../../static/css/index.css"/>
-    <link rel="stylesheet" type="text/css" href="../../static/css/mycss.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/mycss.css"/>
 </head>
 <body>
 <!--Vue.js-->
-<script src="../../static/js/vue.js"></script>
+<script src="/js/vue.js"></script>
 <!--Element-ui-->
-<script src="../../static/js/index.js"></script>
+<script src="/js/index.js"></script>
 <!--axios-->
-<script src="../../static/js/axios.min.js"></script>
+<script src="/js/axios.min.js"></script>
 <!--cookie工具-->
-<script src="../../static/js/cookie_utils.js"></script>
+<script src="/js/cookie_utils.js"></script>
 <!--工具-->
-<script src="../../static/js/utils.js"></script>
+<script src="/js/utils.js"></script>
 
 
 <div id="container">
     <el-container>
         <!--网站图片 + 用户信息-->
-        <el-header height="100px">
+        <el-header height="100%">
             <el-col :span="6">
-                <a href="index.html">
-                    <img class="logo" src="../../static/img/server_html/logo.png"/>
-                </a>
+                <img class="logo" src="/img/server_html/sportLogo.jpg" style="width: 100px;height: 100px"/>
             </el-col>
-            <el-col :span="6" :offset="12">
+            <el-col :span="9">
+                <span class="campus-sports" style="margin-left: 150px;font-size: 36px;padding-top: 50px">重庆工程学院校园运动会</span>
+            </el-col>
+            <el-col :span="6" :offset="12" style="display: flex; align-items: center; justify-content: flex-end;">
                 <br>
                 <!--个人用户信息-->
-                <el-col :span="8" :offset="6" class="move-bottom-mini-mini font-size-mid">
-                    <span class="no-attention move-bottom-mini-mini">用户: &nbsp;</span>
-                    <el-link type="primary" class="font-size-big">{{user.username}}</el-link>
-                </el-col>
+                <el-dropdown>
+                    <span class="no-attention move-bottom-mini-mini" style="font-size: 20px">
+                                用户:&nbsp;
+                        <el-button type="text"  icon="el-icon-arrow-down" style="font-size: 20px;margin-right: 20px">{{user.username}}</el-button>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item >
+                            <el-button @click="myIndex" style="width: 100px;text-align: center;border: none;font-size: 15px">主页</el-button>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                            <el-button @click="logout" style="width: 100px;text-align: center;border: none;font-size: 15px">注销</el-button>
+                        </el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
                 <!--头像-->
                 <el-col :span="6" :offset="0">
                     <el-avatar :src="user.userHeadUrl"></el-avatar>
@@ -43,8 +54,6 @@
         </el-header>
 
         <el-main>
-
-
             <el-col :span="10" :offset="1">
                 <el-card class="box-card">
                     <div slot="header" class="clearfix">
@@ -55,7 +64,24 @@
                         {{this.username}}
                         <br>
                         <br>
-
+                        <el-tag>身份</el-tag>
+                        <span v-if="this.type == '0'">
+                            学生
+                        </span>
+                        <span v-else-if="this.type == '1'">
+                            班级老师
+                        </span>
+                        <span v-if="this.type == '2'">
+                            裁判
+                        </span>
+                        <span v-if="this.type == '3'">
+                            校内工作人员
+                        </span>
+                        <span v-else>
+                            非本校人员
+                        </span>
+                        <br>
+                        <br>
                         <el-tag>邮箱</el-tag>
                         {{this.email}}
                         <br>
@@ -76,13 +102,19 @@
                         <br>
                         <br>
 
-                        <el-tag>身份证号</el-tag>
-                        {{this.idnumber}}
+                        <el-tag>出生日期</el-tag>
+                        {{this.birthday}}
                         <br>
                         <br>
 
                         <el-tag>运动会编号</el-tag>
-                        {{this.number}}
+                        <span v-if="this.number != null">
+                            {{this.number}}
+                        </span>
+                        <span v-else>
+                            暂未参赛
+                        </span>
+
                         <br>
                         <br>
 
@@ -197,7 +229,7 @@
 
         <el-footer>
             <div class="foot2">
-                &copy;2021 by Zhou_LC
+                &copy;2023 by 第三组
             </div>
         </el-footer>
     </el-container>
@@ -217,7 +249,7 @@
 
 
 <script>
-    var baseUrl = "http://localhost:8080";
+    var baseUrl = "http://localhost:8080/client/user";
     var vm = new Vue({
         el: '#container',
         data: {
@@ -235,9 +267,8 @@
             rePassword: '',
             phoneNumber: '',
             gender: '',
-            idnumber: '',
             number: '',
-
+            birthday:'',
             info: {},
 
             changeSelect: '',
@@ -248,36 +279,31 @@
         },
 
         created: function () {
-
-
             this.user.userId = getCookieValue("userId");
             this.user.username = getCookieValue("username");
-            this.user.userHeadUrl = './static/img/user_upload/' + getCookieValue("img");
+            this.user.userHeadUrl = '/img/user_upload/' + getCookieValue("img");
             this.user.type = getCookieValue("type");
             this.user.typeId = getCookieValue("typeId");
-
+            this.user.token = getCookieValue("token")
             axios({
                 method: 'get',
-                url: baseUrl + "/myinfo",
+                url: baseUrl + "/myInfo",
                 params: {
                     userId: this.user.userId,
                     type:this.user.type,
-                    typeId:this.user.typeId
+                    typeId:this.user.typeId,
+                    token: this.user.token
                 }
             }).then((res)=>{
-                // console.log(res.data);
                 this.info = res.data.data;
-                // console.log(this.info);
-
                 this.type = this.info.type;
                 this.typeId = this.info.typeId;
                 this.userId = this.info.userId;
                 this.username = this.info.username;
                 this.email = this.info.email;
-                this.password = this.info.password;
                 this.phoneNumber = this.info.phoneNumber;
                 this.gender = this.info.gender;
-                this.idnumber = this.info.idnumber;
+                this.birthday = this.info.birthday;
                 this.number = this.info.other;
             });
 
@@ -304,12 +330,9 @@
                         return;
                     }
                 }
-
-                console.log(this.type);
-                console.log(this.typeId);
                 axios({
                     method: 'post',
-                    url: baseUrl + '/myinfochange',
+                    url: baseUrl + '/update',
                     data: {
                         userId: this.userId,
                         type: this.type,
@@ -328,6 +351,29 @@
                         confirmButtonText: '确定',
                     });
                     this.userInput = '';
+                });
+            },
+            myIndex() {
+                window.location.href = baseUrl + "/toIndex";
+            },
+            logout() {
+                const token = getCookieValue("token");
+                console.log(token)
+                axios({
+                    method: 'post',
+                    url: baseUrl + '/logout',
+                    data: {
+                        token: token,
+                    },
+                }).then((res)=>{
+                    setCookieValue("token", "");
+                    setCookieValue("userId", "");
+                    setCookieValue("username", "");
+                    setCookieValue("img", "");
+                    setCookieValue("type", "");
+                    setCookieValue("typeId", "");
+                    setCookieValue("gender", "");
+                    window.location.href = baseUrl + '/toLogin'
                 });
             }
         }

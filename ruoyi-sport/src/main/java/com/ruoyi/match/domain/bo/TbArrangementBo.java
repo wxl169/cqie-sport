@@ -66,13 +66,11 @@ public class TbArrangementBo extends BaseEntity {
     /**
      * 取消原因 若未取消则为NULL
      */
-    @NotBlank(message = "取消原因 若未取消则为NULL不能为空", groups = { AddGroup.class, EditGroup.class })
     private String reason;
 
     /**
      * 其他 备用字段
      */
-    @NotBlank(message = "其他 备用字段不能为空", groups = { AddGroup.class, EditGroup.class })
     private String other;
 
 

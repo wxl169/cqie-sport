@@ -29,7 +29,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 裁判员管理
  *
  * @author ruoyi
- * @date 2023-09-13
+ * @date 2023-09-19
  */
 @Validated
 @RequiredArgsConstructor

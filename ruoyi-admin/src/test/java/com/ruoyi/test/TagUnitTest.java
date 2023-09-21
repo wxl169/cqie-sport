@@ -1,5 +1,6 @@
 package com.ruoyi.test;
 
+import cn.hutool.crypto.digest.MD5;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 

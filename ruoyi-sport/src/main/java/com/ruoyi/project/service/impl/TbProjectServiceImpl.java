@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.constant.CacheNames;
 import com.ruoyi.common.core.domain.PageQuery;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -19,6 +20,7 @@ import com.ruoyi.project.mapper.TbProjectMapper;
 import com.ruoyi.project.service.ITbProjectService;
 import com.ruoyi.system.mapper.SysDictDataMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -85,20 +87,19 @@ public class TbProjectServiceImpl implements ITbProjectService {
      * 新增项目管理
      */
     @Override
+    @CacheEvict(cacheNames = CacheNames.SYS_DICT, key = "'project_name'")
     public Boolean insertByBo(TbProjectBo bo) {
         TbProject add = BeanUtil.toBean(bo, TbProject.class);
         validEntityBeforeSave(add);
         boolean flag = baseMapper.insert(add) > 0;
         if (flag) {
             bo.setProjectId(add.getProjectId());
-
             //添加项目信息到字典
             SysDictData sysDictData = new SysDictData();
             sysDictData.setDictLabel(bo.getName());
             sysDictData.setDictValue(String.valueOf(bo.getProjectId()));
             sysDictData.setDictType("project_name");
             sysDictDataMapper.insert(sysDictData);
-
         }
         return flag;
     }
@@ -107,6 +108,7 @@ public class TbProjectServiceImpl implements ITbProjectService {
      * 修改项目管理
      */
     @Override
+    @CacheEvict(cacheNames = CacheNames.SYS_DICT, key = "'project_name'")
     public Boolean updateByBo(TbProjectBo bo) {
         TbProject update = BeanUtil.toBean(bo, TbProject.class);
         LambdaQueryWrapper<TbArrangement> queryWrapper = new LambdaQueryWrapper<>();
@@ -130,12 +132,19 @@ public class TbProjectServiceImpl implements ITbProjectService {
      */
     private void validEntityBeforeSave(TbProject entity) {
         //TODO 做一些数据校验,如唯一约束
+        LambdaQueryWrapper<TbProject> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(TbProject::getName, entity.getName());
+        TbProject tbProject = baseMapper.selectOne(queryWrapper);
+        if (tbProject!= null){
+            throw new BaseException("项目已存在");
+        }
     }
 
     /**
      * 批量删除项目管理
      */
     @Override
+    @CacheEvict(cacheNames = CacheNames.SYS_DICT, key = "'project_name'")
     public Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {
         if (isValid) {
             //TODO 做一些业务上的校验,判断是否需要校验

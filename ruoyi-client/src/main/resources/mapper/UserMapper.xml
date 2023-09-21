@@ -20,5 +20,16 @@
         <result column="update_time" property="updateTime" />
         <result column="other" property="other" />
     </resultMap>
+    <select id="selectUserByEmail" resultType="com.ruoyi.client.domain.entity.User">
+        select user_id,password,`type`,type_id,gender,username,img from tb_user where email = #{email};
+    </select>
+    <select id="selectUserByType" resultType="com.ruoyi.client.domain.entity.User">
+        select user_id from tb_user where type_id = #{studentId} and type = #{userTypeStudent}
+    </select>
+    <select id="selectStudentInfo" resultType="com.ruoyi.client.domain.vo.UserInfoVO">
+        select user_id,type_id,type,username,ts.gender,ts.phone_number,ts.birthday,img,email,tu.other
+        from tb_user as tu join tb_student as ts
+        where tu.type_id = ts.student_id and tu.user_id = #{userId};
+    </select>
 
 </mapper>
