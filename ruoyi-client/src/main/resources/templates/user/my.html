@@ -298,8 +298,8 @@
 
 <script>
     //登录验证
-    if (getCookieValue("token") == null || getCookieValue("token").length === 0) {
-        window.location.href = 'login.html?reason=nologin';
+    if (getCookieValue("token") == null || getCookieValue("token") === '') {
+        window.location.href = baseUrl + 'system/toLogin?reason=nologin';
     }
 </script>
 
