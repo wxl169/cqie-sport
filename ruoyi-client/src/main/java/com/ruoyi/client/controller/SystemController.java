@@ -54,7 +54,15 @@ public class SystemController {
         modelAndView.setViewName("user/index");
         return  modelAndView;
     }
-
+    /**
+     * 跳转到赛事公布
+     *
+     * @return 赛事公布
+     */
+    @RequestMapping("/toSports")
+    public String toSports(){
+        return "sports/sports";
+    }
 
 
 }
