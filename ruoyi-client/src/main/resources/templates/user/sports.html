@@ -80,7 +80,7 @@
 
 
                             <el-tag>项目类型</el-tag>
-                            <template v-if="project.projectType == 0">
+                            <template v-if="project.projectType == '0'">
                                 个人赛
                             </template>
                             <template v-else>
@@ -246,8 +246,8 @@
 
 <script>
     //登录验证
-    if (getCookieValue("userId") == null || getCookieValue("userId").length == 0) {
-        window.location.href = 'login.html?reason=nologin';
+    if (getCookieValue("token") == null || getCookieValue("token") === '') {
+        window.location.href = baseUrl + '/toLogin?reason=nologin';
     }
 </script>
 
@@ -259,7 +259,8 @@
             user: {
                 userId: '',
                 username: '',
-                userHeadUrl: ''
+                userHeadUrl: '',
+                token: ''
             },
             searchInput: '',
             projects: [],
@@ -275,15 +276,20 @@
         },
 
         created: function () {
+            this.user.token = getCookieValue("token");
 
-            // console.log(this.isok);
+            axios({
+                method: 'get',
+                url: baseUrl + '/getLoginUserInfo' + '/' + this.user.token,
+            }).then((res)=>{
+                this.user.userId = res.data.data.userId;
+                this.user.username = res.data.data.username;
+                this.user.gender = res.data.data.gender;
+                this.user.userHeadUrl = '/img/user_upload/' + res.data.data.img;
+            });
 
-            this.user.userId = getCookieValue("userId");
-            this.user.username = getCookieValue("username");
-            this.user.userHeadUrl = './static/img/user_upload/' + getCookieValue("img");
-
-            axios.get(baseUrl + "/signup").then((res)=>{
-                // console.log(res.data);
+            axios.get(baseUrl + "/sportsList").then((res)=>{
+                console.log(res.data);
                 this.projects = res.data.data;
                 // console.log(this.projects);
             });
@@ -291,15 +297,6 @@
 
         methods: {
             searchProject() {
-
-                console.log('---'+this.searchInput);
-
-                if (this.searchInput.length == 0) {
-                    this.$alert('请输入查询所需内容', '查询失败', {
-                        confirmButtonText: '确定',
-                    });
-                    return;
-                }
 
                 /**
                  * 说明：此处也可用vue和js来做模糊查询，但此处以优先练习后端的原则，将此功能的实现放在后端
@@ -348,7 +345,7 @@
                 if (this.searchType == 'bynumber') { //按赛事编号查询--------
                     axios({
                         method: 'get',
-                        url: baseUrl + "/searchbynumber",
+                        url: baseUrl + "/searchSportByNumber",
                         params: {
                             projectNumber: this.searchInput
                         }
@@ -359,12 +356,11 @@
                 } else if (this.searchType == 'byname') { //按赛事名查询
                     axios({
                         method: 'get',
-                        url: baseUrl + "/searchbyname",
+                        url: baseUrl + "/searchSportsByName",
                         params: {
                             projectName: this.searchInput
                         }
                     }).then((res)=>{
-                        console.log(res.data);
                         this.resultProjects = res.data.data;
                     });
                 } else if (this.searchType == 'bytype') { //按类别查询
@@ -377,7 +373,7 @@
 
                     axios({
                         method: 'get',
-                        url: baseUrl + "/searchbytype",
+                        url: baseUrl + "/searchSportsByType",
                         params: {
                             projectType: this.typeValue
                         }
@@ -430,6 +426,19 @@
             myIndex() {
                 window.location.href = baseUrl + "/toIndex";
             },
+
+            logout() {
+                axios({
+                    method: 'post',
+                    url: baseUrl + '/logout',
+                    data: {
+                        token: this.user.token,
+                    },
+                }).then((res)=>{
+                    setCookieValue("token", "");
+                    window.location.href = baseUrl + '/toLogin'
+                });
+            }
         }
     });
 </script>
