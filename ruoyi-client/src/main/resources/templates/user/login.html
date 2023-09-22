@@ -74,7 +74,7 @@
     </div>
 
     <script>
-        var baseUrl = "http://localhost:8080/client/user";
+        var baseUrl = "http://localhost:8080/client/";
         //登录验证
         // if (getCookieValue("token") != null || getCookieValue("token") !== '') {
         //     window.location.href = baseUrl + '/toIndex?reason=successLogin';
@@ -106,7 +106,7 @@
                     // 发送 POST 请求
                     axios({
                         method: 'post',
-                        url: baseUrl + '/login',
+                        url: baseUrl + 'user/login',
                         data: {
                             email: this.form.email,
                             password: this.form.password
@@ -127,7 +127,7 @@
                             // setCookieValue("typeId", vo.data.typeId);
                             // setCookieValue("gender", vo.data.gender);
                             // console.log(document.cookie);
-                            window.location.href = baseUrl + "/toIndex?reason=successlogin";
+                            window.location.href = baseUrl + "system/toIndex?reason=successlogin";
                         }else {
                             this.$notify({
                                 title: '警告',
@@ -137,7 +137,7 @@
                         }
                     });
                 },
-                register() {window.location.href = baseUrl + '/toRegister';
+                register() {window.location.href = baseUrl + 'system/toRegister';
                 }
             }
         });
