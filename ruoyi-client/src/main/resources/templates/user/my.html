@@ -98,10 +98,10 @@
                         <span v-else-if="this.type == '1'">
                             班级老师
                         </span>
-                        <span v-if="this.type == '2'">
+                        <span v-else-if="this.type == '2'">
                             裁判
                         </span>
-                        <span v-if="this.type == '3'">
+                        <span v-else-if="this.type == '3'">
                             校内工作人员
                         </span>
                         <span v-else>
@@ -376,10 +376,11 @@
                     }
                 }).then((res)=>{
                     this.info = res.data.data;
-                    this.userHeadUrl = '/img/user_upload/' + this.info.img;
+                    this.user.userHeadUrl = '/img/user_upload/' + this.info.img;
                     this.type = this.info.type;
                     this.typeId = this.info.typeId;
                     this.userId = this.info.userId;
+                    this.user.username = this.info.username
                     this.username = this.info.username;
                     this.email = this.info.email;
                     this.phoneNumber = this.info.phoneNumber;
@@ -430,6 +431,8 @@
                             confirmButtonText: '确定',
                         });
                         this.userInput = '';
+                        this.form.avatar = '';
+                        this.img = '';
                         this.getUserInfo();
                     }else {
                         this.$notify({
