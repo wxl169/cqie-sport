@@ -1,7 +1,7 @@
 package com.ruoyi.client.service;
 
-import com.ruoyi.client.domain.dto.MatchTypeDTO;
 import com.ruoyi.client.domain.vo.MatchPankingVO;
+import com.ruoyi.client.domain.vo.MatchTypeVO;
 
 import java.util.List;
 import java.util.Map;
@@ -12,7 +12,7 @@ import java.util.Map;
  * @date 2023/9/15 12:01
  */
 public interface MatchRankingService {
-    List<MatchPankingVO> find(int type,String projectName);
+    List<MatchPankingVO> find(String type, String projectName);
 
-    List<MatchTypeDTO> findTerms();
+    List<MatchTypeVO> findTerms();
 }

@@ -1,8 +1,9 @@
 package com.ruoyi.client.mapper;
 
-import com.ruoyi.client.domain.dto.MatchTypeDTO;
 import com.ruoyi.client.domain.vo.MatchPankingVO;
+import com.ruoyi.client.domain.vo.MatchTypeVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  */
 @Mapper
 public interface MatchPankingMapper {
-    List<MatchPankingVO> find(int type,String projectName);
+    List<MatchPankingVO> find(@Param("type") String type,@Param("projectName") String projectName);
 
-    List<MatchTypeDTO> findTerms();
+    List<MatchTypeVO> findTerms();
 }

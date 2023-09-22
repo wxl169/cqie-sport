@@ -18,7 +18,9 @@ public class MatchRankingController {
     @Resource
     private MatchRankingService matchRankingService;
     @RequestMapping("/client/matchRanking")
-    public String matchRanking(String projectName,int type,Model model){
+    public String matchRanking(String projectName,String type,Model model){
+        if (type == null)
+            type = "0";
         //查询排行
         model.addAttribute("matchPanking",matchRankingService.find(type,projectName));
         //查询筛选条件

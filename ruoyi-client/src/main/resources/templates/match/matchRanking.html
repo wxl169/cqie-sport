@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>成绩公布</title>
   <style>
@@ -15,18 +15,18 @@
     table {
       border-collapse: collapse;
       width: 100%;
-      background-color: #cfffd7;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background-color: #cffeff;
+      box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
     }
 
     th, td {
       padding: 8px;
       text-align: left;
-      border-bottom: 1px solid #ddd951;
+      border-bottom: 1px solid #51aadd;
     }
 
     th {
-      background-color: #f2d52c;
+      background-color: #2c8cf2;
     }
 
     .filter {
@@ -41,24 +41,54 @@
       padding: 5px;
     }
 
+    .btn {
+      background-color: #F2F2F2;
+      color: #333333;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #E6E6E6;
+    }
+
+    .btn:active {
+      background-color: #CCCCCC;
+    }
+
+    .btn:focus {
+      outline: none;
+      box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
+    }
   </style>
 </head>
 <body>
   <h2>成绩公布</h2>
 
   <div class="filter">
-    <label for="type">筛选类型：</label>
-    <input type="radio" value="个人" name="type"/>个人
-    <input type="radio" value="团体" name="type"/>团体<br />
+    <form method="post" action="/client/matchRanking">
+    <label >筛选类型：</label>
+    <input type="radio" name="type" value="0" required>个人
+    <input type="radio" name="type" value="1" required>团体
+
+    <br/>
 
     <label for="event-filter">筛选项目：</label>
-    <select id="event-filter">
+    <select id="event-filter" name="projectName">
       <option value="">全部</option>
-      <option value="800m">800米</option>
-      <option value="400m">400米</option>
-      <option value="long-jump">跳远</option>
-      <option value="high-jump">跳高</option>
+      <option th:each="mt:${matchType}" th:text="${mt.matchType}" th:value="${mt.matchType}"></option>
     </select>
+
+      <button type="submit" class="btn">提交</button>
+    </form>
   </div>
 
   <table>
@@ -70,23 +100,16 @@
       <th>学院</th>
 	  <th>项目</th>
     </tr>
-    <tr>
-      <td>1</td>
-      <td>小明</td>
-      <td>95</td>
-      <td>1班</td>
-      <td>软件与人工智能学院</td>
-	   <td>立定跳远</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>小红</td>
-      <td>87</td>
-      <td>2班</td>
-      <td>软件与人工智能学院</td>
-	   <td>立定跳远</td>
+    <tr th:each="mp:${matchPanking}">
+      <td th:text="${mpStat.index+1}"></td>
+      <td th:text="${mp.studentName}"></td>
+      <td th:text="${mp.score}"></td>
+      <td th:text="${mp.studentClass}"></td>
+      <td th:text="${mp.college}"></td>
+      <td th:text="${mp.projectName}"></td>
     </tr>
     <!-- 添加更多成绩行 -->
   </table>
 </body>
+
 </html>
