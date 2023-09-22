@@ -1,5 +1,6 @@
 package com.ruoyi.client.controller;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import com.ruoyi.client.domain.dto.LogoutDTO;
 import com.ruoyi.client.domain.dto.UserInfoDTO;
 import com.ruoyi.client.domain.dto.UserLoginDTO;
@@ -105,7 +106,6 @@ public class UserController extends BaseController {
      * @return 是否注册成功
      */
     @RequestMapping(value = "/register",method = RequestMethod.POST)
-    @Log(title = "用户端注册账号 ", businessType = BusinessType.INSERT)
     @RepeatSubmit()
     @ResponseBody
     public R register(@RequestBody Map<String, String> info) {
@@ -150,7 +150,7 @@ public class UserController extends BaseController {
         UserInfoDTO userInfoDTO  = new UserInfoDTO();
         userInfoDTO.setUserId(Long.valueOf(userId));
         userInfoDTO.setType(type);
-        if (!UserConstants.USER_NULL.equals(typeId)){
+        if (!UserConstants.USER_NULL.equals(typeId) && typeId != null){
             userInfoDTO.setTypeId(Integer.valueOf(typeId));
         }
         return userService.getUserInfo(userInfoDTO);

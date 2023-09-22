@@ -158,8 +158,10 @@ spring:
     suffix: .html
     mode: HTML
     encoding: UTF-8
-  mvc:
-    static-path-pattern:  /img/**
-  web:
-    resources:
-      static-locations: file:D:/sportImg/img/user_upload/
+    prefix: classpath:/templates/
+#  mvc:
+#    static-path-pattern: /img/**,classpath:/resources/static/**
+#  web:
+#    resources:
+#      static-locations: file:D:/sportImg/img/user_upload/,classpath:/resources/static/**
+

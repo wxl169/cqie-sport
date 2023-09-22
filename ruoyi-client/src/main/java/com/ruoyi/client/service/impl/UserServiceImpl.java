@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -125,7 +126,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         user.setPassword(BCrypt.hashpw(password));
         user.setEmail(email);
         user.setImg("default.png");
-
+        user.setCreateTime(LocalDateTime.now());
+        user.setUpdateTime(LocalDateTime.now());
         //若是学生注册
         if (UserConstants.USER_TYPE_STUDENT.equals(type)) {
             //首先根据学号得到学生在学生表中的主键id，从而插入用户表中的type_id字段
@@ -294,6 +296,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         if (!pd){
             return  R.fail("请选择提供的修改字段");
         }
+            updateWrapper.set(User::getUpdateTime,LocalDateTime.now());
             updateWrapper.eq(User::getUserId,userUpdateDTO.getUserId());
             judge = this.update(updateWrapper);
         }
