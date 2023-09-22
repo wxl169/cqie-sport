@@ -1,0 +1,57 @@
+package com.ruoyi.client.controller;
+
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+/**
+ * @author 16956
+ */
+@Controller
+@RequestMapping("/client/system")
+public class SystemController {
+
+    /**
+     * 跳转到登录
+     *
+     * @return 跳转到登录页面
+     */
+    @RequestMapping("/toLogin")
+    public String toLogin(){
+        return "user/login";
+    }
+    /**
+     * 跳转到注册
+     *
+     * @return 注册界面
+     */
+    @RequestMapping("/toRegister")
+    public String toRegister(){
+        return "user/register";
+    }
+
+    /**
+     * 前往个人详情页
+     *
+     * @return 个人详情页
+     */
+    @RequestMapping("/toMyInfo")
+    public String toMyInfo(){
+        return "user/my";
+    }
+
+    /**
+     * 跳转到主页
+     *
+     * @param reason 判断是否登录
+     * @return 主页面
+     */
+    @RequestMapping("/toIndex")
+    public ModelAndView toIndex(String reason){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("reason",reason);
+        modelAndView.setViewName("user/index");
+        return  modelAndView;
+    }
+}

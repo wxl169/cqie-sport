@@ -121,7 +121,7 @@
 
 
 <script>
-    var baseUrl = "http://localhost:8080/client/user";
+    var baseUrl = "http://localhost:8080/client/";
 
     //登录验证
     if (getCookieValue("token") == null || getCookieValue("token") === '') {
@@ -149,7 +149,6 @@
             // this.user.username = getCookieValue("username");
             // this.user.userHeadUrl = './static/img/user_upload/' + getCookieValue("img");
             this.user.token = getCookieValue("token");
-            console.log(this.user.token)
             var param = window.location.href.split("?");
             if (param[1] === 'reason=successlogin') {
                 this.$notify({
@@ -160,10 +159,13 @@
             }
             axios({
                 method: 'get',
-                url: baseUrl + '/getLoginUserInfo' + '/' + this.user.token,
+                url: baseUrl + 'user/getLoginUserInfo' + '/' + this.user.token,
                 // data: {
                 //     token: this.user.token,
                 // },
+                header: {
+                    token : this.user.token
+                }
             }).then((res)=>{
                 this.user.userId = res.data.data.userId;
                 this.user.username = res.data.data.username;
@@ -185,7 +187,7 @@
                 window.location.href = "query.html?index=" + byType;
             },
             myPage() {
-                window.location.href = baseUrl + "/toMyInfo";
+                window.location.href = baseUrl + "system/toMyInfo";
             },
             scorePage() {
                 window.location.href = "score.html";
@@ -193,7 +195,7 @@
             logout() {
                 axios({
                     method: 'post',
-                    url: baseUrl + '/logout',
+                    url: baseUrl + 'user/logout',
                     data: {
                         token: this.user.token,
                     },
@@ -205,7 +207,7 @@
                     // setCookieValue("type", "");
                     // setCookieValue("typeId", "");
                     // setCookieValue("gender", "");
-                    window.location.href = baseUrl + '/toLogin'
+                    window.location.href = baseUrl + 'system/toLogin'
                 });
             }
         }

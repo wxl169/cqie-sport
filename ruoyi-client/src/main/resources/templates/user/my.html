@@ -283,10 +283,10 @@
 
         </el-main>
 
-        <el-footer>
-            <div class="foot2">
-                &copy;2023 by 第三组
-            </div>
+        <el-footer class="foot">
+            <br>
+            <br>
+            &copy;2023 by 第三组
         </el-footer>
     </el-container>
 
@@ -445,7 +445,7 @@
                 });
             },
             myIndex() {
-                window.location.href = baseUrl + "user/toIndex";
+                window.location.href = baseUrl + "system/toIndex";
             },
             logout() {
                 axios({
@@ -462,7 +462,7 @@
                     // setCookieValue("type", "");
                     // setCookieValue("typeId", "");
                     // setCookieValue("gender", "");
-                    window.location.href = baseUrl + 'user/toLogin'
+                    window.location.href = baseUrl + 'system/toLogin'
                 });
             },
             handleAvatarSuccess(res, file) {

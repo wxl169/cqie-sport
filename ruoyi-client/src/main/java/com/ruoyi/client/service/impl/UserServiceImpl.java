@@ -162,7 +162,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             Referee referee = refereeMapper.selectOne(queryWrapper);
             //如果工号正确
             if (referee != null) {
-                //判断该学生是否注册账号
+                //判断该裁判員是否注册账号
                 User userStudent = userMapper.selectUserByType(referee.getRefereeId(),UserConstants.USER_TYPE_REFEREE);
                 if (userStudent != null) {
                     return R.fail("该裁判员已创建账号");
