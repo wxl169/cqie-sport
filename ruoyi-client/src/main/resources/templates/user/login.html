@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" th:href="@{/css/index.css}" />
-    <link rel="stylesheet" th:href="@{/css/mycss.css}" />
+    <link rel="stylesheet" type="text/css" href="/css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/mycss.css"/>
 </head>
 <body>
     <!--Vue.js-->
@@ -74,7 +74,7 @@
     </div>
 
     <script>
-        var baseUrl = "http://localhost:8080/client/";
+        var baseUrl = "http://localhost:8080/client/user";
         //登录验证
         // if (getCookieValue("token") != null || getCookieValue("token") !== '') {
         //     window.location.href = baseUrl + '/toIndex?reason=successLogin';
@@ -106,7 +106,7 @@
                     // 发送 POST 请求
                     axios({
                         method: 'post',
-                        url: baseUrl + 'user/login',
+                        url: baseUrl + '/login',
                         data: {
                             email: this.form.email,
                             password: this.form.password
@@ -127,7 +127,7 @@
                             // setCookieValue("typeId", vo.data.typeId);
                             // setCookieValue("gender", vo.data.gender);
                             // console.log(document.cookie);
-                            window.location.href = baseUrl + "system/toIndex?reason=successlogin";
+                            window.location.href = baseUrl + "/toIndex?reason=successlogin";
                         }else {
                             this.$notify({
                                 title: '警告',
@@ -137,7 +137,7 @@
                         }
                     });
                 },
-                register() {window.location.href = baseUrl + 'system/toRegister';
+                register() {window.location.href = baseUrl + '/toRegister';
                 }
             }
         });

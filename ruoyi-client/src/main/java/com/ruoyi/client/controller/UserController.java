@@ -1,6 +1,5 @@
 package com.ruoyi.client.controller;
 
-import cn.dev33.satoken.annotation.SaIgnore;
 import com.ruoyi.client.domain.dto.LogoutDTO;
 import com.ruoyi.client.domain.dto.UserInfoDTO;
 import com.ruoyi.client.domain.dto.UserLoginDTO;
@@ -35,6 +34,48 @@ public class UserController extends BaseController {
     @Resource
     private UserService userService;
 
+    /**
+     * 跳转到登录
+     *
+     * @return 跳转到登录页面
+     */
+    @RequestMapping("/toLogin")
+    public String toLogin(){
+        return "user/login";
+    }
+    /**
+     * 跳转到注册
+     *
+     * @return 注册界面
+     */
+    @RequestMapping("/toRegister")
+    public String toRegister(){
+        return "user/register";
+    }
+
+    /**
+     * 前往个人详情页
+     *
+     * @return 个人详情页
+     */
+    @RequestMapping("/toMyInfo")
+    public String toMyInfo(){
+        return "user/my";
+    }
+
+    /**
+     * 跳转到主页
+     *
+     * @param reason 判断是否登录
+     * @return 主页面
+     */
+    @RequestMapping("/toIndex")
+    public ModelAndView toIndex(String reason){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("reason",reason);
+        modelAndView.setViewName("user/index");
+        return  modelAndView;
+    }
 
     /**
      * 用户登录
@@ -64,6 +105,7 @@ public class UserController extends BaseController {
      * @return 是否注册成功
      */
     @RequestMapping(value = "/register",method = RequestMethod.POST)
+    @Log(title = "用户端注册账号 ", businessType = BusinessType.INSERT)
     @RepeatSubmit()
     @ResponseBody
     public R register(@RequestBody Map<String, String> info) {
@@ -108,7 +150,7 @@ public class UserController extends BaseController {
         UserInfoDTO userInfoDTO  = new UserInfoDTO();
         userInfoDTO.setUserId(Long.valueOf(userId));
         userInfoDTO.setType(type);
-        if (!UserConstants.USER_NULL.equals(typeId) && typeId != null){
+        if (!UserConstants.USER_NULL.equals(typeId)){
             userInfoDTO.setTypeId(Integer.valueOf(typeId));
         }
         return userService.getUserInfo(userInfoDTO);

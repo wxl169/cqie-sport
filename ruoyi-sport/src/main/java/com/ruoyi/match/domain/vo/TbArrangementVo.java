@@ -37,7 +37,7 @@ public class TbArrangementVo {
      * 裁判员id
      */
     @ExcelProperty(value = "裁判员id")
-    private Long refereeId;
+    private String refereeId;
 
     /**
      * 运动员id / 团体id
