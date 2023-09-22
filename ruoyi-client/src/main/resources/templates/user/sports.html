@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>赛事公布</title>
-    <link rel="stylesheet" type="text/css" href="../../static/css/index.css"/>
-    <link rel="stylesheet" type="text/css" href="../../static/css/mycss.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/mycss.css"/>
 </head>
 <body>
 <!--Vue.js-->
-<script src="../../static/js/vue.js"></script>
+<script src="/js/vue.js"></script>
 <!--Element-ui-->
-<script src="../../static/js/index.js"></script>
+<script src="/js/index.js"></script>
 <!--axios-->
-<script src="../../static/js/axios.min.js"></script>
+<script src="/js/axios.min.js"></script>
 <!--cookie工具-->
-<script src="../../static/js/cookie_utils.js"></script>
+<script src="/js/cookie_utils.js"></script>
 <!--工具-->
-<script src="../../static/js/utils.js"></script>
+<script src="/js/utils.js"></script>
 
 
 <div id="container">
@@ -25,7 +25,7 @@
         <el-header height="100px">
             <el-col :span="6">
                 <a href="index.html">
-                    <img class="logo" src="../../static/img/server_html/logo.png"/>
+                    <img class="logo" src="/img/server_html/logo.png"/>
                 </a>
             </el-col>
             <el-col :span="6" :offset="12">
@@ -234,13 +234,13 @@
 
 <script>
     //登录验证
-    if (getCookieValue("userId") == null || getCookieValue("userId").length == 0) {
-        window.location.href = 'login.html?reason=nologin';
+    if (getCookieValue("token") == null || getCookieValue("token") === '') {
+        window.location.href = baseUrl + 'system/toLogin?reason=nologin';
     }
 </script>
 
 <script>
-    var baseUrl = "http://localhost:8080";
+    var baseUrl = "http://localhost:8080/client/";
     var vm = new Vue({
         el: '#container',
         data: {
