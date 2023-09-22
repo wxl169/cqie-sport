@@ -5,6 +5,33 @@
     <title>赛事公布</title>
     <link rel="stylesheet" type="text/css" href="/css/index.css"/>
     <link rel="stylesheet" type="text/css" href="/css/mycss.css"/>
+    <style>
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            margin-left: 30%;
+        }
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 178px;
+            height: 178px;
+            line-height: 178px;
+            text-align: center;
+        }
+        .avatar {
+            width: 178px;
+            height: 178px;
+            display: block;
+        }
+
+    </style>
 </head>
 <body>
 <!--Vue.js-->
@@ -225,20 +252,23 @@
                     <div slot="header" class="clearfix">
                         <span>更换头像</span>
                     </div>
+                    <template>
+                        <el-alert
+                            title="温馨提示：点击即可修改图片，只允许上传.jpg格式   **非必选**"
+                            type="warning"
+                            :closable="false">
+                        </el-alert>
+                    </template>
                     <div>
-                        <el-input>
                             <el-upload
                                 class="avatar-uploader"
-                                action="https://jsonplaceholder.typicode.com/posts/"
+                                action="#"
                                 :show-file-list="false"
                                 :on-success="handleAvatarSuccess"
                                 :before-upload="beforeAvatarUpload">
-                                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                <img v-if="form.avatar" :src="form.avatar" class="avatar">
                                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                             </el-upload>
-                        </el-input>
-
-
                         <br>
                         <br>
                         <center>
@@ -268,14 +298,14 @@
 
 <script>
     //登录验证
-    if (getCookieValue("token") == null || getCookieValue("token").length == 0) {
+    if (getCookieValue("token") == null || getCookieValue("token").length === 0) {
         window.location.href = 'login.html?reason=nologin';
     }
 </script>
 
 
 <script>
-    var baseUrl = "http://localhost:8080/client/user";
+    var baseUrl = "http://localhost:8080/client/";
     var vm = new Vue({
         el: '#container',
         data: {
@@ -300,6 +330,10 @@
             changeSelect: '',
             userInput: '',
             reuserInput: '',
+            imageUrl: '',
+            form:{
+                avatar:'',
+            }
         },
 
         created: function () {
@@ -311,7 +345,7 @@
             this.user.token = getCookieValue("token")
             axios({
                 method: 'get',
-                url: baseUrl + '/getLoginUserInfo' + '/' + this.user.token,
+                url: baseUrl + 'user/getLoginUserInfo' + '/' + this.user.token,
                 data: {
                     token: this.user.token,
                 },
@@ -333,7 +367,7 @@
             getUserInfo(){
                 axios({
                     method: 'get',
-                    url: baseUrl + "/myInfo",
+                    url: baseUrl + "user/myInfo",
                     params: {
                         userId: this.user.userId,
                         type:this.user.type,
@@ -342,6 +376,7 @@
                     }
                 }).then((res)=>{
                     this.info = res.data.data;
+                    this.userHeadUrl = '/img/user_upload/' + this.info.img;
                     this.type = this.info.type;
                     this.typeId = this.info.typeId;
                     this.userId = this.info.userId;
@@ -354,6 +389,9 @@
                 });
             },
             changeBtn() {
+                if (this.changeSelect === 'image'){
+                    this.userInput = this.img;
+                }
                 //验证输入内容是否为空
                 if (this.userInput.length === 0) {
                     this.$alert('请在输入框中输入内容', '更改失败', {
@@ -373,7 +411,7 @@
                 }
                 axios({
                     method: 'post',
-                    url: baseUrl + '/update',
+                    url: baseUrl + 'user/update',
                     data: {
                         userId: this.userId,
                         type: this.type,
@@ -383,16 +421,16 @@
                     }
                 }).then((res)=>{
                     // console.log(res.data);
-                    if (res.data.code == 200){
+                    if (res.data.code === 200){
                         console.log(this.userInput);
-                        if (this.changeSelect === 'username') {
+                        if (this.changeSelect === 'username' ) {
                             this.user.username = this.userInput;
-                            this.getUserInfo();
                         }
                         this.$alert('更改成功', '更改成功', {
                             confirmButtonText: '确定',
                         });
                         this.userInput = '';
+                        this.getUserInfo();
                     }else {
                         this.$notify({
                             title: '警告',
@@ -404,12 +442,12 @@
                 });
             },
             myIndex() {
-                window.location.href = baseUrl + "/toIndex";
+                window.location.href = baseUrl + "user/toIndex";
             },
             logout() {
                 axios({
                     method: 'post',
-                    url: baseUrl + '/logout',
+                    url: baseUrl + 'user/logout',
                     data: {
                         token: this.user.token,
                     },
@@ -421,7 +459,7 @@
                     // setCookieValue("type", "");
                     // setCookieValue("typeId", "");
                     // setCookieValue("gender", "");
-                    window.location.href = baseUrl + '/toLogin'
+                    window.location.href = baseUrl + 'user/toLogin'
                 });
             },
             handleAvatarSuccess(res, file) {
@@ -430,14 +468,40 @@
             beforeAvatarUpload(file) {
                 const isJPG = file.type === 'image/jpeg';
                 const isLt2M = file.size / 1024 / 1024 < 2;
-
                 if (!isJPG) {
                     this.$message.error('上传头像图片只能是 JPG 格式!');
                 }
                 if (!isLt2M) {
                     this.$message.error('上传头像图片大小不能超过 2MB!');
                 }
-                return isJPG && isLt2M;
+                const fileData = new FormData();
+                fileData.append("img", file);
+                axios({
+                    method: 'post',
+                    url: baseUrl + 'file/upload',
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    },
+                    data: fileData
+                }).then(response => {
+                    if (response.data.code === 200){
+                        this.img = response.data.data;
+                        this.imageUrl = "/img/user_upload/" + response.data.data;
+                        this.$set(this.form, "avatar", this.imageUrl);
+                        // this.user.userHeadUrl = response.data.img;
+                    }else{
+                        this.$notify({
+                            title: '警告',
+                            message: response.data.msg,
+                            type: 'warning'
+                        });
+                    }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                //阻止传到本地浏览器
+                return false;
             }
         }
     });
