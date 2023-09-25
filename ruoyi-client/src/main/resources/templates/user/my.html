@@ -416,7 +416,6 @@
                 }).then((res)=>{
                     // console.log(res.data);
                     if (res.data.code === 200){
-                        console.log(this.userInput);
                         if (this.changeSelect === 'username' ) {
                             this.user.username = this.userInput;
                         }
@@ -438,7 +437,7 @@
                 });
             },
             myIndex() {
-                window.location.href = baseUrl + "user/toIndex";
+                window.location.href = baseUrl + "system/toIndex";
             },
             logout() {
                 axios({

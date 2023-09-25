@@ -247,12 +247,12 @@
 <script>
     //登录验证
     if (getCookieValue("token") == null || getCookieValue("token") === '') {
-        window.location.href = baseUrl + '/toLogin?reason=nologin';
+        window.location.href = baseUrl + 'system/toLogin?reason=nologin';
     }
 </script>
 
 <script>
-    var baseUrl = "http://localhost:8080/client/user";
+    var baseUrl = "http://localhost:8080/client/";
     var vm = new Vue({
         el: '#container',
         data: {
@@ -280,7 +280,7 @@
 
             axios({
                 method: 'get',
-                url: baseUrl + '/getLoginUserInfo' + '/' + this.user.token,
+                url: baseUrl + 'user/getLoginUserInfo' + '/' + this.user.token,
             }).then((res)=>{
                 this.user.userId = res.data.data.userId;
                 this.user.username = res.data.data.username;
@@ -288,7 +288,7 @@
                 this.user.userHeadUrl = '/img/user_upload/' + res.data.data.img;
             });
 
-            axios.get(baseUrl + "/sportsList").then((res)=>{
+            axios.get(baseUrl + "sports/sportsList").then((res)=>{
                 console.log(res.data);
                 this.projects = res.data.data;
                 // console.log(this.projects);
@@ -345,7 +345,7 @@
                 if (this.searchType == 'bynumber') { //按赛事编号查询--------
                     axios({
                         method: 'get',
-                        url: baseUrl + "/searchSportByNumber",
+                        url: baseUrl + "sports/searchSportByNumber",
                         params: {
                             projectNumber: this.searchInput
                         }
@@ -356,7 +356,7 @@
                 } else if (this.searchType == 'byname') { //按赛事名查询
                     axios({
                         method: 'get',
-                        url: baseUrl + "/searchSportsByName",
+                        url: baseUrl + "sports/searchSportsByName",
                         params: {
                             projectName: this.searchInput
                         }
@@ -373,7 +373,7 @@
 
                     axios({
                         method: 'get',
-                        url: baseUrl + "/searchSportsByType",
+                        url: baseUrl + "sports/searchSportsByType",
                         params: {
                             projectType: this.typeValue
                         }
@@ -420,23 +420,23 @@
             },
 
             myPage() {
-                window.location.href = baseUrl + "/toMyInfo";
+                window.location.href = baseUrl + "system/toMyInfo";
             },
 
             myIndex() {
-                window.location.href = baseUrl + "/toIndex";
+                window.location.href = baseUrl + "system/toIndex";
             },
 
             logout() {
                 axios({
                     method: 'post',
-                    url: baseUrl + '/logout',
+                    url: baseUrl + 'system/logout',
                     data: {
                         token: this.user.token,
                     },
                 }).then((res)=>{
                     setCookieValue("token", "");
-                    window.location.href = baseUrl + '/toLogin'
+                    window.location.href = baseUrl + 'system/toLogin'
                 });
             }
         }

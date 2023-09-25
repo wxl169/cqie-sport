@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author 20664
  */
 @Controller
-@RequestMapping("/client/user")
+@RequestMapping("/client/sports")
 public class SportsController extends BaseController {
 
     @Autowired
