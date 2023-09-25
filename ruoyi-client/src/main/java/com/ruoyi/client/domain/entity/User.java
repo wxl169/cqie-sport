@@ -1,10 +1,13 @@
 package com.ruoyi.client.domain.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
-
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.IdType;
 import java.time.LocalDate;
+import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.Date;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -29,7 +32,7 @@ public class User implements Serializable {
      * 用户id 用户表的主键
      */
     @TableId(value = "user_id", type = IdType.AUTO)
-    private Integer userId;
+    private Long userId;
 
     /**
      * 对应身份id 若不是本校学生，则为NULL；若是本校学生，则学生表中已有的数据此表中为NULL即可
@@ -74,7 +77,7 @@ public class User implements Serializable {
     /**
      * 出生日期
      */
-    private LocalDate birthday;
+    private Date birthday;
 
     /**
      * 头像 存储图片相对地址，初始应指定默认头像
@@ -89,14 +92,12 @@ public class User implements Serializable {
     /**
      * 录入时间
      */
-    @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime createTime;
+    private Date createTime;
 
     /**
      * 更新时间
      */
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updateTime;
+    private Date updateTime;
 
     /**
      * 其他 备用字段
