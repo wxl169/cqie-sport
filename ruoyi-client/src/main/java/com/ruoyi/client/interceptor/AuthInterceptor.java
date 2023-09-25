@@ -4,6 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.ruoyi.common.core.domain.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -16,6 +17,7 @@ import java.util.concurrent.TimeUnit;
  * 登录拦截器
  * @author 16956
  */
+@Component
 public class AuthInterceptor implements HandlerInterceptor {
 
     @Autowired
@@ -25,6 +27,14 @@ public class AuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         String token = request.getHeader("token");
+        System.out.println("过滤器:"+token);
+        if (token == null){
+            response.setContentType("application/json;charset=utf-8");
+            response.setCharacterEncoding("UTF-8");
+            PrintWriter out = response.getWriter();
+            out.println(JSONUtil.toJsonStr(R.fail("请先登录账号")));
+            return false;
+        }
         Object o = redisTemplate.opsForValue().get(token);
         if (o != null) {
             //token自动延期1小时

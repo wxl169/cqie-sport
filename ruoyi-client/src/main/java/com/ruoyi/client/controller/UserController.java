@@ -106,7 +106,7 @@ public class UserController extends BaseController {
             return R.fail("请登录账号");
         }
         UserInfoDTO userInfoDTO  = new UserInfoDTO();
-        userInfoDTO.setUserId(Long.valueOf(userId));
+        userInfoDTO.setUserId(Integer.valueOf(userId));
         userInfoDTO.setType(type);
         if (!UserConstants.USER_NULL.equals(typeId) && typeId != null){
             userInfoDTO.setTypeId(Integer.valueOf(typeId));
@@ -136,9 +136,13 @@ public class UserController extends BaseController {
      * @param userUpdateDTO 传入的信息参数
      * @return 修改是否成功
      */
-    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    @RequestMapping(value = "/update",method = RequestMethod.PUT)
     @ResponseBody
-    public R updateUserInfo(@RequestBody UserUpdateDTO userUpdateDTO){
+    public R updateUserInfo(@RequestBody UserUpdateDTO userUpdateDTO,HttpServletRequest request){
+        String token = request.getHeader("token");
+        if (!userService.judgeLogin(token)){
+            return R.fail("请登录账号");
+        }
         if (userUpdateDTO == null){
             return R.fail("请求参数错误");
         }

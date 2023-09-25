@@ -8,7 +8,7 @@ import lombok.Data;
  */
 @Data
 public class UserInfoDTO {
-    private Long userId;
+    private Integer userId;
     private String type;
     private Integer typeId;
     private String token;
