@@ -138,14 +138,14 @@ public class UserController extends BaseController {
      */
     @RequestMapping(value = "/update",method = RequestMethod.PUT)
     @ResponseBody
-    public R updateUserInfo(@RequestBody UserUpdateDTO userUpdateDTO,HttpServletRequest request){
-        String token = request.getHeader("token");
-        if (!userService.judgeLogin(token)){
-            return R.fail("请登录账号");
-        }
+    public R updateUserInfo(@RequestBody UserUpdateDTO userUpdateDTO){
         if (userUpdateDTO == null){
             return R.fail("请求参数错误");
         }
+        if (!userService.judgeLogin(userUpdateDTO.getToken())){
+            return R.fail("请登录账号");
+        }
+
         return userService.updateUserInfo(userUpdateDTO);
     }
 

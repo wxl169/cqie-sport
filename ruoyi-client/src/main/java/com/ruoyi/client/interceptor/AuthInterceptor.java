@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
@@ -20,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
 
-    @Autowired
+    @Resource
     private RedisTemplate redisTemplate;
 
     @Override
