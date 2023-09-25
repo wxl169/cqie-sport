@@ -12,4 +12,5 @@ public class UserUpdateDTO {
     private Integer typeId;
     private String changeType;
     private String value;
+    private String token;
 }

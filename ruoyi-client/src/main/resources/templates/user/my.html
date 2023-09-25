@@ -5,6 +5,33 @@
     <title>赛事公布</title>
     <link rel="stylesheet" type="text/css" href="/css/index.css"/>
     <link rel="stylesheet" type="text/css" href="/css/mycss.css"/>
+    <style>
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            margin-left: 30%;
+        }
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 178px;
+            height: 178px;
+            line-height: 178px;
+            text-align: center;
+        }
+        .avatar {
+            width: 178px;
+            height: 178px;
+            display: block;
+        }
+
+    </style>
 </head>
 <body>
 <!--Vue.js-->
@@ -71,10 +98,10 @@
                         <span v-else-if="this.type == '1'">
                             班级老师
                         </span>
-                        <span v-if="this.type == '2'">
+                        <span v-else-if="this.type == '2'">
                             裁判
                         </span>
-                        <span v-if="this.type == '3'">
+                        <span v-else-if="this.type == '3'">
                             校内工作人员
                         </span>
                         <span v-else>
@@ -225,20 +252,23 @@
                     <div slot="header" class="clearfix">
                         <span>更换头像</span>
                     </div>
+                    <template>
+                        <el-alert
+                            title="温馨提示：点击即可修改图片，只允许上传.jpg格式   **非必选**"
+                            type="warning"
+                            :closable="false">
+                        </el-alert>
+                    </template>
                     <div>
-                        <el-input>
                             <el-upload
                                 class="avatar-uploader"
-                                action="https://jsonplaceholder.typicode.com/posts/"
+                                action="#"
                                 :show-file-list="false"
                                 :on-success="handleAvatarSuccess"
                                 :before-upload="beforeAvatarUpload">
-                                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                <img v-if="form.avatar" :src="form.avatar" class="avatar">
                                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                             </el-upload>
-                        </el-input>
-
-
                         <br>
                         <br>
                         <center>
@@ -253,10 +283,10 @@
 
         </el-main>
 
-        <el-footer>
-            <div class="foot2">
-                &copy;2023 by 第三组
-            </div>
+        <el-footer class="foot">
+            <br>
+            <br>
+            &copy;2023 by 第三组
         </el-footer>
     </el-container>
 
@@ -275,7 +305,7 @@
 
 
 <script>
-    var baseUrl = "http://localhost:8080/client/user";
+    var baseUrl = "http://localhost:8080/client/";
     var vm = new Vue({
         el: '#container',
         data: {
@@ -300,6 +330,10 @@
             changeSelect: '',
             userInput: '',
             reuserInput: '',
+            imageUrl: '',
+            form:{
+                avatar:'',
+            }
         },
 
         created: function () {
@@ -330,7 +364,7 @@
             getUserInfo(){
                 axios({
                     method: 'get',
-                    url: baseUrl + "/myInfo",
+                    url: baseUrl + "user/myInfo",
                     params: {
                         userId: this.user.userId,
                         type:this.user.type,
@@ -339,9 +373,11 @@
                     }
                 }).then((res)=>{
                     this.info = res.data.data;
+                    this.user.userHeadUrl = '/img/user_upload/' + this.info.img;
                     this.type = this.info.type;
                     this.typeId = this.info.typeId;
                     this.userId = this.info.userId;
+                    this.user.username = this.info.username
                     this.username = this.info.username;
                     this.email = this.info.email;
                     this.phoneNumber = this.info.phoneNumber;
@@ -351,6 +387,9 @@
                 });
             },
             changeBtn() {
+                if (this.changeSelect === 'image'){
+                    this.userInput = this.img;
+                }
                 //验证输入内容是否为空
                 if (this.userInput.length === 0) {
                     this.$alert('请在输入框中输入内容', '更改失败', {
@@ -369,27 +408,30 @@
                     }
                 }
                 axios({
-                    method: 'post',
-                    url: baseUrl + '/update',
+                    method: 'put',
+                    url: baseUrl + 'user/update',
                     data: {
                         userId: this.userId,
                         type: this.type,
                         typeId: this.typeId,
                         changeType: this.changeSelect,
-                        value: this.userInput
+                        value: this.userInput,
+                        token :this.user.token
                     }
                 }).then((res)=>{
                     // console.log(res.data);
-                    if (res.data.code == 200){
+                    if (res.data.code === 200){
                         console.log(this.userInput);
-                        if (this.changeSelect === 'username') {
+                        if (this.changeSelect === 'username' ) {
                             this.user.username = this.userInput;
-                            this.getUserInfo();
                         }
                         this.$alert('更改成功', '更改成功', {
                             confirmButtonText: '确定',
                         });
                         this.userInput = '';
+                        this.form.avatar = '';
+                        this.img = '';
+                        this.getUserInfo();
                     }else {
                         this.$notify({
                             title: '警告',
@@ -406,19 +448,13 @@
             logout() {
                 axios({
                     method: 'post',
-                    url: baseUrl + '/logout',
+                    url: baseUrl + 'user/logout',
                     data: {
                         token: this.user.token,
                     },
                 }).then((res)=>{
                     setCookieValue("token", "");
-                    // setCookieValue("userId", "");
-                    // setCookieValue("username", "");
-                    // setCookieValue("img", "");
-                    // setCookieValue("type", "");
-                    // setCookieValue("typeId", "");
-                    // setCookieValue("gender", "");
-                    window.location.href = baseUrl + '/toLogin'
+                    window.location.href = baseUrl + 'system/toLogin'
                 });
             },
             handleAvatarSuccess(res, file) {
@@ -427,14 +463,40 @@
             beforeAvatarUpload(file) {
                 const isJPG = file.type === 'image/jpeg';
                 const isLt2M = file.size / 1024 / 1024 < 2;
-
                 if (!isJPG) {
                     this.$message.error('上传头像图片只能是 JPG 格式!');
                 }
                 if (!isLt2M) {
                     this.$message.error('上传头像图片大小不能超过 2MB!');
                 }
-                return isJPG && isLt2M;
+                const fileData = new FormData();
+                fileData.append("img", file);
+                axios({
+                    method: 'post',
+                    url: baseUrl + 'file/upload',
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    },
+                    data: fileData
+                }).then(response => {
+                    if (response.data.code === 200){
+                        this.img = response.data.data;
+                        this.imageUrl = "/img/user_upload/" + response.data.data;
+                        this.$set(this.form, "avatar", this.imageUrl);
+                        // this.user.userHeadUrl = response.data.img;
+                    }else{
+                        this.$notify({
+                            title: '警告',
+                            message: response.data.msg,
+                            type: 'warning'
+                        });
+                    }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                //阻止传到本地浏览器
+                return false;
             }
         }
     });

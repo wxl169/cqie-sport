@@ -1,10 +1,11 @@
 package com.ruoyi.client.config;
 
 import com.ruoyi.client.interceptor.AuthInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import javax.annotation.Resource;
 
 /**
  * @author 16956
@@ -12,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-//    @Autowired
+//    @Resource
 //    private AuthInterceptor authInterceptor;
 //
 //    @Override
