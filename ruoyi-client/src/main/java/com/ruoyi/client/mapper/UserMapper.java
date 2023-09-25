@@ -37,5 +37,5 @@ public interface UserMapper extends BaseMapper<User> {
      * @param userId 学生id
      * @return 学生信息
      */
-    UserInfoVO selectStudentInfo(Long userId);
+    UserInfoVO selectStudentInfo(Integer userId);
 }

@@ -329,7 +329,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
      * @param type 用户类型
      * @return 是否正确
      */
-    private boolean judgeUserInfo(Long userId,String type){
+    private boolean judgeUserInfo(Integer userId,String type){
         if (userId == null || userId <= 0){
             return false;
         }

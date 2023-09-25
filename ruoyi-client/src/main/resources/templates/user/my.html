@@ -268,7 +268,7 @@
 
 <script>
     //登录验证
-    if (getCookieValue("token") == null || getCookieValue("token").length == 0) {
+    if (getCookieValue("token") == null || getCookieValue("token").length === 0) {
         window.location.href = 'login.html?reason=nologin';
     }
 </script>
@@ -311,10 +311,7 @@
             this.user.token = getCookieValue("token")
             axios({
                 method: 'get',
-                url: baseUrl + '/getLoginUserInfo' + '/' + this.user.token,
-                data: {
-                    token: this.user.token,
-                },
+                url: baseUrl + 'user/getLoginUserInfo' + '/' + this.user.token,
             }).then((res)=>{
                 this.user.userId = res.data.data.userId;
                 this.user.username = res.data.data.username;
@@ -404,7 +401,7 @@
                 });
             },
             myIndex() {
-                window.location.href = baseUrl + "/toIndex";
+                window.location.href = baseUrl + "user/toIndex";
             },
             logout() {
                 axios({
