@@ -32,7 +32,7 @@ public class User implements Serializable {
      * 用户id 用户表的主键
      */
     @TableId(value = "user_id", type = IdType.AUTO)
-    private Long userId;
+    private Integer userId;
 
     /**
      * 对应身份id 若不是本校学生，则为NULL；若是本校学生，则学生表中已有的数据此表中为NULL即可

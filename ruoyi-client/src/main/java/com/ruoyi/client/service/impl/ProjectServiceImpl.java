@@ -39,7 +39,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             Project project = projectMapper.selectOne(lambdaQueryWrapper);
 
             //设置比赛项目工具类属性
-            sportsVo.setProjectId(project.getProjectId().intValue());
+            sportsVo.setProjectId(project.getProjectId());
             sportsVo.setProjectNumber(project.getNumber());
             sportsVo.setProjectName(project.getName());
             sportsVo.setProjectIntroduction(project.getIntroduction());
@@ -72,7 +72,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
 
         //设置比赛项目工具类属性
-        sportsVo.setProjectId(project.getProjectId().intValue());
+        sportsVo.setProjectId(project.getProjectId());
         sportsVo.setProjectNumber(project.getNumber());
         sportsVo.setProjectName(project.getName());
         sportsVo.setProjectIntroduction(project.getIntroduction());
@@ -122,7 +122,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             if (arrangeInfo != null){
                 SportsVo sportsVo = new SportsVo();
                 //设置比赛项目工具类属性
-                sportsVo.setProjectId(project.getProjectId().intValue());
+                sportsVo.setProjectId(project.getProjectId());
                 sportsVo.setProjectNumber(project.getNumber());
                 sportsVo.setProjectName(project.getName());
                 sportsVo.setProjectIntroduction(project.getIntroduction());

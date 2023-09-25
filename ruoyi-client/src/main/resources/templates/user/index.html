@@ -121,7 +121,7 @@
 
 
 <script>
-    var baseUrl = "http://localhost:8080/client/user";
+    var baseUrl = "http://localhost:8080/client/";
 
     //登录验证
     if (getCookieValue("token") == null || getCookieValue("token") === '') {
@@ -180,13 +180,13 @@
                 window.location.href = "signup.html";
             },
             sportsIPage() {
-                window.location.href = baseUrl + "/toSportsList";
+                window.location.href = baseUrl + "user/toSportsList";
             },
             queryIPage(byType) {
                 window.location.href = "query.html?index=" + byType;
             },
             myPage() {
-                window.location.href = baseUrl + "/toMyInfo";
+                window.location.href = baseUrl + "system/toMyInfo";
             },
             scorePage() {
                 window.location.href = "score.html";
@@ -194,7 +194,7 @@
             logout() {
                 axios({
                     method: 'post',
-                    url: baseUrl + '/logout',
+                    url: baseUrl + 'user/logout',
                     data: {
                         token: this.user.token,
                     },

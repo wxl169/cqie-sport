@@ -314,7 +314,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     public R getLoginUserInfo(String token) {
         String email = redisTemplate.opsForValue().get(token);
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(User::getUserId,User::getUsername,User::getImg,User::getType,User::getTypeId);
         queryWrapper.eq(User::getEmail,email);
         User user = this.getOne(queryWrapper);
         UserLoginVO copy = BeanCopyUtils.copy(user, UserLoginVO.class);

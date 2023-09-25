@@ -337,11 +337,6 @@
         },
 
         created: function () {
-            // this.user.userId = getCookieValue("userId");
-            // this.user.username = getCookieValue("username");
-            // this.user.userHeadUrl = '/img/user_upload/' + getCookieValue("img");
-            // this.user.type = getCookieValue("type");
-            // this.user.typeId = getCookieValue("typeId");
             this.user.token = getCookieValue("token")
             axios({
                 method: 'get',
@@ -408,14 +403,15 @@
                     }
                 }
                 axios({
-                    method: 'post',
+                    method: 'put',
                     url: baseUrl + 'user/update',
                     data: {
                         userId: this.userId,
                         type: this.type,
                         typeId: this.typeId,
                         changeType: this.changeSelect,
-                        value: this.userInput
+                        value: this.userInput,
+                        token :this.user.token
                     }
                 }).then((res)=>{
                     // console.log(res.data);
@@ -477,7 +473,7 @@
                 const fileData = new FormData();
                 fileData.append("img", file);
                 axios({
-                    method: 'post',
+                    method: 'put',
                     url: baseUrl + 'file/upload',
                     headers: {
                         'Content-Type': 'multipart/form-data'

@@ -17,7 +17,7 @@ public class UploadController {
     @Resource
     private UploadService uploadService;
 
-    @RequestMapping(value = "/upload",method = RequestMethod.POST)
+    @RequestMapping(value = "/upload",method = RequestMethod.PUT)
     @ResponseBody
     public R uploadImg(@RequestParam(value = "img",required = false) MultipartFile file){
         if (file.isEmpty()){
