@@ -145,6 +145,9 @@
                 'http://i.cqie.edu.cn/resources/style/pc/images/newicon/bg_3.jpg']
         },
         created: function () {
+            // this.user.userId = getCookieValue("userId");
+            // this.user.username = getCookieValue("username");
+            // this.user.userHeadUrl = './static/img/user_upload/' + getCookieValue("img");
             this.user.token = getCookieValue("token");
             console.log(this.user.token)
             var param = window.location.href.split("?");
@@ -159,7 +162,6 @@
                 config.headers['token'] = this.user.token;
                 return config;
             });
-
             axios({
                 method: 'get',
                 url: baseUrl + 'user/getLoginUserInfo' + '/' + this.user.token,

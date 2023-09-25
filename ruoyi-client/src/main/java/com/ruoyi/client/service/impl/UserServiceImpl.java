@@ -318,7 +318,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         queryWrapper.eq(User::getEmail,email);
         User user = this.getOne(queryWrapper);
         UserLoginVO copy = BeanCopyUtils.copy(user, UserLoginVO.class);
-
         return R.ok(copy);
     }
 
