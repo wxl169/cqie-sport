@@ -19,6 +19,7 @@ public class MatchRankingController {
     private MatchRankingService matchRankingService;
     @RequestMapping("/client/matchRanking")
     public String matchRanking(String projectName,String type,Model model){
+        //如果没有指定类型，默认为个人比赛
         if (type == null)
             type = "0";
         //查询排行
