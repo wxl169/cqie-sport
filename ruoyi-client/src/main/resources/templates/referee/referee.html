@@ -62,11 +62,11 @@
                     <el-submenu index="3" style="margin-left: 85px">
                         <template slot="title">成绩查询</template>
                         <el-menu-item index="3-1" @click="queryIPage('searchsign')">报名查询</el-menu-item>
-<!--                        <el-submenu index="3-2">-->
-<!--                            <template slot="title">成绩查询</template>-->
-<!--                            <el-menu-item index="3-2-1" @click="queryIPage('searchscore')">单项成绩查询</el-menu-item>-->
-<!--                            <el-menu-item index="3-2-2" @click="queryIPage('searchteam')">团体成绩查询</el-menu-item>-->
-<!--                        </el-submenu>-->
+                        <!--                        <el-submenu index="3-2">-->
+                        <!--                            <template slot="title">成绩查询</template>-->
+                        <!--                            <el-menu-item index="3-2-1" @click="queryIPage('searchscore')">单项成绩查询</el-menu-item>-->
+                        <!--                            <el-menu-item index="3-2-2" @click="queryIPage('searchteam')">团体成绩查询</el-menu-item>-->
+                        <!--                        </el-submenu>-->
                         <el-menu-item index="3-2" @click="queryIPage('searchscore')">比赛成绩查询</el-menu-item>
                         <el-menu-item index="3-3">班级总分查询</el-menu-item>
                         <el-menu-item index="3-4">班级总分查询</el-menu-item>
@@ -74,54 +74,12 @@
                     </el-submenu>
                     <el-menu-item index="4" style="margin-left: 85px" @click="scorePage">成绩公布</el-menu-item>
                     <el-menu-item index="5" style="margin-left: 85px">投诉与检举</el-menu-item>
-                    <el-menu-item index="6" style="margin-left: 85px"><a href="toReferee">成绩录入</a></el-menu-item>
+                    <el-menu-item index="5" style="margin-left: 85px"><a href="/">成绩录入</a></el-menu-item>
                 </el-menu>
             </el-col>
-
-            <!--轮播图-->
-            <el-col :span="10">
-                <el-carousel indicator-position="outside" height="300px"
-                             style="width:680px; position: relative; top: 20px; left: 50px">
-                    <el-carousel-item v-for="imgUrl in circleImgUrl" :key="imgUrl">
-                        <img :src="imgUrl" width="100%" height="100%" style="border-radius: 5px"/>
-                    </el-carousel-item>
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 row no-padding" id="widget_ext_weather"
-                                            style="z-index: 999; margin: 0 auto 0;float: none;position: absolute;bottom: 10px;left: 50%;transform: translateX(-50%);">
-                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" align="left"></div>
-                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" align="left" style="padding: 0 0 0 30px">
-                        <iframe style="background-color: rgba(0,0,0,0.5);border-radius: 5px;"
-                                allowtransparency="true" frameborder="0" width="290" height="96" scrolling="no"
-                                src="//tianqi.2345.com/plugin/widget/index.htm?s=2&amp;z=1&amp;t=0&amp;v=0&amp;d=2&amp;bd=0&amp;k=&amp;f=ffffff&amp;ltf=009944&amp;htf=cc0000&amp;q=1&amp;e=1&amp;a=1&amp;c=57516&amp;w=290&amp;h=96&amp;align=centor">
-
-                        </iframe>
-                    </div>
-                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" align="left"></div>
-                </div>
-                </el-carousel>
-            </el-col>
-
-            <!--文字资讯-->
-            <el-col :span="11" :offset="3">
-                <el-card class="box-card" style="position: relative; top: 20px;">
-                    <div slot="header" class="clearfix">
-                        <span>运动会资讯</span>
-                    </div>
-                    <div v-for="o in 4" :key="o" class="text item">
-                        {{'列表内容 ' + o }}
-                    </div>
-                </el-card>
-            </el-col>
-
         </el-main>
-
-        <el-footer class="foot">
-            <br>
-            <br>
-            &copy;2023 by 第三组
-        </el-footer>
     </el-container>
 </div>
-
 
 <script>
     var baseUrl = "http://localhost:8080/client/";
@@ -207,3 +165,4 @@
 
 </body>
 </html>
+
