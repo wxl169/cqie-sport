@@ -66,5 +66,4 @@ public class SystemController {
         return "sports/sports";
     }
 
-
 }
