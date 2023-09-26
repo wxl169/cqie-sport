@@ -337,11 +337,6 @@
         },
 
         created: function () {
-            // this.user.userId = getCookieValue("userId");
-            // this.user.username = getCookieValue("username");
-            // this.user.userHeadUrl = '/img/user_upload/' + getCookieValue("img");
-            // this.user.type = getCookieValue("type");
-            // this.user.typeId = getCookieValue("typeId");
             this.user.token = getCookieValue("token")
             axios({
                 method: 'get',
@@ -421,7 +416,6 @@
                 }).then((res)=>{
                     // console.log(res.data);
                     if (res.data.code === 200){
-                        console.log(this.userInput);
                         if (this.changeSelect === 'username' ) {
                             this.user.username = this.userInput;
                         }
@@ -443,7 +437,7 @@
                 });
             },
             myIndex() {
-                window.location.href = baseUrl + "user/toIndex";
+                window.location.href = baseUrl + "system/toIndex";
             },
             logout() {
                 axios({
@@ -472,7 +466,7 @@
                 const fileData = new FormData();
                 fileData.append("img", file);
                 axios({
-                    method: 'post',
+                    method: 'put',
                     url: baseUrl + 'file/upload',
                     headers: {
                         'Content-Type': 'multipart/form-data'

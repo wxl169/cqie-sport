@@ -61,10 +61,9 @@ public class SystemController {
      *
      * @return 赛事公布
      */
-    @RequestMapping("/toSports")
+    @RequestMapping("/toSportsList")
     public String toSports(){
         return "sports/sports";
     }
-
 
 }

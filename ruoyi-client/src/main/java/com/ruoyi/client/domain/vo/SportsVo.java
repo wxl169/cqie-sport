@@ -7,7 +7,7 @@ import java.util.Date;
 @Data
 public class SportsVo {
     //Project
-    private Integer projectId;
+    private Long projectId;
     private String projectNumber;
     private String projectName;
     private String projectIntroduction;

@@ -16,17 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
  * @author 20664
  */
 @Controller
-@RequestMapping("/client/user")
+@RequestMapping("/client/sports")
 public class SportsController extends BaseController {
 
     @Autowired
     private ProjectService projectService;
-
-    //访问赛事公布页面
-    @GetMapping("/toSportsList")
-    public String toList(){
-        return "user/sports";
-    }
 
     //赛事列表
     @GetMapping("/sportsList")
