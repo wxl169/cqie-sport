@@ -337,6 +337,11 @@
         },
 
         created: function () {
+            // this.user.userId = getCookieValue("userId");
+            // this.user.username = getCookieValue("username");
+            // this.user.userHeadUrl = '/img/user_upload/' + getCookieValue("img");
+            // this.user.type = getCookieValue("type");
+            // this.user.typeId = getCookieValue("typeId");
             this.user.token = getCookieValue("token")
             axios({
                 method: 'get',
