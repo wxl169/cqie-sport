@@ -52,7 +52,7 @@ public class UserController extends BaseController {
             return R.fail("请输入邮箱");
         }
         if (StringUtils.isBlank(userLoginDTO.getPassword())){
-            return R.fail("请输入密码");
+            return R.fail("请输入密码1");
         }
         return userService.getUserByEmailAndPassword(userLoginDTO.getEmail(), userLoginDTO.getPassword());
     }
