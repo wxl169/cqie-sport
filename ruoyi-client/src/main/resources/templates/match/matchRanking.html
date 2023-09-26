@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>成绩公布</title>
+    <link rel="stylesheet" type="text/css" href="/css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/mycss.css"/>
+</head>
+<body>
+<!--Vue.js-->
+<script src="/js/vue.js"></script>
+<!--Element-ui-->
+<script src="/js/index.js"></script>
+<!--axios-->
+<script src="/js/axios.min.js"></script>
+<!--cookie工具-->
+<script src="/js/cookie_utils.js"></script>
+<!--工具-->
+<script src="/js/utils.js"></script>
+
+<div id="container">
+    <el-container>
+
+        <!--网站图片 + 用户信息-->
+        <el-header height="100%">
+            <el-col :span="6">
+                <img class="logo" src="/img/server_html/sportLogo.jpg" style="width: 100px;height: 100px"/>
+            </el-col>
+            <el-col :span="9">
+                <span class="campus-sports" style="margin-left: 150px;font-size: 36px;padding-top: 50px">重庆工程学院校园运动会</span>
+            </el-col>
+            <el-col :span="6" :offset="12" style="display: flex; align-items: center; justify-content: flex-end;">
+                <br>
+                <!--个人用户信息-->
+                <el-dropdown>
+                    <span class="no-attention move-bottom-mini-mini" style="font-size: 20px">
+                                用户:&nbsp;
+                        <el-button type="text"  icon="el-icon-arrow-down" style="font-size: 20px;margin-right: 20px">{{user.username}}</el-button>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item >
+                            <el-button @click="myIndex" style="width: 100px;text-align: center;border: none;font-size: 15px">主页</el-button>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                            <el-button @click="logout" style="width: 100px;text-align: center;border: none;font-size: 15px">注销</el-button>
+                        </el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <!--头像-->
+                <el-col :span="6" :offset="0">
+                    <el-avatar :src="user.userHeadUrl"></el-avatar>
+                </el-col>
+            </el-col>
+        </el-header>
+
+        <el-main>
+            <!--导航栏-->
+            <el-col :span="17" :offset="3">
+                <div class="filter">
+<!--                    <form method="post" action="/client/matchRanking">-->
+<!--                        <label >筛选类型：</label>-->
+<!--                        <input type="radio" name="type" value="0" required>个人-->
+<!--                        <input type="radio" name="type" value="1" required>团体-->
+<!--                        <br/>-->
+
+<!--                        <label for="event-filter">筛选项目：</label>-->
+<!--                        <select id="event-filter" name="projectName">-->
+<!--                            <option value="">全部</option>-->
+<!--                            <option th:each="mt:${matchType}" th:text="${mt.matchType}" th:value="${mt.matchType}"></option>-->
+<!--                        </select>-->
+
+<!--                        <button type="submit" class="btn">提交</button>-->
+<!--                    </form>-->
+
+                    <el-form ref="form" :model="form" label-width="80px" class="horizontal-form">
+                        <el-row>
+                            <el-col :span="6">
+                                <el-form-item label="比赛类型">
+                                    <el-radio-group v-model="form.type">
+                                        <el-radio label="个人"></el-radio>
+                                        <el-radio label="团体"></el-radio>
+                                    </el-radio-group>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="比赛项目">
+                                <el-select v-model="form.projectName" placeholder="请选择比赛项目">
+                                    <el-option v-for="item in projectNameOptions" :key="item.matchType" :label="item.matchType" :value="item.matchType"></el-option>
+                                </el-select>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item>
+                                    <el-button type="primary" @click="onSubmit">提交</el-button>
+                                    <el-button @click="onCancel">取消</el-button>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </el-form>
+                </div>
+                <table>
+                    <tr>
+                        <th>排名</th>
+                        <th>学生姓名</th>
+                        <th>成绩</th>
+                        <th>班级</th>
+                        <th>学院</th>
+                        <th>项目</th>
+                    </tr>
+                    <tr th:each="mp:${matchPanking}">
+                        <td th:text="${mpStat.index+1}"></td>
+                        <td th:text="${mp.studentName}"></td>
+                        <td th:text="${mp.score}"></td>
+                        <td th:text="${mp.studentClass}"></td>
+                        <td th:text="${mp.college}"></td>
+                        <td th:text="${mp.projectName}"></td>
+                    </tr>
+                    <!-- 添加更多成绩行 -->
+                </table>
+            </el-col>
+
+            <!--文字资讯-->
+            <el-col :span="11" :offset="3">
+                <el-card class="box-card" style="position: relative; top: 20px;">
+                    <div slot="header" class="clearfix">
+                        <span>运动会资讯</span>
+                    </div>
+                    <div v-for="o in 4" :key="o" class="text item">
+                        {{'列表内容 ' + o }}
+                    </div>
+                </el-card>
+            </el-col>
+
+        </el-main>
+
+        <el-footer class="foot">
+            <br>
+            <br>
+            &copy;2023 by 第三组
+        </el-footer>
+    </el-container>
+</div>
+
+<script>
+    //登录验证
+    if (getCookieValue("token") == null || getCookieValue("token") === '') {
+        window.location.href = baseUrl + 'system/toLogin?reason=nologin';
+    }
+</script>
+
+<script>
+    var baseUrl = "http://localhost:8080/client/";
+    var vm = new Vue({
+        el: '#container',
+        data: {
+            user: {
+                userId: '',
+                username: '',
+                userHeadUrl: '',
+                token: '',
+            },
+            form: {
+                type:'',
+                projectName: ''
+            },
+            projectNameOptions: [
+                { label: '个人', value: '0' },
+                { label: '团体', value: '1' }
+            ]
+        },
+
+        created: function () {
+            this.user.token = getCookieValue("token");
+            axios({
+                method: 'get',
+                url: baseUrl + 'user/getLoginUserInfo' + '/' + this.user.token,
+                header: {
+                    token : this.user.token
+                }
+            }).then((res)=>{
+                this.user.userId = res.data.data.userId;
+                this.user.username = res.data.data.username;
+                this.user.userHeadUrl = '/img/user_upload/' + res.data.data.img;
+            });
+
+            // axios.get(baseUrl + "matchRanking/signup").then((res)=>{
+            //     // console.log(res.data);
+            //     this.projects = res.data.data;
+            //     // console.log(this.projects);
+            // });
+        },
+
+        methods: {
+
+            methods: {
+                onSubmit() {
+                    console.log('submit!');
+                }
+            },
+            onCancel() {
+                this.form.type = '';
+                this.form.projectName = '';
+            },
+            myIndex() {
+                window.location.href = baseUrl + "system/toIndex";
+            },
+            logout() {
+                axios({
+                    method: 'post',
+                    url: baseUrl + 'user/logout',
+                    data: {
+                        token: this.user.token,
+                    },
+                }).then((res)=>{
+                    setCookieValue("token", "");
+                    window.location.href = baseUrl + 'system/toLogin'
+                });
+            }
+        }
+    });
+</script>
+</body>
+</html>

@@ -297,6 +297,7 @@
 
         methods: {
             searchProject() {
+<<<<<<< HEAD:ruoyi-client/src/main/resources/templates/user/sports.html
 
                 /**
                  * 说明：此处也可用vue和js来做模糊查询，但此处以优先练习后端的原则，将此功能的实现放在后端
@@ -335,6 +336,16 @@
                 //......
 
                 // console.log(this.searchInput);
+=======
+                console.log('---'+this.searchInput);
+
+                if (this.searchInput.length == 0) {
+                    this.$alert('请输入查询所需内容', '查询失败', {
+                        confirmButtonText: '确定',
+                    });
+                    return;
+                }
+>>>>>>> d4bdf61017ee81ce2148db309ecf69f18e09dfd2:ruoyi-client/src/main/resources/templates/sports/sports.html
 
                 console.log(this.isok);
 
@@ -419,10 +430,13 @@
                 this.resultProjects = [];
             },
 
+<<<<<<< HEAD:ruoyi-client/src/main/resources/templates/user/sports.html
             myPage() {
                 window.location.href = baseUrl + "/toMyInfo";
             },
 
+=======
+>>>>>>> d4bdf61017ee81ce2148db309ecf69f18e09dfd2:ruoyi-client/src/main/resources/templates/sports/sports.html
             myIndex() {
                 window.location.href = baseUrl + "/toIndex";
             },
@@ -436,7 +450,11 @@
                     },
                 }).then((res)=>{
                     setCookieValue("token", "");
+<<<<<<< HEAD:ruoyi-client/src/main/resources/templates/user/sports.html
                     window.location.href = baseUrl + '/toLogin'
+=======
+                    window.location.href = baseUrl + 'system/toLogin'
+>>>>>>> d4bdf61017ee81ce2148db309ecf69f18e09dfd2:ruoyi-client/src/main/resources/templates/sports/sports.html
                 });
             }
         }

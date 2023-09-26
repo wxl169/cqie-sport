@@ -1,5 +1,6 @@
 package com.ruoyi.client.service.impl;
 
+
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.client.domain.entity.ArrangeInfo;
@@ -15,7 +16,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * <p>
+ * 项目表  服务实现类
+ * </p>
+ *
+ * @author 16956
+ * @since 2023-09-25
+ */
 @Service
 public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> implements ProjectService {
 
@@ -31,11 +39,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         List<ArrangeInfo> arrangeInfos = arrangeInfoMapper.selectList(null);
         List<SportsVo> sportsVos = new ArrayList<>();
 
-        for (ArrangeInfo arrangeInfo : arrangeInfos){
+        for (ArrangeInfo arrangeInfo : arrangeInfos) {
             SportsVo sportsVo = new SportsVo();
             LambdaQueryWrapper<Project> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-            lambdaQueryWrapper.eq(Project::getProjectId,arrangeInfo.getProjectId())
-                .eq(Project::getIsCancel,0);
+            lambdaQueryWrapper.eq(Project::getProjectId, arrangeInfo.getProjectId())
+                .eq(Project::getIsCancel, 0);
             Project project = projectMapper.selectOne(lambdaQueryWrapper);
 
             //设置比赛项目工具类属性
@@ -63,11 +71,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     public R listProjectByNumber(String projectNumber) {
         SportsVo sportsVo = new SportsVo();
         LambdaQueryWrapper<Project> prolqw = new LambdaQueryWrapper<>();
-        prolqw.eq(Project::getNumber,projectNumber)
-            .eq(Project::getIsCancel,"0");
+        prolqw.eq(Project::getNumber, projectNumber)
+            .eq(Project::getIsCancel, "0");
         Project project = projectMapper.selectOne(prolqw);
         LambdaQueryWrapper<ArrangeInfo> arrlqw = new LambdaQueryWrapper<>();
-        arrlqw.eq(ArrangeInfo::getProjectId,project.getProjectId());
+        arrlqw.eq(ArrangeInfo::getProjectId, project.getProjectId());
         ArrangeInfo arrangeInfo = arrangeInfoMapper.selectOne(arrlqw);
 
 
@@ -94,8 +102,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     public R listProjectsByName(String projectName) {
         List<SportsVo> sportsVos = new ArrayList<>();
         LambdaQueryWrapper<Project> plwq = new LambdaQueryWrapper<>();
-        plwq.like(Project::getName,projectName)
-            .eq(Project::getIsCancel,0);
+        plwq.like(Project::getName, projectName)
+            .eq(Project::getIsCancel, 0);
         List<Project> projects = projectMapper.selectList(plwq);
 
         return getR(sportsVos, projects);
@@ -106,8 +114,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     public R listProjectsByType(String projectType) {
         List<SportsVo> sportsVos = new ArrayList<>();
         LambdaQueryWrapper<Project> plwq = new LambdaQueryWrapper<>();
-        plwq.eq(Project::getType,projectType)
-            .eq(Project::getIsCancel,0);
+        plwq.eq(Project::getType, projectType)
+            .eq(Project::getIsCancel, 0);
         List<Project> projects = projectMapper.selectList(plwq);
 
         return getR(sportsVos, projects);
@@ -115,11 +123,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
     @NotNull
     private R getR(List<SportsVo> sportsVos, List<Project> projects) {
-        for (Project project : projects){
+        for (Project project : projects) {
             LambdaQueryWrapper<ArrangeInfo> arrlqw = new LambdaQueryWrapper<>();
-            arrlqw.eq(ArrangeInfo::getProjectId,project.getProjectId());
+            arrlqw.eq(ArrangeInfo::getProjectId, project.getProjectId());
             ArrangeInfo arrangeInfo = arrangeInfoMapper.selectOne(arrlqw);
-            if (arrangeInfo != null){
+            if (arrangeInfo != null) {
                 SportsVo sportsVo = new SportsVo();
                 //设置比赛项目工具类属性
                 sportsVo.setProjectId(project.getProjectId().intValue());
@@ -143,5 +151,5 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return R.ok(sportsVos);
     }
 
-
 }
+
