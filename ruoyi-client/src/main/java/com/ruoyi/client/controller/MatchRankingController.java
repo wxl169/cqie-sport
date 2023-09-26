@@ -12,7 +12,6 @@ import javax.annotation.Resource;
  * @explanation
  * @date 2023/9/15 11:55
  */
-//比赛排行榜
 @Controller
 @RequestMapping("/client/matchRanking")
 public class MatchRankingController {

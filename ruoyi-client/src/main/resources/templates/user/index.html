@@ -74,6 +74,7 @@
                     </el-submenu>
                     <el-menu-item index="4" style="margin-left: 85px" @click="scorePage">成绩公布</el-menu-item>
                     <el-menu-item index="5" style="margin-left: 85px">投诉与检举</el-menu-item>
+                    <el-menu-item index="5" style="margin-left: 85px" v-if="user.type === '2'">裁判打分</el-menu-item>
                 </el-menu>
             </el-col>
 
@@ -139,6 +140,7 @@
                 username: '',
                 userHeadUrl: '',
                 token: '',
+                type:'',
             },
             img:'',
             activeIndex: '0',
@@ -167,6 +169,7 @@
                 this.user.username = res.data.data.username;
                 this.user.gender = res.data.data.gender;
                 this.user.userHeadUrl = '/img/user_upload/' + res.data.data.img;
+                this.user.type = res.data.data.type;
             });
         },
         methods: {

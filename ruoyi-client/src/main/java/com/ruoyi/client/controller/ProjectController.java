@@ -1,6 +1,8 @@
 package com.ruoyi.client.controller;
 
 import com.ruoyi.client.service.ProjectService;
+import com.ruoyi.common.core.domain.R;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +18,11 @@ public class ProjectController {
     private ProjectService projectService;
 
 
+    @GetMapping("/get")
+    public R getProjectName(){
 
+        return R.ok();
+    }
 
 
 }
