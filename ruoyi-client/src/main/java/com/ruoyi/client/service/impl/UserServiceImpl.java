@@ -8,11 +8,13 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.client.domain.dto.UserInfoDTO;
+import com.ruoyi.client.domain.dto.UserLoginDTO;
 import com.ruoyi.client.domain.dto.UserUpdateDTO;
 import com.ruoyi.client.domain.entity.Referee;
 import com.ruoyi.client.domain.entity.Student;
 import com.ruoyi.client.domain.entity.User;
 import com.ruoyi.client.domain.vo.UserInfoVO;
+import com.ruoyi.client.domain.vo.UserLoginVO;
 import com.ruoyi.client.mapper.RefereeMapper;
 import com.ruoyi.client.mapper.StudentMapper;
 import com.ruoyi.client.mapper.UserMapper;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -52,7 +55,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             return R.fail("请输入邮箱或密码");
         }
         User user = userMapper.selectUserByEmail(email);
-        System.out.println(BCrypt.hashpw(password,BCrypt.gensalt()));
+        System.out.println(BCrypt.hashpw(password));
         if (BCrypt.checkpw(password,user.getPassword())){
 //        if (user != null) {
             //如果登录验证成功，则生成令牌token
@@ -120,10 +123,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         User user = new User();
         user.setType(type);
         user.setUsername(username);
-        user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+        user.setPassword(BCrypt.hashpw(password));
         user.setEmail(email);
         user.setImg("default.png");
-
+        user.setCreateTime(LocalDateTime.now());
+        user.setUpdateTime(LocalDateTime.now());
         //若是学生注册
         if (UserConstants.USER_TYPE_STUDENT.equals(type)) {
             //首先根据学号得到学生在学生表中的主键id，从而插入用户表中的type_id字段
@@ -158,7 +162,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             Referee referee = refereeMapper.selectOne(queryWrapper);
             //如果工号正确
             if (referee != null) {
-                //判断该学生是否注册账号
+                //判断该裁判員是否注册账号
                 User userStudent = userMapper.selectUserByType(referee.getRefereeId(),UserConstants.USER_TYPE_REFEREE);
                 if (userStudent != null) {
                     return R.fail("该裁判员已创建账号");
@@ -246,28 +250,53 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         }
         //判断如果是本校学生，则修改学生表信息
         boolean judge = false;
+        //判断选择的是否为系统提供的修改字段
+        boolean pd  = false;
         if (UserConstants.USER_TYPE_STUDENT.equals(userUpdateDTO.getType()) && userUpdateDTO.getTypeId() != null && "phonenumber".equals(userUpdateDTO.getChangeType())){
             //如果是修改学生手机号的信息，需要修改学生表的信息
             judge = studentMapper.updateSutdentPhone(userUpdateDTO.getTypeId(),userUpdateDTO.getValue());
         }else {
             //如果是其他信息，则修改信息表
             LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
+            LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
             //更改用户名
         if ("username".equals(userUpdateDTO.getChangeType())){
             updateWrapper.set(User::getUsername,userUpdateDTO.getValue());
+            pd = true;
         }
         //更改邮箱
         if ("email".equals(userUpdateDTO.getChangeType())){
+            queryWrapper.eq(User::getEmail,userUpdateDTO.getValue());
+            User user = this.getOne(queryWrapper);
+            if (user != null){
+                return R.fail("该邮箱已注册");
+            }
             updateWrapper.set(User::getEmail,userUpdateDTO.getValue());
+            pd = true;
         }
         //更改密码
         if ("password".equals(userUpdateDTO.getChangeType())){
             updateWrapper.set(User::getPassword,userUpdateDTO.getValue());
+            pd = true;
         }
         //更改手机号
         if ("phonenumber".equals(userUpdateDTO.getChangeType())){
+            queryWrapper.eq(User::getPhoneNumber,userUpdateDTO.getValue());
+            User user = this.getOne(queryWrapper);
+            if (user != null){
+                return R.fail("该手机号已注册");
+            }
             updateWrapper.set(User::getPhoneNumber,userUpdateDTO.getValue());
+            pd = true;
         }
+        if ("image".equals(userUpdateDTO.getChangeType())){
+            updateWrapper.set(User::getImg,userUpdateDTO.getValue());
+            pd = true;
+        }
+        if (!pd){
+            return  R.fail("请选择提供的修改字段");
+        }
+            updateWrapper.set(User::getUpdateTime,LocalDateTime.now());
             updateWrapper.eq(User::getUserId,userUpdateDTO.getUserId());
             judge = this.update(updateWrapper);
         }
@@ -275,6 +304,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             return R.fail("修改失败");
         }
         return R.ok("修改成功");
+    }
+
+    @Override
+    public R getLoginUserInfo(String token) {
+        String email = redisTemplate.opsForValue().get(token);
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(User::getUserId,User::getUsername,User::getImg,User::getType,User::getTypeId);
+        queryWrapper.eq(User::getEmail,email);
+        User user = this.getOne(queryWrapper);
+        UserLoginVO copy = BeanCopyUtils.copy(user, UserLoginVO.class);
+        return R.ok(copy);
     }
 
 

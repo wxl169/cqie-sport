@@ -14,14 +14,25 @@ import javax.annotation.Resource;
  */
 //比赛排行榜
 @Controller
+@RequestMapping("/client/matchRanking")
 public class MatchRankingController {
     @Resource
     private MatchRankingService matchRankingService;
-    @RequestMapping("/client/matchRanking")
+
+    /**
+     * 查询排行榜
+     *
+     * @param projectName 项目名称
+     * @param type 项目类型
+     * @param model 页面跳转
+     * @return
+     */
+    @RequestMapping("/")
     public String matchRanking(String projectName,String type,Model model){
         //如果没有指定类型，默认为个人比赛
-        if (type == null)
+        if (type == null) {
             type = "0";
+        }
         //查询排行
         model.addAttribute("matchPanking",matchRankingService.find(type,projectName));
         //查询筛选条件

@@ -7,6 +7,7 @@ import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpInterface;
 import cn.dev33.satoken.stp.StpLogic;
 import cn.dev33.satoken.stp.StpUtil;
+import com.ruoyi.common.constant.UploadConstants;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.framework.config.properties.SecurityProperties;
 import com.ruoyi.framework.handler.AllUrlHandler;
@@ -34,6 +35,7 @@ public class SaTokenConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**");
+        registry.addResourceHandler("/img/user_upload/**").addResourceLocations(UploadConstants.IMG_HEAD);
     }
     /**
      * 注册sa-token的拦截器
