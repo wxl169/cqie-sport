@@ -297,7 +297,6 @@
 
         methods: {
             searchProject() {
-
                 console.log('---'+this.searchInput);
 
                 if (this.searchInput.length == 0) {
@@ -306,44 +305,6 @@
                     });
                     return;
                 }
-
-                /**
-                 * 说明：此处也可用vue和js来做模糊查询，但此处以优先练习后端的原则，将此功能的实现放在后端
-                 */
-                // console.log(this.searchInput);
-                // var resultIndex = -1;
-
-                //根据赛事名查询-------
-                // if (this.searchType == 'byname') {
-                //     for (var i = 0; i < this.projects.length; i++) {
-                //         // console.log(this.projects[i].projectName);
-                //         if (this.searchInput == this.projects[i].projectName) {
-                //             // console.log("yes");
-                //             // resultIndex = i;
-                //             this.project = this.projects[i];
-                //             this.isOk = 1;
-                //             // console.log(this.project);
-                //             break;
-                //         }
-                //     }
-                //
-                //     // this.projects[resultIndex]
-                //     if(this.project == {}) { //查询失败，无结果
-                //         this.isOk = 0;
-                //     }
-                //     this.drawer = true;
-                //
-                // } else if (this.searchType == 'bytype') {
-                //     // 根据赛事类别查询
-                //
-                // } else {
-                //     this.$alert('请选择查询方式', '查询失败', {
-                //         confirmButtonText: '确定',
-                //     });
-                // }
-                //......
-
-                // console.log(this.searchInput);
 
                 console.log(this.isok);
 
@@ -429,9 +390,6 @@
                 this.resultProjects = [];
             },
 
-            myPage() {
-                window.location.href = 'my.html';
-            },
             myIndex() {
                 window.location.href = baseUrl + "system/toIndex";
             },
@@ -444,12 +402,6 @@
                     },
                 }).then((res)=>{
                     setCookieValue("token", "");
-                    // setCookieValue("userId", "");
-                    // setCookieValue("username", "");
-                    // setCookieValue("img", "");
-                    // setCookieValue("type", "");
-                    // setCookieValue("typeId", "");
-                    // setCookieValue("gender", "");
                     window.location.href = baseUrl + 'system/toLogin'
                 });
             }

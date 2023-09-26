@@ -136,7 +136,7 @@ public class UserController extends BaseController {
      * @param userUpdateDTO 传入的信息参数
      * @return 修改是否成功
      */
-    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    @RequestMapping(value = "/update",method = RequestMethod.PUT)
     @ResponseBody
     public R updateUserInfo(@RequestBody UserUpdateDTO userUpdateDTO){
         if (userUpdateDTO == null){

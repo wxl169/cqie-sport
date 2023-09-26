@@ -63,6 +63,15 @@ public class SystemController {
     public String toSports(){
         return "sports/sports";
     }
+    /**
+     * 跳转到比赛成绩查询
+     *
+     * @return 比赛成绩查询
+     */
+    @RequestMapping("/toMatchRanking")
+    public String toMatchRanking(){
+        return "match/matchRanking";
+    }
 
 
 }

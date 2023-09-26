@@ -337,11 +337,6 @@
         },
 
         created: function () {
-            // this.user.userId = getCookieValue("userId");
-            // this.user.username = getCookieValue("username");
-            // this.user.userHeadUrl = '/img/user_upload/' + getCookieValue("img");
-            // this.user.type = getCookieValue("type");
-            // this.user.typeId = getCookieValue("typeId");
             this.user.token = getCookieValue("token")
             axios({
                 method: 'get',
@@ -411,7 +406,7 @@
                     }
                 }
                 axios({
-                    method: 'post',
+                    method: 'put',
                     url: baseUrl + 'user/update',
                     data: {
                         userId: this.userId,
@@ -456,12 +451,6 @@
                     },
                 }).then((res)=>{
                     setCookieValue("token", "");
-                    // setCookieValue("userId", "");
-                    // setCookieValue("username", "");
-                    // setCookieValue("img", "");
-                    // setCookieValue("type", "");
-                    // setCookieValue("typeId", "");
-                    // setCookieValue("gender", "");
                     window.location.href = baseUrl + 'system/toLogin'
                 });
             },

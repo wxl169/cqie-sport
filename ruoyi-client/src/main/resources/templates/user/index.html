@@ -62,13 +62,15 @@
                     <el-submenu index="3" style="margin-left: 85px">
                         <template slot="title">成绩查询</template>
                         <el-menu-item index="3-1" @click="queryIPage('searchsign')">报名查询</el-menu-item>
-                        <el-submenu index="3-2">
-                            <template slot="title">成绩查询</template>
-                            <el-menu-item index="3-2-1" @click="queryIPage('searchscore')">单项成绩查询</el-menu-item>
-                            <el-menu-item index="3-2-2" @click="queryIPage('searchteam')">团体成绩查询</el-menu-item>
-                        </el-submenu>
+<!--                        <el-submenu index="3-2">-->
+<!--                            <template slot="title">成绩查询</template>-->
+<!--                            <el-menu-item index="3-2-1" @click="queryIPage('searchscore')">单项成绩查询</el-menu-item>-->
+<!--                            <el-menu-item index="3-2-2" @click="queryIPage('searchteam')">团体成绩查询</el-menu-item>-->
+<!--                        </el-submenu>-->
+                        <el-menu-item index="3-2" @click="queryIPage('searchscore')">比赛成绩查询</el-menu-item>
                         <el-menu-item index="3-3">班级总分查询</el-menu-item>
-                        <el-menu-item index="3-4">学院总分查询</el-menu-item>
+                        <el-menu-item index="3-4">班级总分查询</el-menu-item>
+                        <el-menu-item index="3-5">学院总分查询</el-menu-item>
                     </el-submenu>
                     <el-menu-item index="4" style="margin-left: 85px" @click="scorePage">成绩公布</el-menu-item>
                     <el-menu-item index="5" style="margin-left: 85px">投诉与检举</el-menu-item>
@@ -145,9 +147,6 @@
                 'http://i.cqie.edu.cn/resources/style/pc/images/newicon/bg_3.jpg']
         },
         created: function () {
-            // this.user.userId = getCookieValue("userId");
-            // this.user.username = getCookieValue("username");
-            // this.user.userHeadUrl = './static/img/user_upload/' + getCookieValue("img");
             this.user.token = getCookieValue("token");
             var param = window.location.href.split("?");
             if (param[1] === 'reason=successlogin') {
@@ -160,9 +159,6 @@
             axios({
                 method: 'get',
                 url: baseUrl + 'user/getLoginUserInfo' + '/' + this.user.token,
-                // data: {
-                //     token: this.user.token,
-                // },
                 header: {
                     token : this.user.token
                 }
@@ -184,7 +180,7 @@
                 window.location.href = baseUrl + "system/toSports";
             },
             queryIPage(byType) {
-                window.location.href = "query.html?index=" + byType;
+                window.location.href =baseUrl + "system/toMatchRanking";
             },
             myPage() {
                 window.location.href = baseUrl + "system/toMyInfo";
@@ -201,12 +197,6 @@
                     },
                 }).then((res)=>{
                     setCookieValue("token", "");
-                    // setCookieValue("userId", "");
-                    // setCookieValue("username", "");
-                    // setCookieValue("img", "");
-                    // setCookieValue("type", "");
-                    // setCookieValue("typeId", "");
-                    // setCookieValue("gender", "");
                     window.location.href = baseUrl + 'system/toLogin'
                 });
             }

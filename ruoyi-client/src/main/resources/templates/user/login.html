@@ -76,9 +76,6 @@
     <script>
         var baseUrl = "http://localhost:8080/client/";
         //登录验证
-        // if (getCookieValue("token") != null || getCookieValue("token") !== '') {
-        //     window.location.href = baseUrl + '/toIndex?reason=successLogin';
-        // }
         var vm = new Vue({
             el: '#container',
             data: {
@@ -113,20 +110,10 @@
                         }
                     }).then((res)=>{
                         var vo = res.data;
-                        if (vo.code == 200) {
+                        if (vo.code === 200) {
                             this.isLogin = true
-                            // console.log(vo);
                             //如果登录成功，就把token存储到cookie
                             setCookieValue("token",vo.msg);
-                            // console.log(vo.msg);
-                            //将用户昵称和用户头像的路径保存在cookie
-                            // setCookieValue("userId",vo.data.userId);
-                            // setCookieValue("username",vo.data.username);
-                            // setCookieValue("img",vo.data.img);
-                            // setCookieValue("type", vo.data.type);
-                            // setCookieValue("typeId", vo.data.typeId);
-                            // setCookieValue("gender", vo.data.gender);
-                            // console.log(document.cookie);
                             window.location.href = baseUrl + "system/toIndex?reason=successlogin";
                         }else {
                             this.$notify({
