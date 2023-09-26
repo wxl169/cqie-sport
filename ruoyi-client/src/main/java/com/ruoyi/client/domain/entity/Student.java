@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 学生表 
+ * 学生表
  * </p>
  *
  * @author 16956
@@ -30,7 +30,7 @@ public class Student implements Serializable {
      * 学生id 学生表的主键
      */
     @TableId(value = "student_id", type = IdType.AUTO)
-    private Integer studentId;
+    private Long studentId;
 
     /**
      * 班级id

@@ -20,7 +20,7 @@ public class UserInfoVO {
     /**
      * 对应身份id 若不是本校学生，则为NULL；若是本校学生，则学生表中已有的数据此表中为NULL即可
      */
-    private Integer typeId;
+    private Long typeId;
 
     /**
      * 身份类型 0：学生，1：班级老师，2：裁判，3：校内其他工作人员，4：非本校人员

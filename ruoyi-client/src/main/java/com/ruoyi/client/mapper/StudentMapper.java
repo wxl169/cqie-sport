@@ -23,5 +23,5 @@ public interface StudentMapper extends BaseMapper<Student> {
      * @param phoneNumber 手机号
      * @return 是否修改成功
      */
-    boolean updateSutdentPhone(@Param("studentId") Integer studentId, @Param("phoneNumber") String phoneNumber);
+    boolean updateSutdentPhone(@Param("studentId") Long studentId, @Param("phoneNumber") String phoneNumber);
 }

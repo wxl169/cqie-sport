@@ -8,8 +8,8 @@ import lombok.Data;
  */
 @Data
 public class UserInfoDTO {
-    private Integer userId;
+    private Long userId;
     private String type;
-    private Integer typeId;
+    private Long typeId;
     private String token;
 }

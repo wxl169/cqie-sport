@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 裁判员表 
+ * 裁判员表
  * </p>
  *
  * @author 16956
@@ -30,7 +30,7 @@ public class Referee implements Serializable {
      * 裁判员id 裁判员表的主键
      */
     @TableId(value = "referee_id", type = IdType.AUTO)
-    private Integer refereeId;
+    private Long refereeId;
 
     /**
      * 裁判员编号

@@ -72,7 +72,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
                 if (user.getTypeId() == null) {
                     return R.fail("系统内部错误");
                 }
-                Integer studentId = user.getTypeId();
+                Long studentId = user.getTypeId();
                 LambdaQueryWrapper<Student> studentQueryWrapper = new LambdaQueryWrapper<>();
                 studentQueryWrapper.eq(Student::getStudentId, studentId);
                 Student student = studentMapper.selectOne(studentQueryWrapper);
@@ -342,7 +342,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
      * @param type 用户类型
      * @return 是否正确
      */
-    private boolean judgeUserInfo(Integer userId,String type){
+    private boolean judgeUserInfo(Long userId,String type){
         if (userId == null || userId <= 0){
             return false;
         }
