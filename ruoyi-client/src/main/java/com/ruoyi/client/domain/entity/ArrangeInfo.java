@@ -1,5 +1,6 @@
 package com.ruoyi.client.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
@@ -16,7 +17,7 @@ public class ArrangeInfo implements Serializable {
     /**
      * 安排信息单元id 安排信息单元表的主键
      */
-    @TableId
+    @TableId(value = "arrange_info_id",type = IdType.ASSIGN_ID)
     private Long arrangeInfoId;
 
     /**

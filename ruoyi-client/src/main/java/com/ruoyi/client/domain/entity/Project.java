@@ -17,7 +17,7 @@ public class Project {
     /**
      * 项目id 项目表的主键
      */
-    @TableId(value = "project_id",type = IdType.AUTO)
+    @TableId(value = "project_id",type = IdType.ASSIGN_ID)
     private Long projectId;
 
     /**

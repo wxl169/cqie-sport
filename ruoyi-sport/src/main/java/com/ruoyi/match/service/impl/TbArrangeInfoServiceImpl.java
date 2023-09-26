@@ -1,6 +1,7 @@
 package com.ruoyi.match.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.ruoyi.common.exception.base.BaseException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.domain.PageQuery;
@@ -32,7 +33,7 @@ public class TbArrangeInfoServiceImpl implements ITbArrangeInfoService {
     private final TbArrangeInfoMapper baseMapper;
 
     /**
-     * 查询安排信息单元 
+     * 查询安排信息单元
      */
     @Override
     public TbArrangeInfoVo queryById(Long arrangeInfoId){
@@ -70,7 +71,7 @@ public class TbArrangeInfoServiceImpl implements ITbArrangeInfoService {
     }
 
     /**
-     * 新增安排信息单元 
+     * 新增安排信息单元
      */
     @Override
     public Boolean insertByBo(TbArrangeInfoBo bo) {
@@ -84,7 +85,7 @@ public class TbArrangeInfoServiceImpl implements ITbArrangeInfoService {
     }
 
     /**
-     * 修改安排信息单元 
+     * 修改安排信息单元
      */
     @Override
     public Boolean updateByBo(TbArrangeInfoBo bo) {
@@ -98,10 +99,17 @@ public class TbArrangeInfoServiceImpl implements ITbArrangeInfoService {
      */
     private void validEntityBeforeSave(TbArrangeInfo entity){
         //TODO 做一些数据校验,如唯一约束
+        LambdaQueryWrapper<TbArrangeInfo> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(TbArrangeInfo::getProjectId,entity.getProjectId());
+        TbArrangeInfo tbArrangeInfo = baseMapper.selectOne(lambdaQueryWrapper);
+        if (tbArrangeInfo != null){
+            throw new BaseException("该项目已有安排信息");
+        }
+
     }
 
     /**
-     * 批量删除安排信息单元 
+     * 批量删除安排信息单元
      */
     @Override
     public Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {

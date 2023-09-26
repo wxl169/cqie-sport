@@ -2,6 +2,7 @@ package com.ruoyi.project.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.constant.CacheNames;
@@ -21,6 +22,7 @@ import com.ruoyi.project.service.ITbProjectService;
 import com.ruoyi.system.mapper.SysDictDataMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -114,17 +116,26 @@ public class TbProjectServiceImpl implements ITbProjectService {
         LambdaQueryWrapper<TbArrangement> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(TbArrangement::getProjectId, update.getProjectId());
         List<TbArrangement> tbArrangements = arrangementMapper.selectList(queryWrapper);
-        if (tbArrangements.size() > update.getUpnum()) {
-            throw new BaseException("运动员已报名人数为 " + tbArrangements.size() + "人大于" + update.getUpnum() + "人,无法修改");
-        }
-        TbArrangement tbArrangement = tbArrangements.get(0);
-        String refereeId = tbArrangement.getRefereeId();
-        int count = refereeId.split(",").length;
-        if (count > update.getRenum()) {
-            throw new BaseException("裁判员已报名人数为 " + count + "人大于" + update.getRenum() + "人,无法修改");
+        if(!(tbArrangements.size() == 0)){
+            if (tbArrangements.size() > update.getUpnum()) {
+                throw new BaseException("运动员已报名人数为 " + tbArrangements.size() + "人大于" + update.getUpnum() + "人,无法修改");
+            }
+            TbArrangement tbArrangement = tbArrangements.get(0);
+            String refereeId = tbArrangement.getRefereeId();
+            int count = refereeId.split(",").length;
+            if (count > update.getRenum()) {
+                throw new BaseException("裁判员已报名人数为 " + count + "人大于" + update.getRenum() + "人,无法修改");
+            }
         }
         validEntityBeforeSave(update);
-        return baseMapper.updateById(update) > 0;
+        String name = baseMapper.selectById(update.getProjectId()).getName();
+        LambdaUpdateWrapper<SysDictData> updateWrapper = new LambdaUpdateWrapper<>();
+        if(baseMapper.updateById(update) > 0){
+            updateWrapper.eq(SysDictData::getDictType,"project_name")
+                .eq(SysDictData::getDictLabel,name)
+                .set(SysDictData::getDictLabel,update.getName());
+        }
+        return sysDictDataMapper.update(null,updateWrapper) > 0;
     }
 
     /**

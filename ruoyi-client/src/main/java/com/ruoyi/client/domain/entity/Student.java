@@ -29,7 +29,7 @@ public class Student implements Serializable {
     /**
      * 学生id 学生表的主键
      */
-    @TableId(value = "student_id", type = IdType.AUTO)
+    @TableId(value = "student_id", type = IdType.ASSIGN_ID)
     private Long studentId;
 
     /**
