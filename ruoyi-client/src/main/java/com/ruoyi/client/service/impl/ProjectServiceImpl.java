@@ -28,13 +28,14 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
     @Override
     public R getProjectName(String projectType) {
-        //如果项目类型为空，则返回全部项目名,否则返回指定条件内容
+        //如果项目类型为空，则返回请选择项目名,否则返回指定条件内容
         LambdaQueryWrapper<Project> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.select(Project::getProjectId,Project::getName);
 
         if (projectType != null && !ProjectConstants.NOT_PROJECT.equals(projectType)){
             queryWrapper.eq(Project::getType,projectType);
         }
+
         List<Project> list = this.list(queryWrapper);
         return R.ok(BeanCopyUtils.copyList(list, ProjectNameVO.class));
     }

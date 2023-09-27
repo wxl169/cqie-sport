@@ -210,8 +210,10 @@
                         // console.log(vo);
                         window.location.href = baseUrl +"system/toLogin";
                     } else {
-                        this.$alert('请确认信息是否正确', '注册失败', {
-                            confirmButtonText: '确定',
+                        this.$notify({
+                            title: '警告',
+                            message: vo.msg,
+                            type: 'warning'
                         });
                     }
                 });

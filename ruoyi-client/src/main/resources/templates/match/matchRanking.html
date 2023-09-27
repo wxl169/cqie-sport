@@ -108,11 +108,14 @@
                         :data="matchPanking"
                         stripe
                         style="width: 100%">
-                        <el-table-column
-                            prop="index"
-                            label="排名"
-                            width="180">
-                        </el-table-column>
+                        <<el-table-column
+                        label="排名"
+                        width="180"
+                    >
+                        <template slot-scope="scope">
+                            {{ scope.$index + 1 }}
+                        </template>
+                    </el-table-column>
                         <el-table-column
                             prop="studentName"
                             label="学生姓名"
@@ -200,28 +203,20 @@
 
         methods: {
             onSubmit() {
-                let projectName = this.form.projectName;
-                if (projectName === undefined || projectName === null){
-                    projectName = "null";
-                    console.log("2"+projectName)
+                if (this.form.projectName === '') {
+                    this.$message.warning('请选择比赛项目');
+                } else {
+                    // 执行提交逻辑
                     axios({
-                        method: 'get',
-                        url: baseUrl + 'matchRanking/get/' + projectName,
-                    }).then((res)=>{
-                        this.projectNameOptions = res.data.data;
-                    });
-                }else{
-                    console.log("1"+projectName)
-                    axios({
-                        method: 'get',
-                        url: baseUrl + 'matchRanking/get/' + projectName,
-                    }).then((res)=>{
-                        this.projectNameOptions = res.data.data;
-                    });
+                    method: 'get',
+                        url: baseUrl + 'matchRanking/get/' + this.form.projectName,
+                }).then((res)=>{
+                    this.matchPanking = res.data.data;
+                });
                 }
-                this.getProjectName(null);
             },
             getProjectName(projectType){
+                this.form.projectName = '';
                 console.log(projectType)
                 axios({
                     method: 'get',
@@ -231,6 +226,7 @@
                 });
             },
             onCancel() {
+                this.form.projectName = '';
                 this.form.type = '';
                 this.getProjectName(null);
             },

@@ -4,7 +4,7 @@
 
     <select id="find" resultType="com.ruoyi.client.domain.vo.MatchPankingVO">
         SELECT s.name studentName
-        ,class.`name` studentClass
+        ,class.`name`  studentClass
         ,college.`name` college
         ,c.score score
         ,p.`name` projectName
@@ -25,5 +25,6 @@
         <if test="projectName!=null and !projectName.isEmpty()">
           AND p.`name` = #{projectName}
         </if>
+        order by c.score desc
     </select>
 </mapper>

@@ -422,6 +422,9 @@
                         if (this.changeSelect === 'username' ) {
                             this.user.username = this.userInput;
                         }
+                        if (this.changeSelect === 'image'){
+                            this.user.userHeadUrl = '/img/user_upload/' + this.userInput;
+                        }
                         this.$alert('更改成功', '更改成功', {
                             confirmButtonText: '确定',
                         });
