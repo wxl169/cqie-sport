@@ -6,29 +6,61 @@
     <link rel="stylesheet" type="text/css" href="/css/index.css"/>
     <link rel="stylesheet" type="text/css" href="/css/mycss.css"/>
     <style>
-        /* 表格样式 */
-        table {
-            border-collapse: collapse;
-            width: 100%;
+        body {
             font-family: Arial, sans-serif;
-        }
-
-        th, td {
-            text-align: left;
-            padding: 8px;
-        }
-
-        tr:nth-child(even) {
             background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
         }
 
-        tr:hover {
-            background-color: #ddd;
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            background-color: #fff;
+            border-collapse: collapse;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
         }
 
         th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 5px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+
+        button[type="submit"] {
+            background-color: #aaa7aa;
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
             background-color: #00aaff;
-            color: white;
         }
     </style>
 </head>
@@ -104,37 +136,38 @@
                 </el-menu>
             </el-col>
         </el-main>
-<!--        //表格项目信息-->
-        <table>
-            <thead>
-            <tr>
-                <th>比赛项目编号</th>
-                <th>项目名称</th>
-                <th>规则介绍</th>
-                <th>操作</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>001</td>
-                <td>项目一</td>
-                <td>规则介绍一</td>
-                <td><a href="toInputScores">进入</a></td>
-            </tr>
-            <tr>
-                <td>002</td>
-                <td>项目二</td>
-                <td>规则介绍二</td>
-                <td><a href="toInputScores">进入</a></td>
-            </tr>
-            <tr>
-                <td>003</td>
-                <td>项目三</td>
-                <td>规则介绍三</td>
-                <td><a href="toInputScores">进入</a></td>
-            </tr>
-            </tbody>
-        </table>
+        <!--        //表格项目信息-->
+        <h1>成绩录入</h1>
+
+        <form>
+            <table>
+                <thead>
+                <tr>
+                    <th>学院</th>
+                    <th>班级</th>
+                    <th>姓名</th>
+                    <th>成绩</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>软件与人工智能学院</td>
+                    <td>软工2班</td>
+                    <td>吴小龙</td>
+                    <td><input type="number" name="score" required></td>
+                </tr>
+                <tr>
+                    <td>软件与人工智能学院</td>
+                    <td>软工2班</td>
+                    <td>邬文莱</td>
+                    <td><input type="number" name="score" required></td>
+                </tr>
+                <!-- 可以根据需求添加更多的行 -->
+                </tbody>
+            </table>
+
+            <button type="submit">提交成绩</button>
+        </form>
 
     </el-container>
 </div>

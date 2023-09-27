@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.client.mapper.TbProjectDao">
+  <resultMap id="BaseResultMap" type="com.ruoyi.client.domain.entity.TbProject">
+    <id column="project_id" jdbcType="INTEGER" property="projectId" />
+    <result column="number" jdbcType="VARCHAR" property="number" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="introduction" jdbcType="VARCHAR" property="introduction" />
+    <result column="type" jdbcType="CHAR" property="type" />
+    <result column="gtype" jdbcType="CHAR" property="gtype" />
+    <result column="upnum" jdbcType="INTEGER" property="upnum" />
+    <result column="renum" jdbcType="INTEGER" property="renum" />
+    <result column="is_cancel" jdbcType="CHAR" property="isCancel" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="other" jdbcType="VARCHAR" property="other" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    project_id, `number`, `name`, introduction, `type`, gtype, upnum, renum, is_cancel,
+    create_time, update_time, other
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_project
+    where project_id = #{projectId,jdbcType=INTEGER}
+  </select>
+    <select id="find" resultType="com.ruoyi.client.domain.entity.TbProject">
+        select * from tb_project
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_project
+    where project_id = #{projectId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="project_id" keyProperty="projectId" parameterType="com.ruoyi.client.domain.entity.TbProject" useGeneratedKeys="true">
+    insert into tb_project (`number`, `name`, introduction,
+      `type`, gtype, upnum, renum,
+      is_cancel, create_time, update_time,
+      other)
+    values (#{number,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{introduction,jdbcType=VARCHAR},
+      #{type,jdbcType=CHAR}, #{gtype,jdbcType=CHAR}, #{upnum,jdbcType=INTEGER}, #{renum,jdbcType=INTEGER},
+      #{isCancel,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+      #{other,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="project_id" keyProperty="projectId" parameterType="com.ruoyi.client.domain.entity.TbProject" useGeneratedKeys="true">
+    insert into tb_project
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="number != null">
+        `number`,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="introduction != null">
+        introduction,
+      </if>
+      <if test="type != null">
+        `type`,
+      </if>
+      <if test="gtype != null">
+        gtype,
+      </if>
+      <if test="upnum != null">
+        upnum,
+      </if>
+      <if test="renum != null">
+        renum,
+      </if>
+      <if test="isCancel != null">
+        is_cancel,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="other != null">
+        other,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="number != null">
+        #{number,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="introduction != null">
+        #{introduction,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=CHAR},
+      </if>
+      <if test="gtype != null">
+        #{gtype,jdbcType=CHAR},
+      </if>
+      <if test="upnum != null">
+        #{upnum,jdbcType=INTEGER},
+      </if>
+      <if test="renum != null">
+        #{renum,jdbcType=INTEGER},
+      </if>
+      <if test="isCancel != null">
+        #{isCancel,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="other != null">
+        #{other,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.client.domain.entity.TbProject">
+    update tb_project
+    <set>
+      <if test="number != null">
+        `number` = #{number,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="introduction != null">
+        introduction = #{introduction,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        `type` = #{type,jdbcType=CHAR},
+      </if>
+      <if test="gtype != null">
+        gtype = #{gtype,jdbcType=CHAR},
+      </if>
+      <if test="upnum != null">
+        upnum = #{upnum,jdbcType=INTEGER},
+      </if>
+      <if test="renum != null">
+        renum = #{renum,jdbcType=INTEGER},
+      </if>
+      <if test="isCancel != null">
+        is_cancel = #{isCancel,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="other != null">
+        other = #{other,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where project_id = #{projectId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.client.domain.entity.TbProject">
+    update tb_project
+    set `number` = #{number,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      introduction = #{introduction,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=CHAR},
+      gtype = #{gtype,jdbcType=CHAR},
+      upnum = #{upnum,jdbcType=INTEGER},
+      renum = #{renum,jdbcType=INTEGER},
+      is_cancel = #{isCancel,jdbcType=CHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      other = #{other,jdbcType=VARCHAR}
+    where project_id = #{projectId,jdbcType=INTEGER}
+  </update>
+</mapper>
