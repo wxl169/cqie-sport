@@ -1,41 +1,34 @@
 package com.ruoyi.client.controller;
 
 import com.ruoyi.client.service.MatchRankingService;
+import com.ruoyi.common.core.domain.R;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
 /**
+ * @author 16956
  * @Auther 邬文莱
  * @explanation
  * @date 2023/9/15 11:55
  */
-@Controller
+@RestController
 @RequestMapping("/client/matchRanking")
 public class MatchRankingController {
     @Resource
     private MatchRankingService matchRankingService;
 
+
     /**
-     * 查询排行榜
+     * 查看比赛排行榜
      *
-     * @param projectName 项目名称
-     * @param type 项目类型
-     * @param model 页面跳转
-     * @return
+     * @param projectName 项目名
+     * @return 比赛信息
      */
-    @RequestMapping("/")
-    public String matchRanking(String projectName,String type,Model model){
-        //如果没有指定类型，默认为个人比赛
-        if (type == null) {
-            type = "0";
-        }
-        //查询排行
-        model.addAttribute("matchPanking",matchRankingService.find(type,projectName));
-        //查询筛选条件
-        model.addAttribute("matchType",matchRankingService.findTerms());
-        return "match/matchRanking";
+    @GetMapping("/get/{projectName}")
+    public R getMatchRanking(@PathVariable("projectName") String projectName){
+        return matchRankingService.getMatchRanking(projectName);
     }
 }

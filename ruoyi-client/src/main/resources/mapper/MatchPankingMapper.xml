@@ -21,12 +21,9 @@
         ON c.arrangement_id = arrangement.arrangement_id
         JOIN tb_project p
         ON arrangement.project_id = p.project_id
-        WHERE c.is_effective = 1 and c.type = #{type}
+        WHERE c.is_effective = 1
         <if test="projectName!=null and !projectName.isEmpty()">
           AND p.`name` = #{projectName}
         </if>
-    </select>
-    <select id="findTerms" resultType="com.ruoyi.client.domain.vo.MatchTypeVO">
-        select `name` matchType from tb_project
     </select>
 </mapper>

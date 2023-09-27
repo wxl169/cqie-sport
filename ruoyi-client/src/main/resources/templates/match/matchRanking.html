@@ -57,35 +57,21 @@
             <!--导航栏-->
             <el-col :span="17" :offset="3">
                 <div class="filter">
-<!--                    <form method="post" action="/client/matchRanking">-->
-<!--                        <label >筛选类型：</label>-->
-<!--                        <input type="radio" name="type" value="0" required>个人-->
-<!--                        <input type="radio" name="type" value="1" required>团体-->
-<!--                        <br/>-->
-
-<!--                        <label for="event-filter">筛选项目：</label>-->
-<!--                        <select id="event-filter" name="projectName">-->
-<!--                            <option value="">全部</option>-->
-<!--                            <option th:each="mt:${matchType}" th:text="${mt.matchType}" th:value="${mt.matchType}"></option>-->
-<!--                        </select>-->
-
-<!--                        <button type="submit" class="btn">提交</button>-->
-<!--                    </form>-->
-
                     <el-form ref="form" :model="form" label-width="80px" class="horizontal-form">
                         <el-row>
                             <el-col :span="6">
                                 <el-form-item label="比赛类型">
                                     <el-radio-group v-model="form.type">
-                                        <el-radio label="个人"></el-radio>
-                                        <el-radio label="团体"></el-radio>
+                                        <el-radio label="个人" @change="getProjectName('0')"></el-radio>
+                                        <el-radio label="团体" @change="getProjectName('1')"></el-radio>
+
                                     </el-radio-group>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="6">
                                 <el-form-item label="比赛项目">
                                 <el-select v-model="form.projectName" placeholder="请选择比赛项目">
-                                    <el-option v-for="item in projectNameOptions" :key="item.matchType" :label="item.matchType" :value="item.matchType"></el-option>
+                                    <el-option v-for="item in projectNameOptions" :key="item.name" :label="item.name" :value="item.name"></el-option>
                                 </el-select>
                                 </el-form-item>
                             </el-col>
@@ -98,39 +84,62 @@
                         </el-row>
                     </el-form>
                 </div>
-                <table>
-                    <tr>
-                        <th>排名</th>
-                        <th>学生姓名</th>
-                        <th>成绩</th>
-                        <th>班级</th>
-                        <th>学院</th>
-                        <th>项目</th>
-                    </tr>
-                    <tr th:each="mp:${matchPanking}">
-                        <td th:text="${mpStat.index+1}"></td>
-                        <td th:text="${mp.studentName}"></td>
-                        <td th:text="${mp.score}"></td>
-                        <td th:text="${mp.studentClass}"></td>
-                        <td th:text="${mp.college}"></td>
-                        <td th:text="${mp.projectName}"></td>
-                    </tr>
-                    <!-- 添加更多成绩行 -->
-                </table>
+<!--                <table>-->
+<!--                    <tr>-->
+<!--                        <th>排名</th>-->
+<!--                        <th>学生姓名</th>-->
+<!--                        <th>成绩</th>-->
+<!--                        <th>班级</th>-->
+<!--                        <th>学院</th>-->
+<!--                        <th>项目</th>-->
+<!--                    </tr>-->
+<!--                    <tr th:each="mp:${matchPanking}">-->
+<!--                        <td th:text="${mpStat.index+1}"></td>-->
+<!--                        <td th:text="${mp.studentName}"></td>-->
+<!--                        <td th:text="${mp.score}"></td>-->
+<!--                        <td th:text="${mp.studentClass}"></td>-->
+<!--                        <td th:text="${mp.college}"></td>-->
+<!--                        <td th:text="${mp.projectName}"></td>-->
+<!--                    </tr>-->
+<!--                    &lt;!&ndash; 添加更多成绩行 &ndash;&gt;-->
+<!--                </table>-->
+                <template>
+                    <el-table
+                        :data="matchPanking"
+                        stripe
+                        style="width: 100%">
+                        <el-table-column
+                            prop="index"
+                            label="排名"
+                            width="180">
+                        </el-table-column>
+                        <el-table-column
+                            prop="studentName"
+                            label="学生姓名"
+                            width="180">
+                        </el-table-column>
+                        <el-table-column
+                            prop="score"
+                            label="成绩"
+                            width="180">
+                        </el-table-column>
+                        <el-table-column
+                            prop="studentClass"
+                            label="班级"
+                            width="180">
+                        </el-table-column>
+                        <el-table-column
+                            prop="college"
+                            label="学院">
+                        </el-table-column>
+                        <el-table-column
+                            prop="projectName"
+                            label="项目"
+                            width="180">
+                        </el-table-column>
+                    </el-table>
+                </template>
             </el-col>
-
-            <!--文字资讯-->
-            <el-col :span="11" :offset="3">
-                <el-card class="box-card" style="position: relative; top: 20px;">
-                    <div slot="header" class="clearfix">
-                        <span>运动会资讯</span>
-                    </div>
-                    <div v-for="o in 4" :key="o" class="text item">
-                        {{'列表内容 ' + o }}
-                    </div>
-                </el-card>
-            </el-col>
-
         </el-main>
 
         <el-footer class="foot">
@@ -164,9 +173,10 @@
                 projectName: ''
             },
             projectNameOptions: [
-                { label: '个人', value: '0' },
-                { label: '团体', value: '1' }
-            ]
+            ],
+            projectType:'',
+            matchPanking:[],
+            projectName:'',
         },
 
         created: function () {
@@ -182,24 +192,47 @@
                 this.user.username = res.data.data.username;
                 this.user.userHeadUrl = '/img/user_upload/' + res.data.data.img;
             });
-
-            // axios.get(baseUrl + "matchRanking/signup").then((res)=>{
-            //     // console.log(res.data);
-            //     this.projects = res.data.data;
-            //     // console.log(this.projects);
-            // });
+            this.getProjectName(null);
+            axios.get(baseUrl + "project/get/"+null).then((res)=>{
+                    this.projectNameOptions = res.data.data;
+            });
         },
 
         methods: {
-
-            methods: {
-                onSubmit() {
-                    console.log('submit!');
+            onSubmit() {
+                let projectName = this.form.projectName;
+                if (projectName === undefined || projectName === null){
+                    projectName = "null";
+                    console.log("2"+projectName)
+                    axios({
+                        method: 'get',
+                        url: baseUrl + 'matchRanking/get/' + projectName,
+                    }).then((res)=>{
+                        this.projectNameOptions = res.data.data;
+                    });
+                }else{
+                    console.log("1"+projectName)
+                    axios({
+                        method: 'get',
+                        url: baseUrl + 'matchRanking/get/' + projectName,
+                    }).then((res)=>{
+                        this.projectNameOptions = res.data.data;
+                    });
                 }
+                this.getProjectName(null);
+            },
+            getProjectName(projectType){
+                console.log(projectType)
+                axios({
+                    method: 'get',
+                    url: baseUrl + 'project/get/' + projectType,
+                }).then((res)=>{
+                        this.projectNameOptions = res.data.data;
+                });
             },
             onCancel() {
                 this.form.type = '';
-                this.form.projectName = '';
+                this.getProjectName(null);
             },
             myIndex() {
                 window.location.href = baseUrl + "system/toIndex";

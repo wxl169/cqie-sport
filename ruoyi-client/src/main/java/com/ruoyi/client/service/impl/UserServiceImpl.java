@@ -55,7 +55,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             return R.fail("请输入邮箱或密码");
         }
         User user = userMapper.selectUserByEmail(email);
-        System.out.println(BCrypt.hashpw(password));
+        if (user == null){
+            return R.fail("请注册账户");
+        }
         if (BCrypt.checkpw(password,user.getPassword())){
 //        if (user != null) {
             //如果登录验证成功，则生成令牌token
