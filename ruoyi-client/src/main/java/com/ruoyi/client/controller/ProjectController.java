@@ -1,8 +1,8 @@
 package com.ruoyi.client.controller;
 
 import com.ruoyi.client.service.ProjectService;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ruoyi.common.core.domain.R;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -16,7 +16,13 @@ public class ProjectController {
     private ProjectService projectService;
 
 
-
-
+    /**
+     * 获取项目名
+     * @return 返回项目名列表
+     */
+    @GetMapping("/get/{projectType}")
+    public R getProjectName(@PathVariable("projectType") String projectType){
+        return projectService.getProjectName(projectType);
+    }
 
 }

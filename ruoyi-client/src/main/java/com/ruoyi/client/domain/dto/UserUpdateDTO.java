@@ -9,7 +9,7 @@ import lombok.Data;
 public class UserUpdateDTO {
     private Long userId;
     private String type;
-    private Integer typeId;
+    private Long typeId;
     private String changeType;
     private String value;
 }

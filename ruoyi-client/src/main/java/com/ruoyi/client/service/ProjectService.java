@@ -2,6 +2,7 @@ package com.ruoyi.client.service;
 
 import com.ruoyi.client.domain.entity.Project;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.common.core.domain.R;
 
 /**
  * <p>
@@ -13,4 +14,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ProjectService extends IService<Project> {
 
+    /**
+     * 查询项目名
+     *
+     * @param projectType 项目类型
+     * @return 项目名列表
+     */
+    R getProjectName(String projectType);
 }

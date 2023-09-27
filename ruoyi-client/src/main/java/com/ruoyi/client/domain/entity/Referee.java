@@ -28,8 +28,8 @@ public class Referee implements Serializable {
     /**
      * 裁判员id 裁判员表的主键
      */
-    @TableId(value = "referee_id", type = IdType.AUTO)
-    private Integer refereeId;
+    @TableId(value = "referee_id", type = IdType.ASSIGN_ID)
+    private Long refereeId;
 
     /**
      * 裁判员编号

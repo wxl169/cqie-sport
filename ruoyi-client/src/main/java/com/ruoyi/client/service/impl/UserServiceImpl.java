@@ -55,7 +55,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             return R.fail("请输入邮箱或密码");
         }
         User user = userMapper.selectUserByEmail(email);
-        System.out.println(BCrypt.hashpw(password));
+        if (user == null){
+            return R.fail("请注册账户");
+        }
         if (BCrypt.checkpw(password,user.getPassword())){
 //        if (user != null) {
             //如果登录验证成功，则生成令牌token
@@ -66,7 +68,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
                 if (user.getTypeId() == null) {
                     return R.fail("系统内部错误");
                 }
-                Integer studentId = user.getTypeId();
+                Long studentId = user.getTypeId();
                 LambdaQueryWrapper<Student> studentQueryWrapper = new LambdaQueryWrapper<>();
                 studentQueryWrapper.eq(Student::getStudentId, studentId);
                 Student student = studentMapper.selectOne(studentQueryWrapper);
@@ -310,9 +312,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     public R getLoginUserInfo(String token) {
         String email = redisTemplate.opsForValue().get(token);
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.select(User::getUserId,User::getUsername,User::getImg,User::getType,User::getTypeId);
+        queryWrapper.select(User::getUserId,User::getUsername,User::getImg,User::getType,User::getTypeId,User::getGender);
         queryWrapper.eq(User::getEmail,email);
         User user = this.getOne(queryWrapper);
+        //如果当前用户是学生，则返回学生性别
+        if (UserConstants.USER_TYPE_STUDENT.equals(user.getType())){
+            LambdaQueryWrapper<Student> queryWrapper1 = new LambdaQueryWrapper<>();
+            queryWrapper1.select(Student::getGender)
+                    .eq(Student::getStudentId,user.getTypeId());
+            Student student = studentMapper.selectOne(queryWrapper1);
+            user.setGender(student.getGender());
+        }
+        //如果当前用户是裁判员，则查询裁判员信息
+        if (UserConstants.USER_TYPE_REFEREE.equals(user.getType()) ){
+            LambdaQueryWrapper<Referee> queryWrapper2 = new LambdaQueryWrapper<>();
+            queryWrapper2.select(Referee::getGender)
+                .eq(Referee::getRefereeId,user.getTypeId());
+            Referee referee = refereeMapper.selectOne(queryWrapper2);
+            user.setGender(referee.getGender());
+        }
         UserLoginVO copy = BeanCopyUtils.copy(user, UserLoginVO.class);
         return R.ok(copy);
     }
