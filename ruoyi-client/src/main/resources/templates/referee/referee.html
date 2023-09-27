@@ -5,6 +5,32 @@
     <title>Title</title>
     <link rel="stylesheet" type="text/css" href="/css/index.css"/>
     <link rel="stylesheet" type="text/css" href="/css/mycss.css"/>
+    <style>
+        /* 表格样式 */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        th {
+            background-color: #00aaff;
+            color: white;
+        }
+    </style>
 </head>
 <body>
 <!--Vue.js-->
@@ -78,6 +104,38 @@
                 </el-menu>
             </el-col>
         </el-main>
+<!--        //表格项目信息-->
+        <table>
+            <thead>
+            <tr>
+                <th>比赛项目编号</th>
+                <th>项目名称</th>
+                <th>规则介绍</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>001</td>
+                <td>项目一</td>
+                <td>规则介绍一</td>
+                <td><a href="#">进入</a></td>
+            </tr>
+            <tr>
+                <td>002</td>
+                <td>项目二</td>
+                <td>规则介绍二</td>
+                <td><a href="#">进入</a></td>
+            </tr>
+            <tr>
+                <td>003</td>
+                <td>项目三</td>
+                <td>规则介绍三</td>
+                <td><a href="#">进入</a></td>
+            </tr>
+            </tbody>
+        </table>
+
     </el-container>
 </div>
 
