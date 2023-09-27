@@ -6,6 +6,7 @@ import com.ruoyi.client.domain.vo.ProjectNameVO;
 import com.ruoyi.client.mapper.ProjectMapper;
 import com.ruoyi.client.service.ProjectService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.common.constant.ProjectConstants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.utils.BeanCopyUtils;
@@ -30,7 +31,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         //如果项目类型为空，则返回全部项目名,否则返回指定条件内容
         LambdaQueryWrapper<Project> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.select(Project::getProjectId,Project::getName);
-        if (projectType != null && !"null".equals(projectType)){
+
+        if (projectType != null && !ProjectConstants.NOT_PROJECT.equals(projectType)){
             queryWrapper.eq(Project::getType,projectType);
         }
         List<Project> list = this.list(queryWrapper);

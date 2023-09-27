@@ -29,8 +29,8 @@ public class Project implements Serializable {
     /**
      * 项目id 项目表的主键
      */
-    @TableId(value = "project_id", type = IdType.AUTO)
-    private Integer projectId;
+    @TableId(value = "project_id", type = IdType.ASSIGN_ID)
+    private Long projectId;
 
     /**
      * 项目编号

@@ -28,18 +28,18 @@ public class Student implements Serializable {
     /**
      * 学生id 学生表的主键
      */
-    @TableId(value = "student_id", type = IdType.AUTO)
-    private Integer studentId;
+    @TableId(value = "student_id", type = IdType.ASSIGN_ID)
+    private Long studentId;
 
     /**
      * 班级id
      */
-    private Integer classId;
+    private Long classId;
 
     /**
      * 学院id
      */
-    private Integer collegeId;
+    private Long collegeId;
 
     /**
      * 是否为运动员 0：不是，1：是

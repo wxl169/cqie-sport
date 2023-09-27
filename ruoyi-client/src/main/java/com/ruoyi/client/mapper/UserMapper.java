@@ -30,7 +30,7 @@ public interface UserMapper extends BaseMapper<User> {
      * @param userTypeStudent 用户类型
      * @return 用户数据
      */
-    User selectUserByType(@Param("studentId") Integer studentId, @Param("userTypeStudent") String userTypeStudent);
+    User selectUserByType(@Param("studentId") Long studentId, @Param("userTypeStudent") String userTypeStudent);
 
     /**
      * 查找学生信息

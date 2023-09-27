@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @Data
 public class UserLoginVO {
-    private Integer userId;
+    private Long userId;
     /**
      * 用户名
      */
@@ -31,5 +31,5 @@ public class UserLoginVO {
     /**
      * 学生id
      */
-    private Integer typeId;
+    private Long typeId;
 }
