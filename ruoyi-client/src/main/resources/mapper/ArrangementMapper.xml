@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.client.mapper.ArrangementMapper">
+  <resultMap id="BaseResultMap" type="com.ruoyi.client.domain.entity.Arrangement">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="arrangement_id" jdbcType="INTEGER" property="arrangementId" />
+    <result column="project_id" jdbcType="INTEGER" property="projectId" />
+    <result column="referee_id" jdbcType="INTEGER" property="refereeId" />
+    <result column="type_id" jdbcType="INTEGER" property="typeId" />
+    <result column="info_id" jdbcType="INTEGER" property="infoId" />
+    <result column="type" jdbcType="CHAR" property="type" />
+    <result column="is_cancel" jdbcType="CHAR" property="isCancel" />
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="other" jdbcType="VARCHAR" property="other" />
+  </resultMap>
+
+  <update id="updateRefereeInArrangement">
+    UPDATE tb_arrangement ar
+    SET ar.referee_id = #{refereeId}
+    WHERE project_id = #{projectId} AND info_id = #{arrangementInfoId}
+  </update>
+
+</mapper>

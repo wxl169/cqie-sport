@@ -9,6 +9,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * <p>
  * 学生表
@@ -21,6 +24,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("tb_student")
+@Table(name = "tb_student")
 public class Student implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -28,6 +32,7 @@ public class Student implements Serializable {
     /**
      * 学生id 学生表的主键
      */
+
     @TableId(value = "student_id", type = IdType.ASSIGN_ID)
     private Long studentId;
 

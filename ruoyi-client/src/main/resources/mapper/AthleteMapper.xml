@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.client.mapper.AthleteMapper">
+    <resultMap id="BaseResultMap" type="com.ruoyi.client.domain.entity.Athlete">
+        <id column="athlete_id" jdbcType="INTEGER" property="athleteId"/>
+        <result column="student_id" jdbcType="INTEGER" property="studentId"/>
+        <result column="number" jdbcType="VARCHAR" property="number"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="other" jdbcType="VARCHAR" property="other"/>
+    </resultMap>
+
+    <resultMap id="SearchVOMap" type="com.ruoyi.client.domain.vo.SearchVO">
+        <result column="atnumber" jdbcType="VARCHAR" property="athleteNumber"/>
+        <result column="stidnumber" jdbcType="VARCHAR" property="studentIdNumber"/>
+        <result column="stname" jdbcType="VARCHAR" property="studentName"/>
+        <result column="cpresult" jdbcType="VARCHAR" property="competitionResult"/>
+        <result column="cpscore" jdbcType="VARCHAR" property="competitionScore"/>
+        <result column="aitime" jdbcType="TIMESTAMP" property="arrangementInfoTime"/>
+        <result column="aiplace" jdbcType="VARCHAR" property="arrangementInfoPlace"/>
+        <result column="prnumber" jdbcType="VARCHAR" property="projectNumber"/>
+        <result column="prname" jdbcType="VARCHAR" property="projectName"/>
+    </resultMap>
+
+    <select id="selectCompetitionsByNumber" resultMap="SearchVOMap">
+        SELECT at.number   atnumber,
+               st.idnumber stidnumber,
+               st.`name`   stname,
+               cp.result   cpresult,
+               cp.score    cpscore,
+               ai.time     aitime,
+               ai.place    aiplace,
+               pr.number   prnumber,
+               pr.`name`   prname
+        FROM athlete at
+        INNER JOIN student st
+        INNER JOIN competition cp
+        INNER JOIN arrangement ar
+        INNER JOIN arrange_info ai
+        INNER JOIN project pr
+        ON at.student_id = st.student_id
+            AND at.athlete_id = cp.type_id
+            AND cp.type = '0'
+            AND cp.arrangement_id = ar.arrangement_id
+            AND ar.info_id = ai.arrange_info_id
+            AND ai.project_id = pr.project_id
+            AND pr.is_cancel = '0'
+            AND at.number = #{athleteId}
+    </select>
+
+    <resultMap id="SearchVOMap2" type="com.ruoyi.client.domain.vo.SearchVO">
+        <result column="atnumber" jdbcType="VARCHAR" property="athleteNumber"/>
+        <result column="stidnumber" jdbcType="VARCHAR" property="studentIdNumber"/>
+        <result column="stname" jdbcType="VARCHAR" property="studentName"/>
+        <result column="cpresult" jdbcType="VARCHAR" property="competitionResult"/>
+        <result column="cpscore" jdbcType="VARCHAR" property="competitionScore"/>
+        <result column="aitime" jdbcType="TIMESTAMP" property="arrangementInfoTime"/>
+        <result column="aiplace" jdbcType="VARCHAR" property="arrangementInfoPlace"/>
+        <result column="prnumber" jdbcType="VARCHAR" property="projectNumber"/>
+        <result column="prname" jdbcType="VARCHAR" property="projectName"/>
+        <result column="tenumber" jdbcType="VARCHAR" property="teamNumber"/>
+    </resultMap>
+
+    <select id="selectCompetitionsByTeamNumber" resultMap="SearchVOMap2">
+        SELECT
+            te.number tenumber,
+            at.number atnumber,
+            st.idnumber stidnumber,
+            st.`name` stname,
+            cp.result cpresult,
+            cp.score cpscore,
+            ai.time aitime,
+            ai.place aiplace,
+            pr.number prnumber,
+            pr.`name` prname
+        FROM
+            tb_athlete
+            AT INNER JOIN tb_student st
+	INNER JOIN tb_competition cp
+	INNER JOIN tb_arrangement ar
+	INNER JOIN tb_arrange_info ai
+	INNER JOIN tb_project pr
+	INNER JOIN tb_team te ON AT.student_id = st.student_id
+            AND te.number = cp.type_id
+            AND cp.type = '1'
+            AND AT.student_id = st.student_id
+            AND te.athlete_id = AT.athlete_id
+            AND cp.arrangement_id = ar.arrangement_id
+            AND ar.info_id = ai.arrange_info_id
+            AND ai.project_id = pr.project_id
+            AND pr.is_cancel = '0'
+            AND te.number = #{teamNumber}
+    </select>
+
+
+
+    <resultMap id="SearchSignVOMap" type="com.ruoyi.client.domain.vo.SearchSignVO">
+        <result column="coname" jdbcType="VARCHAR" property="collegeName"/>
+        <result column="clname" jdbcType="VARCHAR" property="className"/>
+        <result column="stname" jdbcType="VARCHAR" property="studentName"/>
+        <result column="stgender" jdbcType="VARCHAR" property="gender"/>
+        <result column="stidnumber" jdbcType="VARCHAR" property="studentIdNumber"/>
+        <result column="stphonenumber" jdbcType="VARCHAR" property="phoneNumber"/>
+        <result column="atnumber" jdbcType="VARCHAR" property="athleteNumber"/>
+        <result column="prnumber" jdbcType="VARCHAR" property="projectNumber"/>
+        <result column="prname" jdbcType="VARCHAR" property="projectName"/>
+        <result column="aitime" jdbcType="TIMESTAMP" property="arrangementInfoTime"/>
+        <result column="aiplace" jdbcType="VARCHAR" property="arrangementInfoPlace"/>
+    </resultMap>
+
+    <select id="selectArrangementsByIdNumber" resultMap="SearchSignVOMap">
+        SELECT       co.`name` coname,
+                     cl.`name` clname,
+                     st.`name`   stname,
+                     st.gender stgender,
+                     st.idnumber stidnumber,
+                     st.phone_number stphonenumber,
+                     at.number   atnumber,
+                     pr.number   prnumber,
+                     pr.`name`   prname,
+                     ai.time     aitime,
+                     ai.place    aiplace
+        FROM tb_athlete at
+        INNER JOIN tb_student st
+				INNER JOIN tb_class cl
+				INNER JOIN tb_college co
+        INNER JOIN tb_arrangement ar
+        INNER JOIN tb_arrange_info ai
+        INNER JOIN tb_project pr
+        ON at.student_id = st.student_id
+            AND st.class_id = cl.class_id
+            AND st.college_id = co.college_id
+            AND at.athlete_id = ar.type_id
+            AND ar.type = '0'
+            AND ar.is_cancel = '0'
+            AND ar.info_id = ai.arrange_info_id
+            AND ai.project_id = pr.project_id
+            AND pr.is_cancel = '0'
+            AND st.idnumber = #{studentIdNumber}
+    </select>
+
+</mapper>
