@@ -173,7 +173,7 @@ public class ArrangementServiceImpl implements ArrangementService {
                 .andEqualTo("type", projectType)
                 .andEqualTo("isCancel", 0);*/
         LambdaQueryWrapper<Arrangement> lqw =new LambdaQueryWrapper<>();
-        lqw.eq(Arrangement::getProjectId,projectId).eq(Arrangement::getArrangementId,arrangeInfoId)
+        lqw.eq(Arrangement::getProjectId,projectId).eq(Arrangement::getInfoId,arrangeInfoId)
             .eq(Arrangement::getTypeId,typeId).eq(Arrangement::getType,projectType)
             .eq(Arrangement::getIsCancel,0);
          List<Arrangement> arrangements = arrangementMapper.selectList(lqw);
@@ -262,9 +262,9 @@ public class ArrangementServiceImpl implements ArrangementService {
             Athlete athlete = athletes.get(0);
 
             Team team = teamMapper.selectById(typeId);
-            if(athlete.getAthleteId() != team.getAthleteId())
+            if(!Objects.equals(athlete.getAthleteId(), team.getAthleteId())) {
                 insert = 2;
-            else{
+            }else{
                 arrangement.setTypeId(typeId);//设置团队id
                 arrangement.setType("1");
                 insert=arrangementMapper.insert(arrangement);

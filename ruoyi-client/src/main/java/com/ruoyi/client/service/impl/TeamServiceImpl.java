@@ -131,7 +131,7 @@ public class TeamServiceImpl implements TeamService {
         LambdaQueryWrapper<Athlete> lqw1 = new LambdaQueryWrapper<>();
         lqw1.eq(Athlete::getStudentId,teamDto.getTypeId());
         Athlete athlete = athleteMapper.selectOne(lqw1);
-        if(team.getAthleteId() == athlete.getAthleteId()){
+        if(!team.getAthleteId().equals(athlete.getAthleteId())){
             return new ResultVO(ResStatus.NO,"你不是组长不能删除",null);
         }
         int i = teamMapper.deleteById(teamDto.getTeamId());
