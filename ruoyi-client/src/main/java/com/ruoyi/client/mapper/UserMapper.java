@@ -4,7 +4,6 @@ import com.ruoyi.client.domain.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.client.domain.vo.UserInfoVO;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>

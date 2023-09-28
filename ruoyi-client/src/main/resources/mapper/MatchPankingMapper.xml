@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.client.mapper.MatchPankingMapper">
+
+    <select id="find" resultType="com.ruoyi.client.domain.vo.MatchPankingVO">
+        SELECT s.name studentName
+        ,class.`name`  studentClass
+        ,college.`name` college
+        ,c.score score
+        ,p.`name` projectName
+        FROM tb_competition c
+        JOIN tb_athlete a
+        ON c.type_id = a.athlete_id
+        JOIN tb_student s
+        ON a.student_id = s.student_id
+        JOIN tb_class class
+        ON s.class_id = class.class_id
+        JOIN tb_college college
+        ON s.college_id = college.college_id
+        JOIN tb_arrangement arrangement
+        ON c.arrangement_id = arrangement.arrangement_id
+        JOIN tb_project p
+        ON arrangement.project_id = p.project_id
+        WHERE c.is_effective = 1
+        <if test="projectName!=null and !projectName.isEmpty()">
+          AND p.`name` = #{projectName}
+        </if>
+        order by c.score desc
+    </select>
+</mapper>

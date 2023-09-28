@@ -4,6 +4,7 @@ package com.ruoyi.client.service;
 import com.ruoyi.client.domain.dto.UserInfoDTO;
 import com.ruoyi.client.domain.dto.UserUpdateDTO;
 import com.ruoyi.client.domain.entity.User;
+import com.ruoyi.client.domain.vo.ResultVO;
 import com.ruoyi.client.domain.vo.UserInfoVO;
 import com.ruoyi.common.core.domain.R;
 
@@ -67,4 +68,6 @@ public interface UserService {
      * @return 用户信息
      */
     R getLoginUserInfo(String token);
+
+    ResultVO selectStudent(Integer id);
 }

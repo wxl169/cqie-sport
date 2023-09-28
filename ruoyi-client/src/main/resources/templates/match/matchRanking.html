@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>成绩公布</title>
+    <link rel="stylesheet" type="text/css" href="/css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/mycss.css"/>
+</head>
+<body>
+<!--Vue.js-->
+<script src="/js/vue.js"></script>
+<!--Element-ui-->
+<script src="/js/index.js"></script>
+<!--axios-->
+<script src="/js/axios.min.js"></script>
+<!--cookie工具-->
+<script src="/js/cookie_utils.js"></script>
+<!--工具-->
+<script src="/js/utils.js"></script>
+
+<div id="container">
+    <el-container>
+
+        <!--网站图片 + 用户信息-->
+        <el-header height="100%">
+            <el-col :span="6">
+                <img class="logo" src="/img/server_html/sportLogo.jpg" style="width: 100px;height: 100px"/>
+            </el-col>
+            <el-col :span="9">
+                <span class="campus-sports" style="margin-left: 150px;font-size: 36px;padding-top: 50px">重庆工程学院校园运动会</span>
+            </el-col>
+            <el-col :span="6" :offset="12" style="display: flex; align-items: center; justify-content: flex-end;">
+                <br>
+                <!--个人用户信息-->
+                <el-dropdown>
+                    <span class="no-attention move-bottom-mini-mini" style="font-size: 20px">
+                                用户:&nbsp;
+                        <el-button type="text"  icon="el-icon-arrow-down" style="font-size: 20px;margin-right: 20px">{{user.username}}</el-button>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item >
+                            <el-button @click="myIndex" style="width: 100px;text-align: center;border: none;font-size: 15px">主页</el-button>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                            <el-button @click="logout" style="width: 100px;text-align: center;border: none;font-size: 15px">注销</el-button>
+                        </el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <!--头像-->
+                <el-col :span="6" :offset="0">
+                    <el-avatar :src="user.userHeadUrl"></el-avatar>
+                </el-col>
+            </el-col>
+        </el-header>
+
+        <el-main>
+            <!--导航栏-->
+            <el-col :span="17" :offset="3">
+                <div class="filter">
+                    <el-form ref="form" :model="form" label-width="80px" class="horizontal-form">
+                        <el-row>
+                            <el-col :span="6">
+                                <el-form-item label="比赛类型">
+                                    <el-radio-group v-model="form.type">
+                                        <el-radio label="个人" @change="getProjectName('0')"></el-radio>
+                                        <el-radio label="团体" @change="getProjectName('1')"></el-radio>
+
+                                    </el-radio-group>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="比赛项目">
+                                <el-select v-model="form.projectName" placeholder="请选择比赛项目">
+                                    <el-option v-for="item in projectNameOptions" :key="item.name" :label="item.name" :value="item.name"></el-option>
+                                </el-select>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item>
+                                    <el-button type="primary" @click="onSubmit">提交</el-button>
+                                    <el-button @click="onCancel">取消</el-button>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </el-form>
+                </div>
+                <template>
+                    <el-table
+                        :data="matchPanking"
+                        stripe
+                        style="width: 100%">
+                        <<el-table-column
+                        label="排名"
+                        width="180"
+                    >
+                        <template slot-scope="scope">
+                            {{ scope.$index + 1 }}
+                        </template>
+                    </el-table-column>
+                        <el-table-column
+                            prop="studentName"
+                            label="学生姓名"
+                            width="180">
+                        </el-table-column>
+                        <el-table-column
+                            prop="score"
+                            label="成绩"
+                            width="180">
+                        </el-table-column>
+                        <el-table-column
+                            prop="studentClass"
+                            label="班级"
+                            width="180">
+                        </el-table-column>
+                        <el-table-column
+                            prop="college"
+                            label="学院">
+                        </el-table-column>
+                        <el-table-column
+                            prop="projectName"
+                            label="项目"
+                            width="180">
+                        </el-table-column>
+                    </el-table>
+                </template>
+            </el-col>
+        </el-main>
+
+        <el-footer class="foot">
+            <br>
+            <br>
+            &copy;2023 by 第三组
+        </el-footer>
+    </el-container>
+</div>
+
+<script>
+    //登录验证
+    if (getCookieValue("token") == null || getCookieValue("token") === '') {
+        window.location.href = baseUrl + 'system/toLogin?reason=nologin';
+    }
+</script>
+
+<script>
+    var baseUrl = "http://localhost:8080/client/";
+    var vm = new Vue({
+        el: '#container',
+        data: {
+            user: {
+                userId: '',
+                username: '',
+                userHeadUrl: '',
+                token: '',
+            },
+            form: {
+                type:'',
+                projectName: ''
+            },
+            projectNameOptions: [
+            ],
+            projectType:'',
+            matchPanking:[],
+            projectName:'',
+        },
+
+        created: function () {
+            this.user.token = getCookieValue("token");
+            axios({
+                method: 'get',
+                url: baseUrl + 'user/getLoginUserInfo' + '/' + this.user.token,
+                header: {
+                    token : this.user.token
+                }
+            }).then((res)=>{
+                this.user.userId = res.data.data.userId;
+                this.user.username = res.data.data.username;
+                this.user.userHeadUrl = '/img/user_upload/' + res.data.data.img;
+            });
+            this.getProjectName(null);
+            axios.get(baseUrl + "project/get/"+null).then((res)=>{
+                    this.projectNameOptions = res.data.data;
+            });
+        },
+
+        methods: {
+            onSubmit() {
+                if (this.form.projectName === '') {
+                    this.$message.warning('请选择比赛项目');
+                } else {
+                    // 执行提交逻辑
+                    axios({
+                    method: 'get',
+                        url: baseUrl + 'matchRanking/get/' + this.form.projectName,
+                }).then((res)=>{
+                    this.matchPanking = res.data.data;
+                });
+                }
+            },
+            getProjectName(projectType){
+                this.form.projectName = '';
+                console.log(projectType)
+                axios({
+                    method: 'get',
+                    url: baseUrl + 'project/get/' + projectType,
+                }).then((res)=>{
+                        this.projectNameOptions = res.data.data;
+                });
+            },
+            onCancel() {
+                this.form.projectName = '';
+                this.form.type = '';
+                this.getProjectName(null);
+            },
+            myIndex() {
+                window.location.href = baseUrl + "system/toIndex";
+            },
+            logout() {
+                axios({
+                    method: 'post',
+                    url: baseUrl + 'user/logout',
+                    data: {
+                        token: this.user.token,
+                    },
+                }).then((res)=>{
+                    setCookieValue("token", "");
+                    window.location.href = baseUrl + 'system/toLogin'
+                });
+            }
+        }
+    });
+</script>
+</body>
+</html>

@@ -13,6 +13,8 @@ import com.ruoyi.client.domain.dto.UserUpdateDTO;
 import com.ruoyi.client.domain.entity.Referee;
 import com.ruoyi.client.domain.entity.Student;
 import com.ruoyi.client.domain.entity.User;
+import com.ruoyi.client.domain.vo.ResStatus;
+import com.ruoyi.client.domain.vo.ResultVO;
 import com.ruoyi.client.domain.vo.UserInfoVO;
 import com.ruoyi.client.domain.vo.UserLoginVO;
 import com.ruoyi.client.mapper.RefereeMapper;
@@ -33,7 +35,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -61,7 +62,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             return R.fail("请输入邮箱或密码");
         }
         User user = userMapper.selectUserByEmail(email);
-        System.out.println(BCrypt.hashpw(password));
+        if (user == null){
+            return R.fail("请注册账户");
+        }
         if (BCrypt.checkpw(password,user.getPassword())){
 //        if (user != null) {
             //如果登录验证成功，则生成令牌token
@@ -128,16 +131,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         }
 
         User user = new User();
-        Date date = new Date();
-        Timestamp timestamp = new Timestamp(date.getTime());
         user.setType(type);
         user.setUsername(username);
         user.setPassword(BCrypt.hashpw(password));
         user.setEmail(email);
-        user.setCreateTime(timestamp);
-        user.setUpdateTime(timestamp);
         user.setImg("default.png");
-
+        user.setCreateTime(LocalDateTime.now());
+        user.setUpdateTime(LocalDateTime.now());
         //若是学生注册
         if (UserConstants.USER_TYPE_STUDENT.equals(type)) {
             //首先根据学号得到学生在学生表中的主键id，从而插入用户表中的type_id字段
@@ -172,7 +172,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             Referee referee = refereeMapper.selectOne(queryWrapper);
             //如果工号正确
             if (referee != null) {
-                //判断该学生是否注册账号
+                //判断该裁判员是否注册账号
                 User userStudent = userMapper.selectUserByType(referee.getRefereeId(),UserConstants.USER_TYPE_REFEREE);
                 if (userStudent != null) {
                     return R.fail("该裁判员已创建账号");
@@ -190,16 +190,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             user.setIdnumber(info.get("idnumber"));
             user.setPhoneNumber(info.get("phoneNumber"));
             String birthday = info.get("birthday");
-            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
-            if (birthday!=null){
-                Date birth= null;
-                try {
-                    birth = sdf.parse(birthday);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                user.setBirthday(birth);
-            }
+            birthday = birthday.substring(0, 10);
+            user.setBirthday(LocalDate.parse(birthday));
         }
         int i = userMapper.insert(user);
         if (i > 0) {
@@ -278,42 +270,42 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
             LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
             //更改用户名
-            if ("username".equals(userUpdateDTO.getChangeType())){
-                updateWrapper.set(User::getUsername,userUpdateDTO.getValue());
-                pd = true;
+        if ("username".equals(userUpdateDTO.getChangeType())){
+            updateWrapper.set(User::getUsername,userUpdateDTO.getValue());
+            pd = true;
+        }
+        //更改邮箱
+        if ("email".equals(userUpdateDTO.getChangeType())){
+            queryWrapper.eq(User::getEmail,userUpdateDTO.getValue());
+            User user = this.getOne(queryWrapper);
+            if (user != null){
+                return R.fail("该邮箱已注册");
             }
-            //更改邮箱
-            if ("email".equals(userUpdateDTO.getChangeType())){
-                queryWrapper.eq(User::getEmail,userUpdateDTO.getValue());
-                User user = this.getOne(queryWrapper);
-                if (user != null){
-                    return R.fail("该邮箱已注册");
-                }
-                updateWrapper.set(User::getEmail,userUpdateDTO.getValue());
-                pd = true;
+            updateWrapper.set(User::getEmail,userUpdateDTO.getValue());
+            pd = true;
+        }
+        //更改密码
+        if ("password".equals(userUpdateDTO.getChangeType())){
+            updateWrapper.set(User::getPassword,userUpdateDTO.getValue());
+            pd = true;
+        }
+        //更改手机号
+        if ("phonenumber".equals(userUpdateDTO.getChangeType())){
+            queryWrapper.eq(User::getPhoneNumber,userUpdateDTO.getValue());
+            User user = this.getOne(queryWrapper);
+            if (user != null){
+                return R.fail("该手机号已注册");
             }
-            //更改密码
-            if ("password".equals(userUpdateDTO.getChangeType())){
-                updateWrapper.set(User::getPassword,userUpdateDTO.getValue());
-                pd = true;
-            }
-            //更改手机号
-            if ("phonenumber".equals(userUpdateDTO.getChangeType())){
-                queryWrapper.eq(User::getPhoneNumber,userUpdateDTO.getValue());
-                User user = this.getOne(queryWrapper);
-                if (user != null){
-                    return R.fail("该手机号已注册");
-                }
-                updateWrapper.set(User::getPhoneNumber,userUpdateDTO.getValue());
-                pd = true;
-            }
-            if ("image".equals(userUpdateDTO.getChangeType())){
-                updateWrapper.set(User::getImg,userUpdateDTO.getValue());
-                pd = true;
-            }
-            if (!pd){
-                return  R.fail("请选择提供的修改字段");
-            }
+            updateWrapper.set(User::getPhoneNumber,userUpdateDTO.getValue());
+            pd = true;
+        }
+        if ("image".equals(userUpdateDTO.getChangeType())){
+            updateWrapper.set(User::getImg,userUpdateDTO.getValue());
+            pd = true;
+        }
+        if (!pd){
+            return  R.fail("请选择提供的修改字段");
+        }
             updateWrapper.set(User::getUpdateTime,LocalDateTime.now());
             updateWrapper.eq(User::getUserId,userUpdateDTO.getUserId());
             judge = this.update(updateWrapper);
@@ -328,10 +320,41 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     public R getLoginUserInfo(String token) {
         String email = redisTemplate.opsForValue().get(token);
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(User::getUserId,User::getUsername,User::getImg,User::getType,User::getTypeId,User::getGender);
         queryWrapper.eq(User::getEmail,email);
         User user = this.getOne(queryWrapper);
+        //如果当前用户是学生，则返回学生性别
+        if (UserConstants.USER_TYPE_STUDENT.equals(user.getType())){
+            LambdaQueryWrapper<Student> queryWrapper1 = new LambdaQueryWrapper<>();
+            queryWrapper1.select(Student::getGender)
+                    .eq(Student::getStudentId,user.getTypeId());
+            Student student = studentMapper.selectOne(queryWrapper1);
+            user.setGender(student.getGender());
+        }
+        //如果当前用户是裁判员，则查询裁判员信息
+        if (UserConstants.USER_TYPE_REFEREE.equals(user.getType()) ){
+            LambdaQueryWrapper<Referee> queryWrapper2 = new LambdaQueryWrapper<>();
+            queryWrapper2.select(Referee::getGender)
+                .eq(Referee::getRefereeId,user.getTypeId());
+            Referee referee = refereeMapper.selectOne(queryWrapper2);
+            user.setGender(referee.getGender());
+        }
         UserLoginVO copy = BeanCopyUtils.copy(user, UserLoginVO.class);
         return R.ok(copy);
+    }
+
+    @Override
+    public ResultVO selectStudent(Integer id) {
+        List<Student> students = studentMapper.selectStudent(id);
+        System.out.println("<<<<<<<<<<<<<<<");
+        System.out.println("<<<<<<<<<<<<<<<");
+        System.out.println(students);
+
+        if (students.size() > 0) {
+            return new ResultVO(ResStatus.OK, "success", students);
+        } else {
+            return new ResultVO(ResStatus.NO, "fail", students);
+        }
     }
 
 

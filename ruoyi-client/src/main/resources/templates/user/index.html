@@ -62,16 +62,19 @@
                     <el-submenu index="3" style="margin-left: 85px">
                         <template slot="title">成绩查询</template>
                         <el-menu-item index="3-1" @click="queryIPage('searchsign')">报名查询</el-menu-item>
-                        <el-submenu index="3-2">
-                            <template slot="title">成绩查询</template>
-                            <el-menu-item index="3-2-1" @click="queryIPage('searchscore')">单项成绩查询</el-menu-item>
-                            <el-menu-item index="3-2-2" @click="queryIPage('searchteam')">团体成绩查询</el-menu-item>
-                        </el-submenu>
+<!--                        <el-submenu index="3-2">-->
+<!--                            <template slot="title">成绩查询</template>-->
+<!--                            <el-menu-item index="3-2-1" @click="queryIPage('searchscore')">单项成绩查询</el-menu-item>-->
+<!--                            <el-menu-item index="3-2-2" @click="queryIPage('searchteam')">团体成绩查询</el-menu-item>-->
+<!--                        </el-submenu>-->
+                        <el-menu-item index="3-2" @click="queryIPage('searchscore')">比赛成绩查询</el-menu-item>
                         <el-menu-item index="3-3">班级总分查询</el-menu-item>
-                        <el-menu-item index="3-4">学院总分查询</el-menu-item>
+                        <el-menu-item index="3-4">班级总分查询</el-menu-item>
+                        <el-menu-item index="3-5">学院总分查询</el-menu-item>
                     </el-submenu>
                     <el-menu-item index="4" style="margin-left: 85px" @click="scorePage">成绩公布</el-menu-item>
                     <el-menu-item index="5" style="margin-left: 85px">投诉与检举</el-menu-item>
+                    <el-menu-item index="5" style="margin-left: 85px"> <a href=" " v-if="user.type === '2'">成绩录入</a ></el-menu-item>
                 </el-menu>
             </el-col>
 
@@ -98,16 +101,24 @@
             </el-col>
 
             <!--文字资讯-->
-            <el-col :span="11" :offset="3">
-                <el-card class="box-card" style="position: relative; top: 20px;">
-                    <div slot="header" class="clearfix">
-                        <span>运动会资讯</span>
-                    </div>
-                    <div v-for="o in 4" :key="o" class="text item">
-                        {{'列表内容 ' + o }}
-                    </div>
-                </el-card>
-            </el-col>
+                <el-col :span="11" :offset="3">
+                    <template>
+                        <el-tabs v-model="activeName" @tab-click="handleClick">
+                            <el-tab-pane label="运动会资讯" name="first">
+                                <el-card class="box-card" style="position: relative;">
+                                    <div v-for="o in 4" :key="o" class="text item">
+                                        {{'列表内容 ' + o }}
+                                    </div>
+                                </el-card>
+                            </el-tab-pane>
+                            <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
+                            <el-tab-pane label="角色管理" name="third">角色管理</el-tab-pane>
+                            <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane>
+                        </el-tabs>
+                    </template>
+                </el-col>
+
+
 
         </el-main>
 
@@ -137,9 +148,11 @@
                 username: '',
                 userHeadUrl: '',
                 token: '',
+                type:'',
             },
             img:'',
             activeIndex: '0',
+            activeName: 'second',
             circleImgUrl: ['http://i.cqie.edu.cn/resources/style/pc/images/newicon/bg_1.jpg',
                 'http://i.cqie.edu.cn/resources/style/pc/images/newicon/bg_2.jpg',
                 'http://i.cqie.edu.cn/resources/style/pc/images/newicon/bg_3.jpg']
@@ -149,41 +162,44 @@
             // this.user.username = getCookieValue("username");
             // this.user.userHeadUrl = './static/img/user_upload/' + getCookieValue("img");
             this.user.token = getCookieValue("token");
-            console.log(this.user.token)
             var param = window.location.href.split("?");
             if (param[1] === 'reason=successlogin') {
                 this.$notify({
                     title: '登录成功',
-                    message: '欢迎您: ' + this.user.username,
+                    message: '欢迎您',
                     type: 'success'
                 });
             }
-            axios.interceptors.request.use(config => {
-                config.headers['token'] = this.user.token;
-                return config;
-            });
             axios({
                 method: 'get',
                 url: baseUrl + 'user/getLoginUserInfo' + '/' + this.user.token,
+                header: {
+                    token : this.user.token
+                }
             }).then((res)=>{
                 this.user.userId = res.data.data.userId;
                 this.user.username = res.data.data.username;
                 this.user.gender = res.data.data.gender;
                 this.user.userHeadUrl = '/img/user_upload/' + res.data.data.img;
+                this.user.type = res.data.data.type;
             });
         },
         methods: {
             handleSelect(key, keyPath) {
                 console.log(key, keyPath);
             },
+            //首页资讯
+            handleClick(tab, event) {
+                console.log(tab, event);
+            },
             signupPage() {
-                window.location.href = "signup.html";
+                window.location.href = baseUrl+"system/toSignUp";
             },
             sportsIPage() {
                 window.location.href = baseUrl + "system/toSportsList";
             },
             queryIPage(byType) {
-                window.location.href = "query.html?index=" + byType;
+                window.location.href =baseUrl + "system/toMatchRanking";
             },
             myPage() {
                 window.location.href = baseUrl + "system/toMyInfo";

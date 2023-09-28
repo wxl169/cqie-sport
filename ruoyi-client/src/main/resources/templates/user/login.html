@@ -76,9 +76,6 @@
     <script>
         var baseUrl = "http://localhost:8080/client/";
         //登录验证
-        // if (getCookieValue("token") != null || getCookieValue("token") !== '') {
-        //     window.location.href = baseUrl + 'system/toIndex?reason=successLogin';
-        // }
         var vm = new Vue({
             el: '#container',
             data: {
@@ -115,7 +112,7 @@
                         var vo = res.data;
                         if (vo.code === 200) {
                             this.isLogin = true
-                            // console.log(vo);
+
                             //如果登录成功，就把token存储到cookie
                             setCookieValue("token",vo.msg);
                             window.location.href = baseUrl + "system/toIndex?reason=successlogin";

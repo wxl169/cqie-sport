@@ -3,38 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" type="text/css" href="../../static/css/index.css"/>
-    <link rel="stylesheet" type="text/css" href="../../static/css/mycss.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/mycss.css"/>
 </head>
 <body>
 <!--Vue.js-->
-<script src="../../static/js/vue.js"></script>
+<script src="/js/vue.js"></script>
 <!--Element-ui-->
-<script src="../../static/js/index.js"></script>
+<script src="/js/index.js"></script>
 <!--axios-->
-<script src="../../static/js/axios.min.js"></script>
+<script src="/js/axios.min.js"></script>
 <!--cookie工具-->
-<script src="../../static/js/cookie_utils.js"></script>
+<script src="/js/cookie_utils.js"></script>
 <!--工具-->
-<script src="../../static/js/utils.js"></script>
+<script src="/js/utils.js"></script>
 
 
 <div id="container">
     <el-container>
         <!--网站图片 + 用户信息-->
-        <el-header height="100px">
+        <el-header height="100%">
             <el-col :span="6">
-                <a href="index.html">
-                    <img class="logo" src="../../static/img/server_html/logo.png"/>
-                </a>
+                <img class="logo" src="/img/server_html/sportLogo.jpg" style="width: 100px;height: 100px"/>
             </el-col>
-            <el-col :span="6" :offset="12">
+            <el-col :span="9">
+                <span class="campus-sports" style="margin-left: 150px;font-size: 36px;padding-top: 50px">重庆工程学院校园运动会</span>
+            </el-col>
+            <el-col :span="6" :offset="12" style="display: flex; align-items: center; justify-content: flex-end;">
                 <br>
                 <!--个人用户信息-->
-                <el-col :span="8" :offset="6" class="move-bottom-mini-mini font-size-mid">
-                    <span class="no-attention move-bottom-mini-mini">用户: &nbsp;</span>
-                    <el-link type="primary" class="font-size-big" @click="myPage">{{user.username}}</el-link>
-                </el-col>
+                <el-dropdown>
+                    <span class="no-attention move-bottom-mini-mini" style="font-size: 20px">
+                                用户:&nbsp;
+                        <el-button type="text"  icon="el-icon-arrow-down" style="font-size: 20px;margin-right: 20px">{{user.username}}</el-button>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item >
+                            <el-button @click="myIndex" style="width: 100px;text-align: center;border: none;font-size: 15px">主页</el-button>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                            <el-button @click="logout" style="width: 100px;text-align: center;border: none;font-size: 15px">注销</el-button>
+                        </el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
                 <!--头像-->
                 <el-col :span="6" :offset="0">
                     <el-avatar :src="user.userHeadUrl"></el-avatar>
@@ -43,7 +54,7 @@
         </el-header>
 
         <el-main>
-            <el-col :span="10" :offset="7">
+            <el-col :span="10" :offset="3">
                 <el-card class="box-card">
                     <div slot="header" class="clearfix" style="position: relative; left: 36%">
                         <span>{{title[parseInt(this.userType)]}}</span>
@@ -82,6 +93,15 @@
                                 </template>
                                 <template v-else-if="projectType == 1">
                                     团体赛
+                                    <el-tag>参赛队伍</el-tag>
+                                    <el-select v-model="teamId1"  placeholder="请选择">
+                                        <el-option
+                                                v-for="item in teams"
+                                                :key="item.teamId"
+                                                :label="item.number"
+                                                :value="item.teamId">
+                                        </el-option>
+                                    </el-select>
                                 </template>
                                 <template v-else>
 
@@ -128,7 +148,69 @@
                     </div>
                 </el-card>
             </el-col>
+            <el-cpl el-col :span="10" :offset="1" :push="22">
+            <el-right>
+
+                <template style="width: 20%" >
+                    <h1 >管理队伍</h1>
+                    <el-button type="primary"   @click="createTime()">新建队伍</el-button>
+                    <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
+
+
+                    <el-form ref="form" :model="form" label-width="80px">
+                        <el-form-item label="队伍名称">
+                            <el-input v-model="form.teamName"></el-input>
+                        </el-form-item>
+                        <el-form-item label="队伍队员">
+                            <el-select v-model="students2" multiple placeholder="请选择">
+                                <el-option
+                                        v-for="item in options"
+                                        :key="item.studentId"
+                                        :label="item.name"
+                                        :value="item.studentId">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+
+                        <el-form-item>
+                            <el-button @click="createCancel()">取 消</el-button>
+                            <el-button type="primary" @click="createSubmit()">确 定</el-button>
+                        </el-form-item>
+                    </el-form>
+                    </el-dialog>
+                    <el-table
+                            :data="tableData"
+                            height="250"
+                            border
+                            style="width: 40%">
+                        <el-table-column
+                                prop="teamLeader"
+                                label="队长"
+                                width="180">
+                        </el-table-column>
+                        <el-table-column
+                                prop="team.number"
+                                label="队伍名称"
+                                width="180">
+                        </el-table-column>
+                        <el-table-column label="操作">
+                            <template slot-scope="scope">
+                                <el-button
+                                        size="mini"
+                                        @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                                <el-button
+                                        size="mini"
+                                        type="danger"
+                                        @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+
+        </el-right>
+            </el-cpl>
         </el-main>
+
 
 
         <el-footer>
@@ -143,20 +225,21 @@
 
 <script>
     //登录验证
-    if (getCookieValue("userId") == null || getCookieValue("userId").length == 0) {
-        window.location.href = 'login.html?reason=nologin';
+    if (getCookieValue("token") == null || getCookieValue("token") === '') {
+        window.location.href = baseUrl + 'system/toLogin?reason=nologin';
     }
 </script>
 
 <script>
-    var baseUrl = "http://localhost:8080";
+    var baseUrl = "http://localhost:8080/client";
     var vm = new Vue({
         el: '#container',
         data: {
             user: {
                 userId: '',
                 username: '',
-                userHeadUrl: ''
+                userHeadUrl: '',
+                token: '',
             },
 
             title: ['运动员报名窗口', '', '裁判员报名窗口'],
@@ -182,26 +265,240 @@
             projectId: '',
             arrangeInfoId: '',
 
-            userType: ''
+            userType: '',
+            typeId:'',
+
+            students:[],
+            students2:[],
+
+            tableData: [{
+                date: '2016-05-02',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1518 弄'
+            }, {
+                date: '2016-05-04',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1517 弄'
+            }, {
+                date: '2016-05-01',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1519 弄'
+            }, {
+                date: '2016-05-03',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1516 弄'
+            }, {
+                date: '2016-05-03',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1516 弄'
+            }, {
+                date: '2016-05-03',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1516 弄'
+            }, {
+                date: '2016-05-03',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1516 弄'
+            }],
+            options: [{
+                studentId: '选项1',
+                name: '黄金糕'
+            }, {
+                studentId: '选项2',
+                name: '双皮奶'
+            }, {
+                studentId: '选项3',
+                name: '蚵仔煎'
+            },],
+            value1: [],
+            //对话框
+            dialogFormVisible: false,
+            //创建队伍
+            form: {
+                teamName: '',
+                students: [],
+
+            },
+            teamInfos:[],
+            teams:[],
+            teamId1:''
 
         },
 
-        created: function () {
-            this.user.userId = getCookieValue("userId");
-            this.user.username = getCookieValue("username");
-            this.user.userHeadUrl = './static/img/user_upload/' + getCookieValue("img");
-            this.userType = getCookieValue("type");
-            // console.log(this.projectIndex);
-            // console.log(parseInt(this.userType));
-            // console.log(this.userType);
-            axios.get(baseUrl + "/signup").then((res)=>{
-                // console.log(res.data);
-                this.projects = res.data.data;
-                // console.log(this.projects);
-            });
+
+        // created: function () {
+        //     this.user.userId = getCookieValue("userId");
+        //     this.user.username = getCookieValue("username");
+        //     this.user.userHeadUrl = '/img/user_upload/' + getCookieValue("img");
+        //     this.userType = getCookieValue("type");
+        //     this.typeId = getCookieValue("typeId");
+        //     // console.log(this.projectIndex);
+        //     // console.log(parseInt(this.userType));
+        //     // console.log(this.userType);
+        //     axios.get(baseUrl + "/signup").then((res)=>{
+        //         // console.log(res.data);
+        //         this.projects = res.data.data;
+        //         // console.log(this.projects);
+        //     });
+        // },
+        // created: function () {
+        //     this.user.token = getCookieValue("token");
+        //     var param = window.location.href.split("?");
+        //     if (param[1] === 'reason=successlogin') {
+        //         this.$notify({
+        //             title: '登录成功',
+        //             message: '欢迎您',
+        //             type: 'success'
+        //         });
+        //     }
+        //     axios({
+        //         method: 'get',
+        //         url: baseUrl + '/user/getLoginUserInfo' + '/' + this.user.token,
+        //         header: {
+        //             token : this.user.token
+        //         }
+        //     }).then((res)=>{
+        //         this.user.userId = res.data.data.userId;
+        //         this.user.username = res.data.data.username;
+        //         this.user.gender = res.data.data.gender;
+        //         this.user.userHeadUrl = '/img/user_upload/' + res.data.data.img;
+        //         this.userType = res.data.data.type
+        //         this.typeId = res.data.data.typeId
+        //         console.log(this.userType)
+        //         console.log(this.typeId)
+        //     });
+        // },
+        mounted(){
+            // this.function();
+            // this.selectStudents();
+            // this.selectTeam();
+        },
+        created(){
+            this.function();
+            // this.selectStudents();
+            // this.selectTeam();
         },
 
         methods: {
+            function () {
+                this.user.token = getCookieValue("token");
+                var param = window.location.href.split("?");
+                if (param[1] === 'reason=successlogin') {
+                    this.$notify({
+                        title: '登录成功',
+                        message: '欢迎您',
+                        type: 'success'
+                    });
+                }
+                axios({
+                    method: 'get',
+                    url: baseUrl + '/user/getLoginUserInfo' + '/' + this.user.token,
+                    header: {
+                        token: this.user.token
+                    }
+                }).then((res) => {
+                    this.user.userId = res.data.data.userId;
+                    this.user.username = res.data.data.username;
+                    this.user.gender = res.data.data.gender;
+                    this.user.userHeadUrl = '/img/user_upload/' + res.data.data.img;
+                    this.userType = res.data.data.type
+                    this.typeId = res.data.data.typeId
+                    console.log(this.userType)
+                    console.log(this.typeId)
+                    this.selectTeam();
+                    this.selectStudents();
+                        axios.get(baseUrl + "/system/signup").then((res)=>{
+                                    // console.log(res.data);
+                                    this.projects = res.data.data;
+                                    // console.log(this.projects);
+                                });
+                })
+            },
+            selectTeam(){
+                console.log(this.userType)
+                console.log(this.typeId)
+                axios({
+                    method:"get",
+                    url:baseUrl + "/system/selectTeamByStudentId/" + this.typeId
+                }).then((res)=>{
+                    this.tableData = res.data.data
+                    this.teamInfos = res.data.data
+                    this.teams.length = 0;
+                    this.teamInfos.forEach((value,index,array)=>{
+                        console.log(value.team.teamId)
+                        console.log("<<<<<<<<<<<<<")
+                        this.teams.push(value.team)
+                    })
+                    console.log(this.teams)
+                })
+            },
+            selectStudents(){
+                axios({
+                    method:"get",
+                    url: baseUrl + "/system/selectStudent/" + this.typeId
+                }).then((res)=>{
+                    this.options = res.data.data
+                    this.options.forEach((value,index,array)=>{
+                        if (value.studentId == this.typeId)
+                            array.splice(index,1);
+                    })
+
+                })
+            },
+            createCancel(){
+                this.students2.length = 0;
+                this.teamId1 = ''
+                this.dialogFormVisible = false;
+
+            },
+            createSubmit(){
+                var arr = this.students.concat(this.students2);
+                console.log(arr)
+                // this.from.students = arr;
+                axios({
+                    method: 'post',
+                    url: baseUrl + "/system/team",
+                    data: {
+                        teamName: this.form.teamName,
+                        students: arr
+                    }
+                }).then((res) =>{
+                    console.log(res.data.code)
+                    if(res.data.code == 10000){
+                        this.$message("新建队伍成功");
+                        this.selectTeam();
+                    }else if(res.data.msg == "队伍性别不一致"){
+                        this.$message("队伍性别不一致");
+                    }else {
+                        this.$message("新建队伍失败");
+                    }
+                })
+                this.students2.length = 0;
+                this.teamId1 = ''
+                this.dialogFormVisible = false;
+            },
+            createTime(){
+                this.students.length = 0;
+                this.students.push(this.typeId)
+                this.dialogFormVisible = true;
+            },
+            handleEdit(index, row) {
+                console.log(index, row);
+            },
+            handleDelete(index, row) {
+                console.log(index, row);
+                axios({
+                    method: "delete",
+                    url: baseUrl + "/system/deleteTeam",
+                    data: {
+                        typeId:this.typeId,
+                        teamId: row.teamId
+                    }
+                }).finally((res)=>{
+                    this.selectTeam();
+                })
+
+            },
             changeProject(index) {
                 // console.log(this.projects);
                 // var index = event.srcElement.dataset.index;
@@ -245,8 +542,8 @@
                     return;
                 }
 
-                var gender = getCookieValue("gender");
-                var type = getCookieValue("type");
+                var gender = this.user.gender;
+                var type = this.userType;
                 if (gender != this.projectGType && type == '0') { // 只校验学生性别
                     this.$alert('请确认您的性别是否与比赛要求一致', '报名失败', {
                         confirmButtonText: '确定',
@@ -254,16 +551,18 @@
                     return;
                 }
 
-
+                var id =this.typeId;
+                if(this.projectType == 1) id = this.teamId1
                 axios({
                     method: 'post',
-                    url: baseUrl + "/sign",
+                    url: baseUrl + "/system/sign",
                     data: {
                         projectId: this.projectId,
                         projectType: this.projectType,
                         arrangeInfoId: this.arrangeInfoId,
-                        typeId: getCookieValue("typeId"),
-                        type: getCookieValue("type")
+                        typeId: id,
+                        type: this.userType,
+                        typeId2: this.typeId
                     }
                 }).then((res)=>{
                     // console.log(res.data);
@@ -272,7 +571,18 @@
                         this.$alert('原因：之前已报名', '报名失败', {
                             confirmButtonText: '确定',
                         });
-                    } else if (res.data.msg = 'success') {
+                    }else if (res.data.msg == 'yibaomingmanle') {
+                        //之前已报名
+                        this.$alert('原因：比赛已经报名满了', '报名失败', {
+                            confirmButtonText: '确定',
+                        });
+                    }else if (res.data.msg == '你不是这队组长没权限') {
+                        //之前已报名
+                        this.$alert('原因：你不是这队组长没权限', '报名失败', {
+                            confirmButtonText: '确定',
+                        });
+                    }
+                    else if (res.data.msg = 'success') {
                         //报名成功
                         this.$alert('可前往信息查询页面，查询报名详情', '报名成功', {
                             confirmButtonText: '确定',
@@ -285,9 +595,21 @@
                     }
                 });
             },
-            myPage() {
-                window.location.href = "my.html";
-            }
+            myIndex() {
+                window.location.href = baseUrl + "/system/toIndex";
+            },
+            logout() {
+                axios({
+                    method: 'post',
+                    url: baseUrl + '/user/logout',
+                    data: {
+                        token: this.user.token,
+                    },
+                }).then((res)=>{
+                    setCookieValue("token", "");
+                    window.location.href = baseUrl + '/system/toLogin'
+                });
+            },
         }
     });
 </script>

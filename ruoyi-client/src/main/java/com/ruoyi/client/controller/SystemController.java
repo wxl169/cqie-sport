@@ -43,6 +43,12 @@ public class SystemController {
         return "user/my";
     }
 
+
+    @RequestMapping("/toSignUp")
+    public String toSignUp(){
+        return "user/signup";
+    }
+
     /**
      * 跳转到主页
      *
@@ -64,6 +70,15 @@ public class SystemController {
     @RequestMapping("/toSportsList")
     public String toSports(){
         return "sports/sports";
+    }
+    /**
+     * 跳转到比赛成绩查询
+     *
+     * @return 比赛成绩查询
+     */
+    @RequestMapping("/toMatchRanking")
+    public String toMatchRanking(){
+        return "match/matchRanking";
     }
 
 }

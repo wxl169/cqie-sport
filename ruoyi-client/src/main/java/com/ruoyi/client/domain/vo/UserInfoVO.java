@@ -14,7 +14,7 @@ public class UserInfoVO {
     /**
      * 用户id 用户表的主键
      */
-    @TableId(value = "user_id", type = IdType.AUTO)
+    @TableId(value = "user_id", type = IdType.ASSIGN_ID)
     private Long userId;
 
     /**
