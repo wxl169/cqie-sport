@@ -2,10 +2,14 @@ package com.ruoyi.client.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.client.domain.entity.Project;
+import com.ruoyi.client.domain.vo.ResStatus;
+import com.ruoyi.client.domain.vo.ResultVO;
+import com.ruoyi.client.domain.vo.SignUpVO;
 import com.ruoyi.client.domain.vo.ProjectNameVO;
 import com.ruoyi.client.mapper.ProjectMapper;
 import com.ruoyi.client.service.ProjectService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.ruoyi.common.constant.ProjectConstants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.R;
@@ -38,5 +42,18 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
         List<Project> list = this.list(queryWrapper);
         return R.ok(BeanCopyUtils.copyList(list, ProjectNameVO.class));
+    }
+    @Autowired
+    private ProjectMapper projectMapper;
+
+    /**
+     * 申请报名时返回比赛项目的信息列表
+     *
+     * @return
+     */
+    @Override
+    public ResultVO listSignUpNeedInfo() {
+        List<SignUpVO> list = projectMapper.selectSignUpNeedInfo();
+        return new ResultVO(ResStatus.OK, "success", list);
     }
 }

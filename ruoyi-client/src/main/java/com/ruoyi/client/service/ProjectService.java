@@ -2,6 +2,7 @@ package com.ruoyi.client.service;
 
 import com.ruoyi.client.domain.entity.Project;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.client.domain.vo.ResultVO;
 import com.ruoyi.common.core.domain.R;
 
 /**
@@ -13,6 +14,11 @@ import com.ruoyi.common.core.domain.R;
  * @since 2023-09-25
  */
 public interface ProjectService extends IService<Project> {
+    /**
+     * 申请报名时返回比赛项目的信息列表
+     * @return
+     */
+    public ResultVO listSignUpNeedInfo();
 
     /**
      * 查询项目名

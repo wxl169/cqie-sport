@@ -13,6 +13,8 @@ import com.ruoyi.client.domain.dto.UserUpdateDTO;
 import com.ruoyi.client.domain.entity.Referee;
 import com.ruoyi.client.domain.entity.Student;
 import com.ruoyi.client.domain.entity.User;
+import com.ruoyi.client.domain.vo.ResStatus;
+import com.ruoyi.client.domain.vo.ResultVO;
 import com.ruoyi.client.domain.vo.UserInfoVO;
 import com.ruoyi.client.domain.vo.UserLoginVO;
 import com.ruoyi.client.mapper.RefereeMapper;
@@ -28,6 +30,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -333,6 +336,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         }
         UserLoginVO copy = BeanCopyUtils.copy(user, UserLoginVO.class);
         return R.ok(copy);
+    }
+
+    @Override
+    public ResultVO selectStudent(Integer id) {
+        List<Student> students = studentMapper.selectStudent(id);
+        System.out.println("<<<<<<<<<<<<<<<");
+        System.out.println("<<<<<<<<<<<<<<<");
+        System.out.println(students);
+
+        if (students.size() > 0) {
+            return new ResultVO(ResStatus.OK, "success", students);
+        } else {
+            return new ResultVO(ResStatus.NO, "fail", students);
+        }
     }
 
 
