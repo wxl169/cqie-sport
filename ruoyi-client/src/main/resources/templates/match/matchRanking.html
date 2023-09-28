@@ -41,6 +41,9 @@
                         <el-dropdown-item >
                             <el-button @click="myIndex" style="width: 100px;text-align: center;border: none;font-size: 15px">主页</el-button>
                         </el-dropdown-item>
+                        <el-dropdown-item >
+                            <el-button @click="myPage" style="width: 100px;text-align: center;border: none;font-size: 15px">个人信息</el-button>
+                        </el-dropdown-item>
                         <el-dropdown-item>
                             <el-button @click="logout" style="width: 100px;text-align: center;border: none;font-size: 15px">注销</el-button>
                         </el-dropdown-item>
@@ -213,6 +216,9 @@
             },
             myIndex() {
                 window.location.href = baseUrl + "system/toIndex";
+            },
+            myPage() {
+                window.location.href = baseUrl + "system/toMyInfo";
             },
             logout() {
                 axios({
