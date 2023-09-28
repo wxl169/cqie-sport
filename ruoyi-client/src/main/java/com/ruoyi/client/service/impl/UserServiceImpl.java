@@ -26,8 +26,13 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.utils.BeanCopyUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.xml.crypto.Data;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -101,6 +106,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
 
 
     @Override
+    @Transactional
     public R addUserToRegister(Map<String, String> info) {
         if (StringUtils.isBlank(info.get("type"))) {
             return R.fail("请选择角色");
@@ -167,7 +173,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             Referee referee = refereeMapper.selectOne(queryWrapper);
             //如果工号正确
             if (referee != null) {
-                //判断该裁判員是否注册账号
+                //判断该裁判员是否注册账号
                 User userStudent = userMapper.selectUserByType(referee.getRefereeId(),UserConstants.USER_TYPE_REFEREE);
                 if (userStudent != null) {
                     return R.fail("该裁判员已创建账号");

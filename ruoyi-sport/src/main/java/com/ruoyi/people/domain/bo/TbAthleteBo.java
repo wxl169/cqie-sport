@@ -35,7 +35,6 @@ public class TbAthleteBo extends BaseEntity {
     /**
      * 学生姓名
      */
-    @NotNull(message = "学生姓名不能为空", groups = { AddGroup.class, EditGroup.class })
     private String studentName;
 
     /**

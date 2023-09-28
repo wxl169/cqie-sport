@@ -10,6 +10,6 @@ import lombok.Data;
 public class UserInfoDTO {
     private Long userId;
     private String type;
-    private Integer typeId;
+    private Long typeId;
     private String token;
 }

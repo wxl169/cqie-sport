@@ -13,7 +13,7 @@
 <script src="/js/index.js"></script>
 <!--axios-->
 <script src="/js/axios.min.js"></script>
-<!--cookie工具-->
+<!--cookie工具类-->
 <script src="/js/cookie_utils.js"></script>
 <!--工具-->
 <script src="/js/utils.js"></script>
@@ -22,9 +22,9 @@
 <div id="container">
     <el-container>
         <!--网站图片 + 用户信息-->
-        <el-header height="100%">
+        <el-header height="100px">
             <el-col :span="6">
-                <img class="logo" src="/img/server_html/sportLogo.jpg" style="width: 100px;height: 100px"/>
+                <img @click="myIndex" class="logo" src="/img/server_html/sportLogo.jpg" style="width: 100px;height: 100px"/>
             </el-col>
             <el-col :span="9">
                 <span class="campus-sports" style="margin-left: 150px;font-size: 36px;padding-top: 50px">重庆工程学院校园运动会</span>
@@ -32,14 +32,15 @@
             <el-col :span="6" :offset="12" style="display: flex; align-items: center; justify-content: flex-end;">
                 <br>
                 <!--个人用户信息-->
-                <el-dropdown>
+                <el-dropdown >
                     <span class="no-attention move-bottom-mini-mini" style="font-size: 20px">
                                 用户:&nbsp;
                         <el-button type="text"  icon="el-icon-arrow-down" style="font-size: 20px;margin-right: 20px">{{user.username}}</el-button>
                     </span>
+
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item >
-                            <el-button @click="myIndex" style="width: 100px;text-align: center;border: none;font-size: 15px">主页</el-button>
+                            <el-button @click="myPage" style="width: 100px;text-align: center;border: none;font-size: 15px">个人信息</el-button>
                         </el-dropdown-item>
                         <el-dropdown-item>
                             <el-button @click="logout" style="width: 100px;text-align: center;border: none;font-size: 15px">注销</el-button>
@@ -79,7 +80,7 @@
 
 
                             <el-tag>项目类型</el-tag>
-                            <template v-if="project.projectType == 0">
+                            <template v-if="project.projectType == '0'">
                                 个人赛
                             </template>
                             <template v-else>
@@ -188,14 +189,11 @@
 
 
                             <el-tag>项目类型</el-tag>
-                            <template v-if="project.projectType == 0">
+                            <template v-if="project.projectType == '0'">
                                 个人赛
                             </template>
-                            <template v-else-if="projectType == 1">
-                                团体赛
-                            </template>
                             <template v-else>
-
+                                团体赛
                             </template>
 
 
@@ -233,10 +231,10 @@
 
         </el-main>
 
-        <el-footer class="foot">
-            <br>
-            <br>
-            &copy;2023 by 第三组
+        <el-footer>
+            <div class="foot2">
+                &copy;2023 by 第三组
+            </div>
         </el-footer>
     </el-container>
 
@@ -259,7 +257,7 @@
                 userId: '',
                 username: '',
                 userHeadUrl: '',
-                token: '',
+                token: ''
             },
             searchInput: '',
             projects: [],
@@ -276,20 +274,18 @@
 
         created: function () {
             this.user.token = getCookieValue("token");
+
             axios({
                 method: 'get',
                 url: baseUrl + 'user/getLoginUserInfo' + '/' + this.user.token,
-                header: {
-                    token : this.user.token
-                }
             }).then((res)=>{
                 this.user.userId = res.data.data.userId;
                 this.user.username = res.data.data.username;
+                this.user.gender = res.data.data.gender;
                 this.user.userHeadUrl = '/img/user_upload/' + res.data.data.img;
             });
 
-            axios.get(baseUrl + "/signup").then((res)=>{
-                // console.log(res.data);
+            axios.get(baseUrl + "sports/sportsList").then((res)=>{
                 this.projects = res.data.data;
                 // console.log(this.projects);
             });
@@ -297,25 +293,15 @@
 
         methods: {
             searchProject() {
-                console.log('---'+this.searchInput);
-
-                if (this.searchInput.length == 0) {
-                    this.$alert('请输入查询所需内容', '查询失败', {
-                        confirmButtonText: '确定',
-                    });
-                    return;
-                }
 
                 console.log(this.isok);
-
-                // console.log('input:' + this.searchInput.length);
 
                 var flag = 1;
 
                 if (this.searchType == 'bynumber') { //按赛事编号查询--------
                     axios({
                         method: 'get',
-                        url: baseUrl + "/searchbynumber",
+                        url: baseUrl + "sports/searchSportByNumber",
                         params: {
                             projectNumber: this.searchInput
                         }
@@ -326,7 +312,7 @@
                 } else if (this.searchType == 'byname') { //按赛事名查询
                     axios({
                         method: 'get',
-                        url: baseUrl + "/searchbyname",
+                        url: baseUrl + "sports/searchSportsByName",
                         params: {
                             projectName: this.searchInput
                         }
@@ -344,7 +330,7 @@
 
                     axios({
                         method: 'get',
-                        url: baseUrl + "/searchbytype",
+                        url: baseUrl + "sports/searchSportsByType",
                         params: {
                             projectType: this.typeValue
                         }
@@ -390,13 +376,18 @@
                 this.resultProjects = [];
             },
 
+            myPage() {
+                window.location.href = baseUrl + "system/toMyInfo";
+            },
+
             myIndex() {
                 window.location.href = baseUrl + "system/toIndex";
             },
+
             logout() {
                 axios({
                     method: 'post',
-                    url: baseUrl + 'user/logout',
+                    url: baseUrl + 'system/logout',
                     data: {
                         token: this.user.token,
                     },

@@ -1,6 +1,5 @@
 package com.ruoyi.client.controller;
 
-import cn.dev33.satoken.annotation.SaIgnore;
 import com.ruoyi.client.domain.dto.LogoutDTO;
 import com.ruoyi.client.domain.dto.UserInfoDTO;
 import com.ruoyi.client.domain.dto.UserLoginDTO;
@@ -64,6 +63,7 @@ public class UserController extends BaseController {
      * @return 是否注册成功
      */
     @RequestMapping(value = "/register",method = RequestMethod.POST)
+    @Log(title = "用户端注册账号 ", businessType = BusinessType.INSERT)
     @RepeatSubmit()
     @ResponseBody
     public R register(@RequestBody Map<String, String> info) {
@@ -99,17 +99,19 @@ public class UserController extends BaseController {
      */
     @RequestMapping(value = "/myInfo")
     @ResponseBody
-    public R myInfo(@RequestParam("userId") String userId,@RequestParam("type") String type,
-                    @RequestParam(value = "typeId",required = false) String typeId,@RequestParam("token")String token) {
+    public R myInfo(@RequestParam("userId") Long userId,@RequestParam("type") String type,
+                    @RequestParam(value = "typeId",required = false) Long typeId,@RequestParam("token")String token) {
         //判断当前用户是否登录
+        System.out.println(typeId);
         if (!userService.judgeLogin(token)){
             return R.fail("请登录账号");
         }
         UserInfoDTO userInfoDTO  = new UserInfoDTO();
-        userInfoDTO.setUserId(Long.valueOf(userId));
+        userInfoDTO.setUserId(userId);
         userInfoDTO.setType(type);
-        if (!UserConstants.USER_NULL.equals(typeId) && typeId != null){
-            userInfoDTO.setTypeId(Integer.valueOf(typeId));
+        System.out.println(UserConstants.USER_NULL.equals(typeId));
+        if (!UserConstants.USER_NULL.equals(typeId)){
+            userInfoDTO.setTypeId(typeId);
         }
         return userService.getUserInfo(userInfoDTO);
     }
@@ -142,6 +144,10 @@ public class UserController extends BaseController {
         if (userUpdateDTO == null){
             return R.fail("请求参数错误");
         }
+        if (!userService.judgeLogin(userUpdateDTO.getToken())){
+            return R.fail("请登录账号");
+        }
+
         return userService.updateUserInfo(userUpdateDTO);
     }
 

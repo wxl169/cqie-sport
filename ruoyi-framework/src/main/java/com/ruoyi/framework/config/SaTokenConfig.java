@@ -23,6 +23,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.annotation.Resource;
+
 /**
  * sa-token 配置
  *
@@ -36,6 +38,8 @@ public class SaTokenConfig implements WebMvcConfigurer {
     private final SecurityProperties securityProperties;
     @Autowired
     private ShutdownManager shutdownManager;
+
+
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

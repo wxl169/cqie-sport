@@ -163,12 +163,6 @@ export default {
         number: [
           { required: true, message: "运动员编号不能为空", trigger: "blur" }
         ],
-        createTime: [
-          { required: true, message: "录入时间不能为空", trigger: "blur" }
-        ],
-        updateTime: [
-          { required: true, message: "更新时间不能为空", trigger: "blur" }
-        ],
       }
     };
   },

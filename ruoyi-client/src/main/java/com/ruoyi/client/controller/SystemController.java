@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author 16956
  */
@@ -37,7 +39,7 @@ public class SystemController {
      * @return 个人详情页
      */
     @RequestMapping("/toMyInfo")
-    public String toMyInfo(){
+    public String toMyInfo(HttpServletRequest request){
         return "user/my";
     }
 
@@ -65,7 +67,7 @@ public class SystemController {
      *
      * @return 赛事公布
      */
-    @RequestMapping("/toSports")
+    @RequestMapping("/toSportsList")
     public String toSports(){
         return "sports/sports";
     }
@@ -78,6 +80,5 @@ public class SystemController {
     public String toMatchRanking(){
         return "match/matchRanking";
     }
-
 
 }

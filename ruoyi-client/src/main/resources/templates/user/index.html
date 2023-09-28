@@ -158,6 +158,9 @@
                 'http://i.cqie.edu.cn/resources/style/pc/images/newicon/bg_3.jpg']
         },
         created: function () {
+            // this.user.userId = getCookieValue("userId");
+            // this.user.username = getCookieValue("username");
+            // this.user.userHeadUrl = './static/img/user_upload/' + getCookieValue("img");
             this.user.token = getCookieValue("token");
             var param = window.location.href.split("?");
             if (param[1] === 'reason=successlogin') {
@@ -193,7 +196,7 @@
                 window.location.href = baseUrl+"system/toSignUp";
             },
             sportsIPage() {
-                window.location.href = baseUrl + "system/toSports";
+                window.location.href = baseUrl + "system/toSportsList";
             },
             queryIPage(byType) {
                 window.location.href =baseUrl + "system/toMatchRanking";

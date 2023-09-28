@@ -298,8 +298,8 @@
 
 <script>
     //登录验证
-    if (getCookieValue("token") == null || getCookieValue("token") === '') {
-        window.location.href = baseUrl + 'system/toLogin?reason=nologin';
+    if (getCookieValue("token") == null || getCookieValue("token").length === 0) {
+        window.location.href = 'login.html?reason=nologin';
     }
 </script>
 
@@ -341,9 +341,6 @@
             axios({
                 method: 'get',
                 url: baseUrl + 'user/getLoginUserInfo' + '/' + this.user.token,
-                data: {
-                    token: this.user.token,
-                },
             }).then((res)=>{
                 this.user.userId = res.data.data.userId;
                 this.user.username = res.data.data.username;
@@ -413,12 +410,12 @@
                         type: this.type,
                         typeId: this.typeId,
                         changeType: this.changeSelect,
-                        value: this.userInput
+                        value: this.userInput,
+                        token :this.user.token
                     }
                 }).then((res)=>{
                     // console.log(res.data);
                     if (res.data.code === 200){
-                        console.log(this.userInput);
                         if (this.changeSelect === 'username' ) {
                             this.user.username = this.userInput;
                         }
@@ -472,7 +469,7 @@
                 const fileData = new FormData();
                 fileData.append("img", file);
                 axios({
-                    method: 'post',
+                    method: 'put',
                     url: baseUrl + 'file/upload',
                     headers: {
                         'Content-Type': 'multipart/form-data'
