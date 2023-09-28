@@ -3,16 +3,10 @@ package com.ruoyi.client.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.client.domain.dto.TeamDto;
-import com.ruoyi.client.domain.entity.Athlete;
-import com.ruoyi.client.domain.entity.Student;
-import com.ruoyi.client.domain.entity.Team;
-import com.ruoyi.client.domain.entity.TeamInfo;
+import com.ruoyi.client.domain.entity.*;
 import com.ruoyi.client.domain.vo.ResStatus;
 import com.ruoyi.client.domain.vo.ResultVO;
-import com.ruoyi.client.mapper.AthleteMapper;
-import com.ruoyi.client.mapper.StudentMapper;
-import com.ruoyi.client.mapper.TeamInfoMapper;
-import com.ruoyi.client.mapper.TeamMapper;
+import com.ruoyi.client.mapper.*;
 import com.ruoyi.client.service.TeamService;
 import com.ruoyi.client.util.MyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +31,8 @@ public class TeamServiceImpl implements TeamService {
 
     @Autowired
     private TeamInfoMapper teamInfoMapper;
+    @Autowired
+    private ArrangementMapper arrangementMapper;
 
 
 
@@ -126,6 +122,16 @@ public class TeamServiceImpl implements TeamService {
 
     @Transactional
     public ResultVO deleteTeam(TeamDto teamDto){
+//        LambdaQueryWrapper<Arrangement> queryWrapper = new LambdaQueryWrapper<>();
+//        queryWrapper.eq(Arrangement::getTypeId,teamDto.getTeamId())
+//            .eq(Arrangement::getType,"1");
+//        List<Arrangement> arrangements = arrangementMapper.selectList(queryWrapper);
+//
+//        for (Arrangement arrangement : arrangements) {
+//
+//        }
+
+
         LambdaQueryWrapper<TeamInfo> lqw = new LambdaQueryWrapper<>();
         Team team = teamMapper.selectById(teamDto.getTeamId());
         LambdaQueryWrapper<Athlete> lqw1 = new LambdaQueryWrapper<>();
