@@ -66,4 +66,23 @@ public class SystemController {
         return "sports/sports";
     }
 
+    /**
+     * 跳转到班级总分查询
+     *
+     * @return 班级总分
+     */
+    @RequestMapping("/toClassScores")
+    public String toClass(){
+        return "user/class_scores";
+    }
+
+    /**
+     * 跳转到班级总分查询
+     *
+     * @return 班级总分
+     */
+    @RequestMapping("/toCollegeScores")
+    public String toCollege(){
+        return "user/college_scores";
+    }
 }
