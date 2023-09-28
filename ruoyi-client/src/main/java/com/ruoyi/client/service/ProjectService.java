@@ -28,11 +28,13 @@ public interface ProjectService extends IService<Project> {
      */
     R getProjectName(String projectType);
 
-    public R listProjectByNumber(String projectNumber);
+    R listSignUpNeedInfos();
 
-    public R listProjectsByName(String projectName);
+    R listProjectByNumber(String projectNumber);
 
-    public R listProjectsByType(String projectType);
+    R listProjectsByName(String projectName);
+
+    R listProjectsByType(String projectType);
 
 
 }

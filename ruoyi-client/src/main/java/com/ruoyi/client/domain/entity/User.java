@@ -77,7 +77,7 @@ public class User implements Serializable {
     /**
      * 出生日期
      */
-    private Date birthday;
+    private LocalDate birthday;
 
     /**
      * 头像 存储图片相对地址，初始应指定默认头像
@@ -92,12 +92,12 @@ public class User implements Serializable {
     /**
      * 录入时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 其他 备用字段

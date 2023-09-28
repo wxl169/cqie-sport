@@ -4,11 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.client.domain.entity.ArrangeInfo;
 import com.ruoyi.client.domain.entity.Project;
-import com.ruoyi.client.domain.vo.SportsVo;
+import com.ruoyi.client.domain.vo.*;
 import com.ruoyi.client.mapper.ArrangeInfoMapper;
 import com.ruoyi.client.mapper.ProjectMapper;
 import com.ruoyi.client.service.ProjectService;
+import com.ruoyi.common.constant.ProjectConstants;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.utils.BeanCopyUtils;
 import com.sun.istack.internal.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +29,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
 
     @Override
-    public R listSignUpNeedInfo() {
+    public R listSignUpNeedInfos() {
         List<ArrangeInfo> arrangeInfos = arrangeInfoMapper.selectList(null);
         List<SportsVo> sportsVos = new ArrayList<>();
 
@@ -144,35 +146,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     }
 
 
-import com.ruoyi.client.domain.entity.Project;
-import com.ruoyi.client.domain.vo.ResStatus;
-import com.ruoyi.client.domain.vo.ResultVO;
-import com.ruoyi.client.domain.vo.SignUpVO;
-import com.ruoyi.client.domain.vo.ProjectNameVO;
-import com.ruoyi.client.mapper.ProjectMapper;
-import com.ruoyi.client.service.ProjectService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.ruoyi.common.constant.ProjectConstants;
-import com.ruoyi.common.constant.UserConstants;
-import com.ruoyi.common.core.domain.R;
-import com.ruoyi.common.utils.BeanCopyUtils;
-import com.ruoyi.common.utils.StringUtils;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
-/**
- * <p>
- * 项目表  服务实现类
- * </p>
- *
- * @author 16956
- * @since 2023-09-25
- */
-@Service
-public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> implements ProjectService {
-
     @Override
     public R getProjectName(String projectType) {
         //如果项目类型为空，则返回请选择项目名,否则返回指定条件内容
@@ -186,8 +159,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         List<Project> list = this.list(queryWrapper);
         return R.ok(BeanCopyUtils.copyList(list, ProjectNameVO.class));
     }
-    @Autowired
-    private ProjectMapper projectMapper;
 
     /**
      * 申请报名时返回比赛项目的信息列表

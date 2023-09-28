@@ -25,8 +25,8 @@ public class SportsController extends BaseController {
     //赛事列表
     @GetMapping("/sportsList")
     @ResponseBody
-    public R listSignUpNeedInfo() {
-        R sportsVo = projectService.listSignUpNeedInfo();
+    public R listSignUpNeedInfos() {
+        R sportsVo = projectService.listSignUpNeedInfos();
         return sportsVo;
     }
 
