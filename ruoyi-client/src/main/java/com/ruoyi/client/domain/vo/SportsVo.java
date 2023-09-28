@@ -1,10 +1,16 @@
 package com.ruoyi.client.domain.vo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.Date;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class SportsVo {
     //Project
     private Long projectId;
