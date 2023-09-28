@@ -101,16 +101,24 @@
             </el-col>
 
             <!--文字资讯-->
-            <el-col :span="11" :offset="3">
-                <el-card class="box-card" style="position: relative; top: 20px;">
-                    <div slot="header" class="clearfix">
-                        <span>运动会资讯</span>
-                    </div>
-                    <div v-for="o in 4" :key="o" class="text item">
-                        {{'列表内容 ' + o }}
-                    </div>
-                </el-card>
-            </el-col>
+                <el-col :span="11" :offset="3">
+                    <template>
+                        <el-tabs v-model="activeName" @tab-click="handleClick">
+                            <el-tab-pane label="运动会资讯" name="first">
+                                <el-card class="box-card" style="position: relative;">
+                                    <div v-for="o in 4" :key="o" class="text item">
+                                        {{'列表内容 ' + o }}
+                                    </div>
+                                </el-card>
+                            </el-tab-pane>
+                            <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
+                            <el-tab-pane label="角色管理" name="third">角色管理</el-tab-pane>
+                            <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane>
+                        </el-tabs>
+                    </template>
+                </el-col>
+
+
 
         </el-main>
 
@@ -144,6 +152,7 @@
             },
             img:'',
             activeIndex: '0',
+            activeName: 'second',
             circleImgUrl: ['http://i.cqie.edu.cn/resources/style/pc/images/newicon/bg_1.jpg',
                 'http://i.cqie.edu.cn/resources/style/pc/images/newicon/bg_2.jpg',
                 'http://i.cqie.edu.cn/resources/style/pc/images/newicon/bg_3.jpg']
@@ -175,6 +184,10 @@
         methods: {
             handleSelect(key, keyPath) {
                 console.log(key, keyPath);
+            },
+            //首页资讯
+            handleClick(tab, event) {
+                console.log(tab, event);
             },
             signupPage() {
                 window.location.href = "signup.html";
