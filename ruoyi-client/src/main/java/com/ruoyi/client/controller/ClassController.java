@@ -1,6 +1,7 @@
 package com.ruoyi.client.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.client.domain.dto.ClassDTO;
 import com.ruoyi.client.domain.entity.Class;
@@ -38,8 +39,8 @@ public class ClassController extends BaseController {
      */
     @GetMapping("/classScores")
     @ResponseBody
-    public R classScores() {
-        List<ClassDTO> scoresList = classService.classScores();
+    public R classScores(Integer page, Integer pageSize) {
+        IPage<ClassDTO> scoresList = classService.classScores(page, pageSize);
         return R.ok(scoresList);
     }
 
@@ -50,8 +51,8 @@ public class ClassController extends BaseController {
      */
     @PostMapping("/classSelect")
     @ResponseBody
-    public R classSelect(String name) {
-        List<Class> classes = classService.classSelect(name);
+    public R classSelect(Integer page, Integer pageSize, String name) {
+        IPage<Class> classes = classService.classSelect(page, pageSize, name);
         return R.ok(classes);
     }
 
@@ -61,8 +62,9 @@ public class ClassController extends BaseController {
      */
     @GetMapping("/collegScores")
     @ResponseBody
-    public R collegScores() {
-        List<College> collegeList = collegeService.collegScores();
+    public R collegScores(Integer page, Integer pageSize) {
+        IPage<College> collegeList = collegeService.collegScores(page, pageSize);
+        System.out.println(collegeList.getRecords());
         return R.ok(collegeList);
     }
 
@@ -73,8 +75,8 @@ public class ClassController extends BaseController {
      */
     @PostMapping("/collegSelect")
     @ResponseBody
-    public R collegSelect(String name) {
-        List<College> colleges = collegeService.collegSelect(name);
+    public R collegSelect(Integer page, Integer pageSize, String name) {
+        IPage<College> colleges = collegeService.collegSelect(page, pageSize, name);
         return R.ok(colleges);
     }
 }

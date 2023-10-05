@@ -86,27 +86,17 @@
                     <el-table-column prop="updateTime" label="最新时间"></el-table-column>
                     <el-table-column prop="score" label="总分"></el-table-column>
                 </el-table>
-<!--                    <el-pagination-->
-<!--                        class="pageList"-->
-<!--                        :page-sizes="[10, 20, 30, 40]"-->
-<!--                        :page-size="pageSize"-->
-<!--                        layout="total, sizes, prev, pager, next, jumper"-->
-<!--                        :total="counts"-->
-<!--                        :current-page.sync="page"-->
-<!--                        @size-change="handleSizeChange"-->
-<!--                        @current-change="handleCurrentChange"-->
-<!--                    ></el-pagination>-->
-<!--                    <div class="block">-->
-<!--                        <el-pagination-->
-<!--                            @size-change="handleSizeChange"-->
-<!--                            @current-change="handleCurrentChange"-->
-<!--                            :current-page="page"-->
-<!--                            :page-sizes="[10, 20, 30, 40]"-->
-<!--                            :page-size="10"-->
-<!--                            layout="total, sizes, prev, pager, next, jumper"-->
-<!--                            :total="counts">-->
-<!--                        </el-pagination>-->
-<!--                    </div>-->
+                    <!--分页工具条-->
+                    <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="page"
+                        :page-sizes="[10,20,30,40]"
+                        :page-size="10"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="counts"
+                        style="margin-left: 260px">
+                    </el-pagination>
                 </el-card>
             </template>
         </el-main>
@@ -135,7 +125,7 @@
         data: {
             scoresList: [],
             input: '',
-            counts: 0,
+            counts: 100,
             page: 1,
             pageSize: 10,
 
@@ -180,27 +170,27 @@
                 console.log(this.isok);
             },
             //分页查询
-            // handleSizeChange(val) {
-            //     console.log(`每页 ${val} 条`);
-            // },
-            // handleCurrentChange(val) {
-            //     console.log(`当前页: ${val}`);
-            // },
-
-
+            handleSizeChange(val) {
+                this.pageSize = val;
+                this.queryScores();
+            },
+            handleCurrentChange(val) {
+                this.page = val;
+                this.queryScores();
+            },
             //展示班级总分
             queryScores() {
                 axios({
                     method: 'get',
                     url: baseUrl + "user/classScores",
                     params: {
-                        // page: this.page,
-                        // pageSize: this.pageSize
+                        page: this.page,
+                        pageSize: this.pageSize
                     }
                 }).then(response => {
                     if (response.data.code == 200) {
-                        // this.counts = response.data.total;
-                        this.scoresList = response.data.data;
+                        this.counts = response.data.data.total;
+                        this.scoresList = response.data.data.records;
                     } else {
                         this.$message.warning("查询失败!");
                     }
@@ -216,11 +206,14 @@
                     method: 'post',
                     url: baseUrl + "user/classSelect",
                     params: {
+                        page: this.page,
+                        pageSize: this.pageSize,
                         name: this.input ? this.input : undefined
                     }
                 }).then(response => {
                     if (response.data.code == 200) {
-                        this.scoresList = response.data.data;
+                        this.counts = response.data.data.total;
+                        this.scoresList = response.data.data.records;
                     } else {
                         this.$message.warning("查询失败!");
                     }
