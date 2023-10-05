@@ -59,7 +59,23 @@
             <br>
             <template>
                 <el-card>
-
+                    <div>
+                        <el-input
+                            v-model="input"
+                            placeholder="请输入班级名称"
+                            style="width: 250px"
+                            clearable
+                            @keyup.enter.native="handleQuery">
+                            <i
+                                slot="prefix"
+                                class="el-input__icon el-icon-search"
+                                style="cursor: pointer"
+                                @click="handleQuery"
+                            ></i>
+                        </el-input>
+                        <br>
+                        <br>
+                    </div>
                 <el-table
                     :data="collegeList"
                     stripe
@@ -97,13 +113,7 @@
         el: '#container',
         data: {
             collegeList: [],
-            // scoresList: {
-            //     name: '',
-            //     snum: '',
-            //     collegeName: '',
-            //     updateTime: '',
-            //     score: ''
-            // },
+            input: '',
 
             user: {
                 userId: '',
@@ -165,6 +175,26 @@
                     this.$message.error('系统繁忙，请稍后再试！');
                 });
             },
+            //查询学院总分
+            handleQuery(){
+                axios({
+                    method: 'post',
+                    url: baseUrl + "user/collegSelect",
+                    params: {
+                        name: this.input ? this.input : undefined
+                    }
+                }).then(response => {
+                    if (response.data.code == 200) {
+                        this.collegeList = response.data.data;
+                    } else {
+                        this.$message.warning("查询失败!");
+                    }
+                })
+                    .catch(error => {
+                        this.$message.error('系统繁忙，请稍后再试！');
+                    });
+            },
+
 
             myPage() {
                 window.location.href = baseUrl + "system/toMyInfo";

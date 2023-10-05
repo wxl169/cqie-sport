@@ -10,4 +10,7 @@ public interface ClassService extends IService<Class> {
 
     //按班级总分展示
     public List<ClassDTO> classScores();
+
+    //根据班级名称查询成绩
+    public List<Class> classSelect(String name);
 }

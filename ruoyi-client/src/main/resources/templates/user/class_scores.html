@@ -5,6 +5,7 @@
     <title>班级总分</title>
     <link rel="stylesheet" type="text/css" href="/css/index.css"/>
     <link rel="stylesheet" type="text/css" href="/css/mycss.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/page.css" />
 </head>
 <body>
 <!--Vue.js-->
@@ -56,10 +57,24 @@
 
         <el-main>
             <br>
-            <br>
             <template>
                 <el-card class="box-card">
-
+                    <div>
+                        <el-input
+                            v-model="input"
+                            placeholder="请输入班级名称"
+                            style="width: 250px"
+                            clearable
+                            @keyup.enter.native="handleQuery">
+                            <i
+                                slot="prefix"
+                                class="el-input__icon el-icon-search"
+                                style="cursor: pointer"
+                                @click="handleQuery"
+                            ></i>
+                        </el-input>
+                        <br>
+                    </div>
                 <el-table
                     :data="scoresList"
                     stripe
@@ -71,6 +86,27 @@
                     <el-table-column prop="updateTime" label="最新时间"></el-table-column>
                     <el-table-column prop="score" label="总分"></el-table-column>
                 </el-table>
+<!--                    <el-pagination-->
+<!--                        class="pageList"-->
+<!--                        :page-sizes="[10, 20, 30, 40]"-->
+<!--                        :page-size="pageSize"-->
+<!--                        layout="total, sizes, prev, pager, next, jumper"-->
+<!--                        :total="counts"-->
+<!--                        :current-page.sync="page"-->
+<!--                        @size-change="handleSizeChange"-->
+<!--                        @current-change="handleCurrentChange"-->
+<!--                    ></el-pagination>-->
+<!--                    <div class="block">-->
+<!--                        <el-pagination-->
+<!--                            @size-change="handleSizeChange"-->
+<!--                            @current-change="handleCurrentChange"-->
+<!--                            :current-page="page"-->
+<!--                            :page-sizes="[10, 20, 30, 40]"-->
+<!--                            :page-size="10"-->
+<!--                            layout="total, sizes, prev, pager, next, jumper"-->
+<!--                            :total="counts">-->
+<!--                        </el-pagination>-->
+<!--                    </div>-->
                 </el-card>
             </template>
         </el-main>
@@ -98,13 +134,10 @@
         el: '#container',
         data: {
             scoresList: [],
-            // scoresList: {
-            //     name: '',
-            //     snum: '',
-            //     collegeName: '',
-            //     updateTime: '',
-            //     score: ''
-            // },
+            input: '',
+            counts: 0,
+            page: 1,
+            pageSize: 10,
 
             user: {
                 userId: '',
@@ -146,17 +179,27 @@
             searchProject() {
                 console.log(this.isok);
             },
+            //分页查询
+            // handleSizeChange(val) {
+            //     console.log(`每页 ${val} 条`);
+            // },
+            // handleCurrentChange(val) {
+            //     console.log(`当前页: ${val}`);
+            // },
 
-            //查询班级总分
+
+            //展示班级总分
             queryScores() {
                 axios({
                     method: 'get',
                     url: baseUrl + "user/classScores",
                     params: {
-                        projectName: this.searchInput
+                        // page: this.page,
+                        // pageSize: this.pageSize
                     }
                 }).then(response => {
                     if (response.data.code == 200) {
+                        // this.counts = response.data.total;
                         this.scoresList = response.data.data;
                     } else {
                         this.$message.warning("查询失败!");
@@ -165,6 +208,26 @@
                 .catch(error => {
                     this.$message.error('系统繁忙，请稍后再试！');
                 });
+            },
+
+            //查询班级总分
+            handleQuery(){
+                axios({
+                    method: 'post',
+                    url: baseUrl + "user/classSelect",
+                    params: {
+                        name: this.input ? this.input : undefined
+                    }
+                }).then(response => {
+                    if (response.data.code == 200) {
+                        this.scoresList = response.data.data;
+                    } else {
+                        this.$message.warning("查询失败!");
+                    }
+                })
+                    .catch(error => {
+                        this.$message.error('系统繁忙，请稍后再试！');
+                    });
             },
 
             myPage() {

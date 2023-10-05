@@ -34,6 +34,14 @@
         where
             college_id = #{collegeId,jdbcType=BIGINT}
     </select>
+<!--    根据学院名称查询成绩-->
+    <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select *
+        from tb_college
+        where
+            name = #{name}
+    </select>
+
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from tb_college
