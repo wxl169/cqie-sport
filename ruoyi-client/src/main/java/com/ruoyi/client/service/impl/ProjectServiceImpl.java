@@ -70,13 +70,12 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     public R listProjectByNumber(String projectNumber) {
         SportsVo sportsVo = new SportsVo();
         LambdaQueryWrapper<Project> prolqw = new LambdaQueryWrapper<>();
-        prolqw.eq(StringUtils.isNotEmpty(projectNumber),Project::getNumber,projectNumber)
+        prolqw.eq(Project::getNumber,projectNumber)
             .eq(Project::getIsCancel,"0");
         Project project = projectMapper.selectOne(prolqw);
         LambdaQueryWrapper<ArrangeInfo> arrlqw = new LambdaQueryWrapper<>();
         arrlqw.eq(ArrangeInfo::getProjectId,project.getProjectId());
         ArrangeInfo arrangeInfo = arrangeInfoMapper.selectOne(arrlqw);
-
 
         //设置比赛项目工具类属性
         sportsVo.setProjectId(project.getProjectId());

@@ -6,13 +6,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.client.domain.dto.ClassDTO;
 import com.ruoyi.client.domain.entity.Class;
-import com.ruoyi.client.domain.entity.College;
 import com.ruoyi.client.mapper.ClassMapper;
 import com.ruoyi.client.mapper.CollegeMapper;
 import com.ruoyi.client.service.ClassService;
-
-import com.ruoyi.common.exception.ServiceException;
-import com.ruoyi.common.utils.BeanCopyUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

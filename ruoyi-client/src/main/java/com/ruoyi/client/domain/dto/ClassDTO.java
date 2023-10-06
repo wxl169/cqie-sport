@@ -1,8 +1,5 @@
 package com.ruoyi.client.domain.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.ruoyi.client.domain.entity.Class;
 import lombok.Data;
 
 import java.util.Date;

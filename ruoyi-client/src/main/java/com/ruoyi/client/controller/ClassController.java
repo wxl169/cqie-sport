@@ -1,12 +1,9 @@
 package com.ruoyi.client.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.client.domain.dto.ClassDTO;
 import com.ruoyi.client.domain.entity.Class;
 import com.ruoyi.client.domain.entity.College;
-import com.ruoyi.client.mapper.CollegeMapper;
 import com.ruoyi.client.service.ClassService;
 import com.ruoyi.client.service.CollegeService;
 import com.ruoyi.common.core.controller.BaseController;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
 
 /**
  * 按班级、学院总分展示
