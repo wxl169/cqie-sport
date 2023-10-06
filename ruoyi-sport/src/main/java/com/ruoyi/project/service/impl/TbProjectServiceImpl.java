@@ -127,7 +127,6 @@ public class TbProjectServiceImpl implements ITbProjectService {
                 throw new BaseException("裁判员已报名人数为 " + count + "人大于" + update.getRenum() + "人,无法修改");
             }
         }
-        validEntityBeforeSave(update);
         String name = baseMapper.selectById(update.getProjectId()).getName();
         LambdaUpdateWrapper<SysDictData> updateWrapper = new LambdaUpdateWrapper<>();
         if(baseMapper.updateById(update) > 0){

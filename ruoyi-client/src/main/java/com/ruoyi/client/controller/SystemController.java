@@ -83,6 +83,28 @@ public class SystemController {
     }
 
     /**
+     * 跳转到比赛成绩查询
+     *
+     * @return 比赛成绩查询
+     */
+    @RequestMapping("/toMatchRanking")
+    public String toMatchRanking(){
+        return "match/matchRanking";
+    }
+
+
+    /**
+     * 跳转到成绩公布
+     *
+     * @return 成绩公布
+     */
+    @RequestMapping("/toScore")
+    public String toScore(){
+        return "sports/score";
+
+    }
+
+    /**
      * 跳转到学院总分查询
      *
      * @return 班级总分
