@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.*;
@@ -45,7 +46,7 @@ public class ArrangementServiceImpl implements ArrangementService {
     public ResultVO addSignUp(Map<String, String> info) {
         log.info("info,{}",info);
         String type = info.get("type");//身份
-        Integer studentId = Integer.valueOf(info.get("typeId2"));
+        Long studentId = Long.valueOf(info.get("typeId2"));
         if (!type.equals("0") && !type.equals("2")){ //既不是学生也不是裁判员
             return new ResultVO(ResStatus.NO, "fail", null);
         }
@@ -126,7 +127,7 @@ public class ArrangementServiceImpl implements ArrangementService {
             LambdaQueryWrapper<Arrangement> lqw = new LambdaQueryWrapper<>();
             lqw.eq(Arrangement::getProjectId,projectId).eq(Arrangement::getInfoId,arrangeInfoId);
              List<Arrangement> arrangements = arrangementMapper.selectList(lqw);
-            String RefereeId = null;
+            String RefereeId = "";
             if(arrangements.size() !=0){
                 Arrangement arrangement1 = arrangements.get(0);
                 String[] split = arrangement1.getRefereeId().split(",");
@@ -138,6 +139,7 @@ public class ArrangementServiceImpl implements ArrangementService {
                 if (split.length>=project.getRenum()){
                     return new ResultVO(ResStatus.NO, "yibaomingmanle", null);
                 }
+                if(!ObjectUtils.isEmpty(arrangement1.getRefereeId()))
                 RefereeId = arrangement1.getRefereeId() + ",";
             }
 
@@ -205,7 +207,7 @@ public class ArrangementServiceImpl implements ArrangementService {
             return true;
     }
 
-    private int athleteApply(Student student,Long typeId,String projectType,Arrangement arrangement,Integer studentId){
+    private int athleteApply(Student student,Long typeId,String projectType,Arrangement arrangement,Long studentId){
         int insert = 0;
    /*     Example exampleArrangement = new Example(Arrangement.class);
         exampleArrangement.and().andEqualTo("projectId",arrangement.getProjectId())
