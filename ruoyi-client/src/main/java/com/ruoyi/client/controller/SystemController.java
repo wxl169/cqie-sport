@@ -81,4 +81,10 @@ public class SystemController {
         return "match/matchRanking";
     }
 
+    @RequestMapping("/toScore")
+    public String toScore(){
+        return "sports/score";
+
+    }
+
 }

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.client.mapper.CompetitionMapper">
+  <resultMap id="BaseResultMap" type="com.ruoyi.client.domain.entity.Competition">
+    <id column="比赛_id" jdbcType="INTEGER" property="比赛Id" />
+    <result column="arrangement_id" jdbcType="INTEGER" property="arrangementId" />
+    <result column="type_id" jdbcType="VARCHAR" property="typeId" />
+    <result column="type" jdbcType="CHAR" property="type" />
+    <result column="score" jdbcType="INTEGER" property="score" />
+    <result column="is_effective" jdbcType="CHAR" property="isEffective" />
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="other" jdbcType="VARCHAR" property="other" />
+  </resultMap>
+
+  <resultMap id="ScoreVOMap" type="com.ruoyi.client.domain.vo.ScoreVO">
+    <result column="prnumber" jdbcType="VARCHAR" property="projectNumber"/>
+    <result column="prname" jdbcType="VARCHAR" property="projectName"/>
+    <result column="aitime" jdbcType="VARCHAR" property="arrangementInfoTime"/>
+    <result column="aiplace" jdbcType="VARCHAR" property="arrangementInfoPlace"/>
+    <result column="aicontent" jdbcType="VARCHAR" property="arrangementInfoContent"/>
+    <result column="atnumber" jdbcType="VARCHAR" property="athleteNumber"/>
+    <result column="coname" jdbcType="VARCHAR" property="collegeName"/>
+    <result column="clname" jdbcType="VARCHAR" property="className"/>
+    <result column="stname" jdbcType="VARCHAR" property="studentName"/>
+    <result column="cpresult" jdbcType="VARCHAR" property="competitionResult"/>
+    <result column="cpscore" jdbcType="VARCHAR" property="competitionScore"/>
+    <result column="renumber" jdbcType="VARCHAR" property="refereeNumber"/>
+  </resultMap>
+
+  <select id="selectCompetitions" resultMap="ScoreVOMap">
+    SELECT
+      pr.number prnumber,
+      pr.`name`prname,
+      ai.time aitime,
+      ai.place aiplace,
+      ai.content aicontent,
+      at.number atnumber,
+      co.`name` coname,
+      cl.`name` clname,
+      st.`name` stname,
+      cp.result cpresult,
+      cp.score cpscore,
+      re.number renumber
+    FROM tb_competition cp
+             INNER JOIN tb_arrangement ar ON cp.arrangement_id = ar.arrangement_id
+             INNER JOIN tb_athlete at ON cp.type_id = at.athlete_id
+        INNER JOIN tb_student st ON at.student_id = st.student_id
+        INNER JOIN tb_class cl ON st.class_id = cl.class_id
+        INNER JOIN tb_college co ON st.college_id = co.college_id
+        INNER JOIN tb_referee re ON ar.referee_id = re.referee_id
+        INNER JOIN tb_project pr ON ar.project_id = pr.project_id
+        INNER JOIN tb_arrange_info ai ON ar.info_id = ai.arrange_info_id
+    WHERE cp.type = '0' AND cp.is_effective = '1'
+      AND re.referee_id = (SELECT referee_id FROM tb_referee WHERE referee_id = ar.referee_id);
+  </select>
+
+</mapper>
