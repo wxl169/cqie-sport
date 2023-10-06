@@ -103,15 +103,76 @@
             <!--文字资讯-->
                 <el-col :span="11" :offset="3">
                     <template>
-                        <el-tabs v-model="activeName" @tab-click="handleClick">
+                        <el-tabs  type="border-card" v-model="activeName" @tab-click="handleClick">
                             <el-tab-pane label="运动会资讯" name="first">
-                                <el-card class="box-card" style="position: relative;">
-                                    <div v-for="o in 4" :key="o" class="text item">
-                                        {{'列表内容 ' + o }}
-                                    </div>
-                                </el-card>
+                                <template>
+                                    <el-table
+                                        :data="tableData"
+                                        style="width: 100%">
+                                        <el-table-column
+                                            type="index"
+                                            :index="indexMethod">
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="lostName"
+                                            label="标题"
+                                            width="180">
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="endTime"
+                                            label="结束时间"
+                                            width="180">
+                                        </el-table-column>
+                                    </el-table>
+                                    <el-pagination
+                                        @size-change="handleSizeChange"
+                                        @current-change="handleCurrentChange"
+                                        :current-page="pageNum"
+                                        :page-sizes="[5, 8]"
+                                        :page-size="pageSize"
+                                        layout="total,sizes,prev, pager, next, jumper"
+                                        :total="total">
+                                    </el-pagination>
+                                </template>
                             </el-tab-pane>
-                            <el-tab-pane label="失物招领" name="second">失物招领</el-tab-pane>
+                            <el-tab-pane label="失物招领" name="second">
+                                <template>
+                                    <el-table
+                                        :data="tableData"
+                                        style="width: 100%">
+                                        <el-table-column
+                                            type="index"
+                                            :index="indexMethod">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="lostName"
+                                        label="物品名">
+                                    </el-table-column>
+                                        <el-table-column
+                                            prop="lostPlace"
+                                            label="拾取地点">
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="lostTime"
+                                            label="拾取时间"
+                                            width="180">
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="pickUpName"
+                                            label="拾取人姓名">
+                                        </el-table-column>
+                                    </el-table>
+                                    <el-pagination
+                                        @size-change="handleSizeChange"
+                                        @current-change="handleCurrentChange"
+                                        :current-page="pageNum"
+                                        :page-sizes="[5, 8]"
+                                        :page-size="pageSize"
+                                        layout="total,sizes,prev, pager, next, jumper"
+                                        :total="total">
+                                    </el-pagination>
+                                </template>
+                            </el-tab-pane>
                             <el-tab-pane label="预报名项目" name="third">预报名项目</el-tab-pane>
                             <el-tab-pane label="正进行项目" name="fourth">正进行项目</el-tab-pane>
                         </el-tabs>
@@ -150,17 +211,20 @@
                 token: '',
                 type:'',
             },
-            img:'',
-            activeIndex: '0',
-            activeName: 'second',
             circleImgUrl: ['http://i.cqie.edu.cn/resources/style/pc/images/newicon/bg_1.jpg',
                 'http://i.cqie.edu.cn/resources/style/pc/images/newicon/bg_2.jpg',
-                'http://i.cqie.edu.cn/resources/style/pc/images/newicon/bg_3.jpg']
+                'http://i.cqie.edu.cn/resources/style/pc/images/newicon/bg_3.jpg'],
+
+            img:'',
+            index : 1,
+            activeIndex: '0',
+            activeName: 'first',
+            pageNum:1,
+            total:0,
+            pageSize:10,
+            tableData:[],
         },
         created: function () {
-            // this.user.userId = getCookieValue("userId");
-            // this.user.username = getCookieValue("username");
-            // this.user.userHeadUrl = './static/img/user_upload/' + getCookieValue("img");
             this.user.token = getCookieValue("token");
             var param = window.location.href.split("?");
             if (param[1] === 'reason=successlogin') {
@@ -188,10 +252,6 @@
             handleSelect(key, keyPath) {
                 console.log(key, keyPath);
             },
-            //首页资讯
-            handleClick(tab, event) {
-                console.log(tab, event);
-            },
             signupPage() {
                 window.location.href = baseUrl+"system/toSignUp";
             },
@@ -218,7 +278,46 @@
                     setCookieValue("token", "");
                     window.location.href = baseUrl + 'system/toLogin'
                 });
-            }
+            },
+            //首页资讯
+            handleClick(tab, event) {
+                if (tab.name === "second"){
+                    this.getPageInfo();
+                }
+            },
+            // 获取当前页的数据信息
+            getPageInfo(){
+                //清空pageTicket中的数据
+                this.tableData=[];
+                axios({
+                    method: 'get',
+                    url: baseUrl + 'lostProperty/get',
+                    params: {
+                        pageNum: this.pageNum,
+                        pageSize : this.pageSize
+                    },
+                }).then((res)=>{
+                    this.tableData = res.data.data.rows;
+                    this.total = res.data.data.total;
+                });
+            },
+            handleSizeChange(size) {
+                //修改当前每页的数据行数
+                this.pageSize = size;
+                //数据重新分页
+                this.getPageInfo();
+            },
+
+            handleCurrentChange(pageNum) {
+                //修改当前的页码
+                this.pageNum=pageNum;
+                //数据重新分页
+                this.getPageInfo();
+            },
+            indexMethod(index) {
+                return index + 1;
+            },
+
         }
     });
 </script>
