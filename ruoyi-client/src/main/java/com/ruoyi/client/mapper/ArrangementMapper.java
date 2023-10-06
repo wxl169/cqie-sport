@@ -21,4 +21,17 @@ public interface ArrangementMapper extends  BaseMapper<Arrangement> {
                                           @Param("arrangementInfoId") Long arrangementInfoId,
                                           @Param("refereeId") String refereeId);
 
+    /**
+     * 获取参数裁判数
+     * @param projectId 项目id
+     * @return 裁判数
+     */
+    String getRefereeNum(Long projectId);
+
+    /**
+     * 获取参数运动员数量
+     * @param projectId 项目id
+     * @return 运动员数量
+     */
+    Long getAthleteNum(Long projectId);
 }

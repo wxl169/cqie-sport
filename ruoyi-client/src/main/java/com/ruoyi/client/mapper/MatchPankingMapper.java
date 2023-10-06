@@ -1,7 +1,7 @@
 package com.ruoyi.client.mapper;
 
 import com.ruoyi.client.domain.vo.MatchPankingVO;
-import com.ruoyi.client.domain.vo.MatchTypeVO;
+//import com.ruoyi.client.domain.vo.MatchTypeVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

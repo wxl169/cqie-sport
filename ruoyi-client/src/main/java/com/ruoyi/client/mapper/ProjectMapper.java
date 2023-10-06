@@ -3,7 +3,9 @@ package com.ruoyi.client.mapper;
 import com.ruoyi.client.domain.entity.Project;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.client.domain.general.GeneralDAO;
+import com.ruoyi.client.domain.vo.ProjectPageVO;
 import com.ruoyi.client.domain.vo.SignUpVO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -59,4 +61,19 @@ public interface ProjectMapper extends BaseMapper<Project>, GeneralDAO<Project> 
      * @return
      */
     public List<SignUpVO>selectSignUpNeedInfoAdmin();
+
+    /**
+     * 获取预报名的比赛名
+     *
+     * @param pageNum 页码
+     * @param pageSize 每页数据量
+     * @return 分页数据
+     */
+    List<ProjectPageVO> getProjectPage(@Param("pageNum") Integer pageNum,@Param("pageSize") Integer pageSize);
+
+    /**
+     * 一共有多少数据
+     * @return
+     */
+    Long getProjectPageTotal();
 }

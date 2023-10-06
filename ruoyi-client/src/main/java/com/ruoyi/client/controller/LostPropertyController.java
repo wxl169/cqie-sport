@@ -44,7 +44,7 @@ public class LostPropertyController {
             pageNum = 1;
         }
         if (pageSize  == null){
-            pageSize = 8;
+            pageSize = 5;
         }
         return lostPropertyService.getLostProperty(pageNum,pageSize);
     }

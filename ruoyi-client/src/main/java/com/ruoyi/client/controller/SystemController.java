@@ -71,14 +71,15 @@ public class SystemController {
     public String toSports(){
         return "sports/sports";
     }
+
     /**
-     * 跳转到比赛成绩查询
+     * 跳转到班级总分查询
      *
-     * @return 比赛成绩查询
+     * @return 班级总分
      */
-    @RequestMapping("/toMatchRanking")
-    public String toMatchRanking(){
-        return "match/matchRanking";
+    @RequestMapping("/toClassScores")
+    public String toClass(){
+        return "user/class_scores";
     }
 
     @RequestMapping("/toScore")
@@ -87,4 +88,13 @@ public class SystemController {
 
     }
 
+    /**
+     * 跳转到学院总分查询
+     *
+     * @return 班级总分
+     */
+    @RequestMapping("/toCollegeScores")
+    public String toCollege(){
+        return "user/college_scores";
+    }
 }

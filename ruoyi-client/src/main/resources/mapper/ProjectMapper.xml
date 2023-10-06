@@ -159,4 +159,30 @@
                                 AND p.type = #{projectType}
     </select>
 
+    <select id="getProjectPage" resultType="com.ruoyi.client.domain.vo.ProjectPageVO">
+        select
+            p.project_id,
+            p.`name`,
+            p.type,
+            p.upnum,
+            p.renum,
+            p.gtype,
+            ai.`time`
+        from tb_project  as p
+                 join tb_arrange_info as ai
+                      on  p.project_id = ai.project_id
+                          and  p.is_cancel = '0'
+                          and  ai.`time` > NOW()
+        limit #{pageNum},#{pageSize};
+    </select>
+    <select id="getProjectPageTotal" resultType="java.lang.Long">
+        select
+            count(*)
+        from tb_project  as p
+                 join tb_arrange_info as ai
+                      on  p.project_id = ai.project_id
+                          and  p.is_cancel = '0'
+                          and  ai.`time` > NOW();
+    </select>
+
 </mapper>

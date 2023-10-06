@@ -25,4 +25,21 @@ public class ProjectController {
         return projectService.getProjectName(projectType);
     }
 
+    /**
+     * 获取预报名的比赛名
+     *
+     * @param pageNum 页码
+     * @param pageSize 每页数据量
+     * @return 分页数据
+     */
+    @GetMapping("/get")
+    public R getProjectPage(@RequestParam("pageNum")Integer pageNum,@RequestParam("pageSize") Integer pageSize){
+        if (pageNum == null){
+            pageNum = 1;
+        }
+        if (pageSize == null){
+            pageSize = 5;
+        }
+        return  projectService.getProjectPage(pageNum,pageSize);
+    }
 }

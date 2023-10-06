@@ -1,7 +1,7 @@
 package com.ruoyi.client.service.impl;
 
 import com.ruoyi.client.domain.vo.MatchPankingVO;
-import com.ruoyi.client.domain.vo.MatchTypeVO;
+//import com.ruoyi.client.domain.vo.MatchTypeVO;
 import com.ruoyi.client.mapper.MatchPankingMapper;
 import com.ruoyi.client.service.MatchRankingService;
 import com.ruoyi.common.core.domain.R;
