@@ -166,7 +166,8 @@
             p.type,
             p.upnum,
             p.renum,
-            p.gtype
+            p.gtype,
+            ai.`time`
         from tb_project  as p
                  join tb_arrange_info as ai
                       on  p.project_id = ai.project_id

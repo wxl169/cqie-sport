@@ -23,5 +23,11 @@
     SET ar.referee_id = #{refereeId}
     WHERE project_id = #{projectId} AND info_id = #{arrangementInfoId}
   </update>
+    <select id="getRefereeNum" resultType="java.lang.String" parameterType="java.lang.Long">
+        select referee_id from tb_arrangement where project_id = #{project_id} limit 1;
+    </select>
+    <select id="getAthleteNum" resultType="java.lang.Long" parameterType="java.lang.Long">
+        select count(type_id) from tb_arrangement where project_id = #{project_id};
+    </select>
 
 </mapper>

@@ -6,6 +6,7 @@ import com.ruoyi.client.domain.entity.ArrangeInfo;
 import com.ruoyi.client.domain.entity.Project;
 import com.ruoyi.client.domain.vo.*;
 import com.ruoyi.client.mapper.ArrangeInfoMapper;
+import com.ruoyi.client.mapper.ArrangementMapper;
 import com.ruoyi.client.mapper.ProjectMapper;
 import com.ruoyi.client.service.ProjectService;
 import com.ruoyi.common.constant.ProjectConstants;
@@ -28,6 +29,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
     @Autowired
     private ArrangeInfoMapper arrangeInfoMapper;
+    @Autowired
+    private ArrangementMapper arrangementMapper;
 
 
     @Override
@@ -128,7 +131,17 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         //查询正在报名的比赛
         List<ProjectPageVO> projectPageVOS = projectMapper.getProjectPage((pageNum-1)*pageSize,pageSize);
         projectPageVOS = projectPageVOS.stream().map(projectPageVO -> {
-
+            //查询有多少参数裁判和运动员
+            String referee = arrangementMapper.getRefereeNum(projectPageVO.getProjectId());
+            if (!StringUtils.isBlank(referee)){
+                String[] arr = referee.split(",");
+                int refereeNum = arr.length;
+                //剩余裁判数量
+                projectPageVO.setRenum(projectPageVO.getRenum() - refereeNum);
+            }
+            Long athleteNum = arrangementMapper.getAthleteNum(projectPageVO.getProjectId());
+            //剩余运动员/团队数量
+            projectPageVO.setUpnum((int) (projectPageVO.getUpnum() - athleteNum));
             return projectPageVO;
         }).collect(Collectors.toList());
         //页数
