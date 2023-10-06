@@ -37,4 +37,12 @@ public interface ProjectService extends IService<Project> {
     R listProjectsByType(String projectType);
 
 
+    /**
+     * 获取预报名的比赛名
+     *
+     * @param pageNum 页码
+     * @param pageSize 每页数据量
+     * @return 分页数据
+     */
+    R getProjectPage(Integer pageNum, Integer pageSize);
 }

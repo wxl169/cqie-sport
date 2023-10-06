@@ -173,7 +173,56 @@
                                     </el-pagination>
                                 </template>
                             </el-tab-pane>
-                            <el-tab-pane label="预报名项目" name="third">预报名项目</el-tab-pane>
+                            <el-tab-pane label="预报名项目" name="third">
+                                <template>
+                                    <el-table
+                                        :data="thirdData"
+                                        style="width: 100%">
+                                        <el-table-column
+                                            type="index"
+                                            :index="indexMethodThird">
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="name"
+                                            label="比赛名"
+                                            width="180">
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="type"
+                                            label="比赛类型">
+                                            <template slot-scope="scope">
+                                                {{ scope.row.type === '1' ? '团队赛' : '个人赛' }}
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="gtype"
+                                            label="性别">
+                                            <template slot-scope="scope">
+                                                {{ scope.row.type === '1' ? '男子赛' : '女子赛' }}
+                                            </template>
+                                        </el-table-column>
+                                        <el-table-column
+                                            prop="upnum"
+                                            label="运动员/团队剩余名额"
+                                            width="100">
+                                        </el-table-column>
+                                        <el-table-column
+                                        prop="renum"
+                                        label="裁判员剩余名额"
+                                        width="100">
+                                        </el-table-column>
+                                    </el-table>
+                                    <el-pagination
+                                        @size-change="handleSizeChangeThird"
+                                        @current-change="handleCurrentChangeThird"
+                                        :current-page="pageNumThird"
+                                        :page-sizes="[5, 8]"
+                                        :page-size="pageSizeThird"
+                                        layout="total,sizes,prev, pager, next, jumper"
+                                        :total="total">
+                                    </el-pagination>
+                                </template>
+                            </el-tab-pane>
                             <el-tab-pane label="正进行项目" name="fourth">正进行项目</el-tab-pane>
                         </el-tabs>
                     </template>
@@ -221,8 +270,11 @@
             activeName: 'first',
             pageNum:1,
             total:0,
-            pageSize:10,
+            pageSize:5,
+            pageNumThird:1,
+            pageSizeThird:5,
             tableData:[],
+            thirdData:[],
         },
         created: function () {
             this.user.token = getCookieValue("token");
@@ -284,6 +336,9 @@
                 if (tab.name === "second"){
                     this.getPageInfo();
                 }
+                if (tab.name === "third"){
+                    this.getPageInfoThird();
+                }
             },
             // 获取当前页的数据信息
             getPageInfo(){
@@ -301,13 +356,27 @@
                     this.total = res.data.data.total;
                 });
             },
+            getPageInfoThird(){
+                //清空pageTicket中的数据
+                this.thirdData=[];
+                axios({
+                    method: 'get',
+                    url: baseUrl + 'project/get',
+                    params: {
+                        pageNum: this.pageNumThird,
+                        pageSize : this.pageSizeThird
+                    },
+                }).then((res)=>{
+                    this.thirdData = res.data.data.rows;
+                    this.total = res.data.data.total;
+                });
+            },
             handleSizeChange(size) {
                 //修改当前每页的数据行数
                 this.pageSize = size;
                 //数据重新分页
                 this.getPageInfo();
             },
-
             handleCurrentChange(pageNum) {
                 //修改当前的页码
                 this.pageNum=pageNum;
@@ -317,7 +386,22 @@
             indexMethod(index) {
                 return index + 1;
             },
+            indexMethodThird(index) {
+                return index + 1;
+            },
+            handleSizeChangeThird(size) {
+                //修改当前每页的数据行数
+                this.pageSizeThird = size;
+                //数据重新分页
+                this.getPageInfoThird();
+            },
 
+            handleCurrentChangeThird(pageNum) {
+                //修改当前的页码
+                this.pageNumThird= pageNum;
+                //数据重新分页
+                this.getPageInfoThird();
+            },
         }
     });
 </script>

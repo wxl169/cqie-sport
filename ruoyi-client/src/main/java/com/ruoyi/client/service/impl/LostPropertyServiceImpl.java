@@ -55,11 +55,12 @@ public class LostPropertyServiceImpl extends ServiceImpl<LostPropertyMapper, Los
             pageNum = 1;
         }
         if (pageSize  == null){
-            pageSize = 8;
+            pageSize = 5;
         }
         Page<LostProperty> page = new Page<>(pageNum,pageSize);
         LambdaQueryWrapper<LostProperty> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(LostProperty::getStatus, LostPropertyConstants.RECEIVE_NOT_STATUS);
+        queryWrapper.orderByDesc(LostProperty::getLostTime);
         this.page(page,queryWrapper);
         List<LostPropertyVO> lostPropertyVOS = BeanCopyUtils.copyList(page.getRecords(), LostPropertyVO.class);
         return R.ok(new PageVO(lostPropertyVOS,page.getTotal()));

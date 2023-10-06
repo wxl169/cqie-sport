@@ -11,12 +11,14 @@ import com.ruoyi.client.service.ProjectService;
 import com.ruoyi.common.constant.ProjectConstants;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.utils.BeanCopyUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.sun.istack.internal.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> implements ProjectService {
@@ -65,7 +67,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     public R listProjectByNumber(String projectNumber) {
         SportsVo sportsVo = new SportsVo();
         LambdaQueryWrapper<Project> prolqw = new LambdaQueryWrapper<>();
-        prolqw.eq(Project::getNumber,projectNumber)
+        prolqw.eq(StringUtils.isNotEmpty(projectNumber),Project::getNumber,projectNumber)
             .eq(Project::getIsCancel,"0");
         Project project = projectMapper.selectOne(prolqw);
         LambdaQueryWrapper<ArrangeInfo> arrlqw = new LambdaQueryWrapper<>();
@@ -113,6 +115,26 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         List<Project> projects = projectMapper.selectList(plwq);
 
         return getR(sportsVos, projects);
+    }
+
+    @Override
+    public R getProjectPage(Integer pageNum, Integer pageSize) {
+        if (pageNum == null){
+            pageNum = 1;
+        }
+        if (pageSize == null){
+            pageSize = 5;
+        }
+        //查询正在报名的比赛
+        List<ProjectPageVO> projectPageVOS = projectMapper.getProjectPage((pageNum-1)*pageSize,pageSize);
+        projectPageVOS = projectPageVOS.stream().map(projectPageVO -> {
+
+            return projectPageVO;
+        }).collect(Collectors.toList());
+        //页数
+        Long projectPageTotal = projectMapper.getProjectPageTotal();
+        PageVO pageVO = new PageVO(projectPageVOS,projectPageTotal);
+        return R.ok(pageVO);
     }
 
     @NotNull
