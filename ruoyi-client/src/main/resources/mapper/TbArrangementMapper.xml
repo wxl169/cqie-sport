@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.client.mapper.TbArrangementDao">
+  <resultMap id="BaseResultMap" type="com.ruoyi.client.domain.entity.TArrangement">
+    <id column="arrangement_id" jdbcType="INTEGER" property="arrangementId" />
+    <result column="project_id" jdbcType="INTEGER" property="projectId" />
+    <result column="referee_id" jdbcType="INTEGER" property="refereeId" />
+    <result column="type_id" jdbcType="INTEGER" property="typeId" />
+    <result column="info_id" jdbcType="INTEGER" property="infoId" />
+    <result column="type" jdbcType="CHAR" property="type" />
+    <result column="is_cancel" jdbcType="CHAR" property="isCancel" />
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="other" jdbcType="VARCHAR" property="other" />
+  </resultMap>
+    <resultMap id="Competition" type="com.ruoyi.client.domain.entity.TCompetition">
+        <id column="project_id" jdbcType="INTEGER" property="competitionId" />
+        <result column="arrangement_id" jdbcType="INTEGER" property="arrangementId" />
+        <result column="type_id" jdbcType="INTEGER" property="typeId"/>
+        <result column="type" jdbcType="CHAR" property="type" />
+        <result column="name" jdbcType="CHAR" property="other" />
+    </resultMap>
+  <sql id="Base_Column_List">
+    arrangement_id, project_id, referee_id, type_id, info_id, `type`, is_cancel, reason,
+    create_time, update_time, other
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_arrangement
+    where arrangement_id = #{arrangementId,jdbcType=INTEGER}
+  </select>
+    <select id="selectByProjectId" resultMap="Competition">
+        select * from tb_arrangement
+        JOIN tb_athlete
+        ON tb_arrangement.type_id = tb_athlete.athlete_id
+        JOIN tb_student
+        ON tb_athlete.student_id = tb_student.student_id
+        where project_id = #{projectId}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_arrangement
+    where arrangement_id = #{arrangementId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="arrangement_id" keyProperty="arrangementId" parameterType="com.ruoyi.client.domain.entity.TArrangement" useGeneratedKeys="true">
+    insert into tb_arrangement (project_id, referee_id, type_id,
+      info_id, `type`, is_cancel, reason,
+      create_time, update_time, other
+      )
+    values (#{projectId,jdbcType=INTEGER}, #{refereeId,jdbcType=INTEGER}, #{typeId,jdbcType=INTEGER},
+      #{infoId,jdbcType=INTEGER}, #{type,jdbcType=CHAR}, #{isCancel,jdbcType=CHAR}, #{reason,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{other,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="arrangement_id" keyProperty="arrangementId" parameterType="com.ruoyi.client.domain.entity.TArrangement" useGeneratedKeys="true">
+    insert into tb_arrangement
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="projectId != null">
+        project_id,
+      </if>
+      <if test="refereeId != null">
+        referee_id,
+      </if>
+      <if test="typeId != null">
+        type_id,
+      </if>
+      <if test="infoId != null">
+        info_id,
+      </if>
+      <if test="type != null">
+        `type`,
+      </if>
+      <if test="isCancel != null">
+        is_cancel,
+      </if>
+      <if test="reason != null">
+        reason,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="other != null">
+        other,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="projectId != null">
+        #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="refereeId != null">
+        #{refereeId,jdbcType=INTEGER},
+      </if>
+      <if test="typeId != null">
+        #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="infoId != null">
+        #{infoId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=CHAR},
+      </if>
+      <if test="isCancel != null">
+        #{isCancel,jdbcType=CHAR},
+      </if>
+      <if test="reason != null">
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="other != null">
+        #{other,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.client.domain.entity.TArrangement">
+    update tb_arrangement
+    <set>
+      <if test="projectId != null">
+        project_id = #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="refereeId != null">
+        referee_id = #{refereeId,jdbcType=INTEGER},
+      </if>
+      <if test="typeId != null">
+        type_id = #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="infoId != null">
+        info_id = #{infoId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        `type` = #{type,jdbcType=CHAR},
+      </if>
+      <if test="isCancel != null">
+        is_cancel = #{isCancel,jdbcType=CHAR},
+      </if>
+      <if test="reason != null">
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="other != null">
+        other = #{other,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where arrangement_id = #{arrangementId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.client.domain.entity.TArrangement">
+    update tb_arrangement
+    set project_id = #{projectId,jdbcType=INTEGER},
+      referee_id = #{refereeId,jdbcType=INTEGER},
+      type_id = #{typeId,jdbcType=INTEGER},
+      info_id = #{infoId,jdbcType=INTEGER},
+      `type` = #{type,jdbcType=CHAR},
+      is_cancel = #{isCancel,jdbcType=CHAR},
+      reason = #{reason,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      other = #{other,jdbcType=VARCHAR}
+    where arrangement_id = #{arrangementId,jdbcType=INTEGER}
+  </update>
+</mapper>

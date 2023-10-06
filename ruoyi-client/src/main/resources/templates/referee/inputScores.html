@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" type="text/css" href="/css/index.css"/>
     <link rel="stylesheet" type="text/css" href="/css/mycss.css"/>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            margin: 0;
-            padding: 20px;
-        }
+        /*body {*/
+        /*    font-family: Arial, sans-serif;*/
+        /*    background-color: #f2f2f2;*/
+        /*    margin: 0;*/
+        /*    padding: 20px;*/
+        /*}*/
 
         h1 {
             color: #333;
@@ -136,31 +136,24 @@
                 </el-menu>
             </el-col>
         </el-main>
-        <!--        //表格项目信息-->
-        <h1>成绩录入</h1>
 
-        <form>
+
+        <form method="post" th:action="@{'toInputScores?projectId='+${projectId}}">
             <table>
                 <thead>
                 <tr>
-                    <th>学院</th>
-                    <th>班级</th>
                     <th>姓名</th>
                     <th>成绩</th>
+                    <th>是否有效（0无效，1有效）</th>
+                    <th>无效说明</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>软件与人工智能学院</td>
-                    <td>软工2班</td>
-                    <td>吴小龙</td>
+                <tr th:each="player:${PlayerList}">
+                    <td th:text="${player.other}">吴小龙</td>
                     <td><input type="number" name="score" required></td>
-                </tr>
-                <tr>
-                    <td>软件与人工智能学院</td>
-                    <td>软工2班</td>
-                    <td>邬文莱</td>
-                    <td><input type="number" name="score" required></td>
+                    <td><input type="number" name="is_effective" value="1" required></td>
+                    <td><input type="text" name="reason" value="无" required></td>
                 </tr>
                 <!-- 可以根据需求添加更多的行 -->
                 </tbody>
@@ -171,6 +164,13 @@
 
     </el-container>
 </div>
+<input type="hidden" id="msg" th:value="${inputMsg}">
+<script>
+    msg = document.getElementById("msg").value;
+    if (msg != "") {
+        alert("添加成功");
+    }
+</script>
 
 <script>
     var baseUrl = "http://localhost:8080/client/";

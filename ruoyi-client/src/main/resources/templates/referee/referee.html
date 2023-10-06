@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -115,23 +115,11 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>001</td>
-                <td>项目一</td>
-                <td>规则介绍一</td>
-                <td><a href="toInputScores">进入</a></td>
-            </tr>
-            <tr>
-                <td>002</td>
-                <td>项目二</td>
-                <td>规则介绍二</td>
-                <td><a href="toInputScores">进入</a></td>
-            </tr>
-            <tr>
-                <td>003</td>
-                <td>项目三</td>
-                <td>规则介绍三</td>
-                <td><a href="toInputScores">进入</a></td>
+            <tr th:each="project:${projectList}">
+                <td th:text="${project.number}"></td>
+                <td th:text="${project.name}"></td>
+                <td th:text="${project.introduction}"></td>
+                <td><a th:onclick="return verify([[${project.projectId}]])" th:href="@{'findPlayer?projectId='+${project.projectId}}">进入</a></td>
             </tr>
             </tbody>
         </table>
@@ -140,6 +128,20 @@
 </div>
 
 <script>
+    function verify(projectId){
+        xhr = new XMLHttpRequest();
+        xhr.open("get","toVerify?projectId="+projectId+"&userId="+this.user.userId);
+        xhr.send();
+        if (xhr.readyState == 4){
+            if (xhr.status >= 200 && xhr.status < 300){
+
+            }
+        }else {
+            return false;
+        }
+
+    }
+
     var baseUrl = "http://localhost:8080/client/";
 
     //登录验证
@@ -211,14 +213,20 @@
                     url: baseUrl + 'user/logout',
                     data: {
                         token: this.user.token,
+
                     },
                 }).then((res)=>{
                     setCookieValue("token", "");
                     window.location.href = baseUrl + 'system/toLogin'
                 });
             }
+
+
+
         }
     });
+
+
 </script>
 
 </body>

@@ -17,5 +17,11 @@
         <result column="update_time" property="updateTime" />
         <result column="other" property="other" />
     </resultMap>
+    <select id="find" resultMap="BaseResultMap">
+        select * from tb_project
+    </select>
+    <select id="verify" resultType="java.lang.Boolean">
+
+    </select>
 
 </mapper>

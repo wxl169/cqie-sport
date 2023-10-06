@@ -1,10 +1,14 @@
 package com.ruoyi.client.service.impl;
 
-import com.ruoyi.client.domain.entity.TbProject;
-import com.ruoyi.client.mapper.TbProjectDao;
+import com.ruoyi.client.domain.entity.Project;
+import com.ruoyi.client.domain.entity.TCompetition;
+import com.ruoyi.client.mapper.ProjectMapper;
+import com.ruoyi.client.mapper.TbArrangementDao;
+import com.ruoyi.client.mapper.TbCompetitionDao;
 import com.ruoyi.client.service.RefereeService;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -14,9 +18,32 @@ import java.util.List;
  */
 @Service
 public class RefereeServiceImpl implements RefereeService {
-    private TbProjectDao tbProjectDao;
+    @Resource
+    private ProjectMapper projectMapper;
+    @Resource
+    private TbArrangementDao arrangementDao;
+    @Resource
+    private TbCompetitionDao competitionDao;
     @Override
-    public List<TbProject> find() {
-        return tbProjectDao.find();
+    public List<Project> find() {
+        return projectMapper.find();
+    }
+
+    @Override
+    public boolean toVerify(String projectId) {
+        return projectMapper.verify(projectId);
+    }
+
+    @Override
+    public List<TCompetition> findPlayer(String projectId) {
+        return arrangementDao.selectByProjectId(projectId);
+    }
+
+    @Override
+    public int inputScores(List<TCompetition> playerList) {
+        for (TCompetition competition:playerList) {
+            competitionDao.insertSelective(competition);
+        }
+        return 1;
     }
 }

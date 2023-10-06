@@ -1,6 +1,7 @@
 package com.ruoyi.client.service;
 
-import com.ruoyi.client.domain.entity.TbProject;
+import com.ruoyi.client.domain.entity.Project;
+import com.ruoyi.client.domain.entity.TCompetition;
 
 import java.util.List;
 
@@ -10,5 +11,11 @@ import java.util.List;
  * @date 2023/9/27 10:54
  */
 public interface RefereeService {
-    List<TbProject> find();
+    List<Project> find();
+
+    boolean toVerify(String projectId);
+
+    List<TCompetition> findPlayer(String projectId);
+
+    int inputScores(List<TCompetition> playerList);
 }
