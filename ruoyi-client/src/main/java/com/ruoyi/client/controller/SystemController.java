@@ -83,7 +83,7 @@ public class SystemController {
     }
 
     /**
-     * 跳转到班级总分查询
+     * 跳转到学院总分查询
      *
      * @return 班级总分
      */
