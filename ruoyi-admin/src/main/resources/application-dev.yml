@@ -11,23 +11,34 @@ spring:
       # 严格模式 匹配不到数据源则报错
       strict: true
       datasource:
-        # 主库数据源
         master:
-          type: ${spring.datasource.type}
-          driverClassName: com.mysql.cj.jdbc.Driver
-          # jdbc 所有参数配置参考 https://lionli.blog.csdn.net/article/details/122018562
-          # rewriteBatchedStatements=true 批处理优化 大幅提升批量插入更新删除性能(对数据库有性能损耗 使用批量操作应考虑性能问题)
           url: jdbc:mysql://182.44.55.156:3306/sport?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true&rewriteBatchedStatements=true
           username: sport
           password: NR627rY7CGdWBfSe
-        # 从库数据源
-        slave:
-          lazy: true
-          type: ${spring.datasource.type}
-          driverClassName: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://182.44.55.156:3306/sport?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true&rewriteBatchedStatements=true
-          username: sport
-          password: NR627rY7CGdWBfSe
+          # 从库数据源
+          slave:
+            # 从数据源开关/默认关闭
+            enabled: false
+            url:
+            username:
+            password:
+#        # 主库数据源
+#        master:
+#          type: ${spring.datasource.type}
+#          driverClassName: com.mysql.cj.jdbc.Driver
+#          # jdbc 所有参数配置参考 https://lionli.blog.csdn.net/article/details/122018562
+#          # rewriteBatchedStatements=true 批处理优化 大幅提升批量插入更新删除性能(对数据库有性能损耗 使用批量操作应考虑性能问题)
+#          url: jdbc:mysql://localhost:3306/ry?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true&rewriteBatchedStatements=true
+#          username: root
+#          password: wu13145
+#        # 从库数据源
+#        slave:
+#          lazy: true
+#          type: ${spring.datasource.type}
+#          driverClassName: com.mysql.cj.jdbc.Driver
+#          url: jdbc:mysql://localhost:3306/ry?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true&rewriteBatchedStatements=true
+#          username: root
+#          password: wu13145
 #        oracle:
 #          type: ${spring.datasource.type}
 #          driverClassName: oracle.jdbc.OracleDriver
@@ -158,6 +169,13 @@ spring:
     suffix: .html
     mode: HTML
     encoding: UTF-8
+    prefix: classpath:/templates/
+#  mvc:
+#    static-path-pattern: /img/**,classpath:/resources/static/**
+#  web:
+#    resources:
+#      static-locations: file:D:/sportImg/img/user_upload/,classpath:/resources/static/**
+
 #  mvc:
 #    static-path-pattern: /img/**
 #    web:
