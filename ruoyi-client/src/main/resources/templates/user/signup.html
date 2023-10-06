@@ -94,7 +94,7 @@
                                 <template v-if="projectType == 0">
                                     个人赛
                                 </template>
-                                <template v-else-if="projectType == 1">
+                                <template v-else-if="projectType == 1 && this.userType !=2 ">
                                     团体赛
                                     <el-tag>参赛队伍</el-tag>
                                     <el-select v-model="teamId1"  placeholder="请选择">
@@ -555,7 +555,7 @@
                 }
 
                 var id =this.typeId;
-                if(this.projectType == 1) id = this.teamId1
+                if(this.projectType == 1 && this.userType !=2) id = this.teamId1
                 axios({
                     method: 'post',
                     url: baseUrl + "/system/sign",
