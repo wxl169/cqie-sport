@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.client.mapper.TeamMapper">
+  <resultMap id="BaseResultMap" type="com.ruoyi.client.domain.entity.Team">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="team_id" jdbcType="INTEGER" property="teamId" />
+    <result column="athlete_id" jdbcType="INTEGER" property="athleteId" />
+    <result column="number" jdbcType="VARCHAR" property="number" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="other" jdbcType="VARCHAR" property="other" />
+  </resultMap>
+
+  <insert id="createTime" useGeneratedKeys="true" keyProperty="teamId">
+    insert into tb_team(athlete_id,number,create_time,update_time) values(#{athleteId},#{number},#{createTime},#{updateTime})
+  </insert>
+    <select id="selectTeamByStudentId">
+
+    </select>
+
+
+</mapper>

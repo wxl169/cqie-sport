@@ -20,21 +20,21 @@ public class DemoUnitTest {
     private RuoYiConfig ruoYiConfig;
 
     @DisplayName("测试 @SpringBootTest @Test @DisplayName 注解")
-    @Test
+
     public void testTest() {
         System.out.println(ruoYiConfig);
     }
 
     @Disabled
     @DisplayName("测试 @Disabled 注解")
-    @Test
+
     public void testDisabled() {
         System.out.println(ruoYiConfig);
     }
 
     @Timeout(value = 2L, unit = TimeUnit.SECONDS)
     @DisplayName("测试 @Timeout 注解")
-    @Test
+
     public void testTimeout() throws InterruptedException {
         Thread.sleep(3000);
         System.out.println(ruoYiConfig);

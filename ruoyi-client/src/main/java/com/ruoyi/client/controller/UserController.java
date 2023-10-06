@@ -51,7 +51,7 @@ public class UserController extends BaseController {
             return R.fail("请输入邮箱");
         }
         if (StringUtils.isBlank(userLoginDTO.getPassword())){
-            return R.fail("请输入密码1");
+            return R.fail("请输入密码");
         }
         return userService.getUserByEmailAndPassword(userLoginDTO.getEmail(), userLoginDTO.getPassword());
     }
@@ -99,17 +99,19 @@ public class UserController extends BaseController {
      */
     @RequestMapping(value = "/myInfo")
     @ResponseBody
-    public R myInfo(@RequestParam("userId") String userId,@RequestParam("type") String type,
-                    @RequestParam(value = "typeId",required = false) String typeId,@RequestParam("token")String token) {
+    public R myInfo(@RequestParam("userId") Long userId,@RequestParam("type") String type,
+                    @RequestParam(value = "typeId",required = false) Long typeId,@RequestParam("token")String token) {
         //判断当前用户是否登录
+        System.out.println(typeId);
         if (!userService.judgeLogin(token)){
             return R.fail("请登录账号");
         }
         UserInfoDTO userInfoDTO  = new UserInfoDTO();
-        userInfoDTO.setUserId(Integer.valueOf(userId));
+        userInfoDTO.setUserId(userId);
         userInfoDTO.setType(type);
+        System.out.println(UserConstants.USER_NULL.equals(typeId));
         if (!UserConstants.USER_NULL.equals(typeId)){
-            userInfoDTO.setTypeId(Integer.valueOf(typeId));
+            userInfoDTO.setTypeId(typeId);
         }
         return userService.getUserInfo(userInfoDTO);
     }

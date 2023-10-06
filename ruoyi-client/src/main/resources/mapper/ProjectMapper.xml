@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.client.mapper.ProjectMapper">
+    <resultMap id="BaseResultMap" type="com.ruoyi.client.domain.entity.Project">
+        <id column="project_id" jdbcType="BIGINT" property="projectId"/>
+        <result column="number" jdbcType="VARCHAR" property="number"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="introduction" jdbcType="VARCHAR" property="introduction"/>
+        <result column="type" jdbcType="CHAR" property="type"/>
+        <result column="gtype" jdbcType="CHAR" property="gtype"/>
+        <result column="upnum" jdbcType="INTEGER" property="upnum"/>
+        <result column="renum" jdbcType="INTEGER" property="renum"/>
+        <result column="is_cancel" jdbcType="CHAR" property="isCancel"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="other" jdbcType="VARCHAR" property="other"/>
+    </resultMap>
+
+    <resultMap id="SignUpVOMap" type="com.ruoyi.client.domain.vo.SignUpVO">
+        <result column="project_id" jdbcType="BIGINT" property="projectId"/>
+        <result column="number" jdbcType="VARCHAR" property="projectNumber"/>
+        <result column="name" jdbcType="VARCHAR" property="projectName"/>
+        <result column="introduction" jdbcType="VARCHAR" property="projectIntroduction"/>
+        <result column="type" jdbcType="VARCHAR" property="projectType"/>
+        <result column="gtype" jdbcType="CHAR" property="projectGType"/>
+        <result column="upnum" jdbcType="INTEGER" property="projectNeedNum"/>
+        <result column="renum" jdbcType="INTEGER" property="projectNeedReNum"/>
+
+        <result column="arrange_info_id" jdbcType="INTEGER" property="arrangeInfoId"/>
+        <result column="time" jdbcType="TIMESTAMP" property="arrangeInfoTime"/>
+        <result column="place" jdbcType="VARCHAR" property="arrangeInfoPlace"/>
+        <result column="content" jdbcType="VARCHAR" property="arrangeInfoContent"/>
+    </resultMap>
+
+    <select id="selectSignUpNeedInfo" resultMap="SignUpVOMap">
+        SELECT p.project_id,
+               p.number,
+               p.`name`,
+               p.introduction,
+               p.type,
+               p.upnum,
+               p.renum,
+               p.gtype,
+               ai.arrange_info_id,
+               ai.time,
+               ai.place,
+               ai.content
+        FROM tb_project p
+                 INNER JOIN tb_arrange_info ai
+                            ON p.project_id = ai.project_id
+                                AND p.is_cancel = '0'
+    </select>
+
+
+    <resultMap id="SignUpVOMap2" type="com.ruoyi.client.domain.vo.SignUpVO">
+        <result column="project_id" jdbcType="BIGINT" property="projectId"/>
+        <result column="number" jdbcType="VARCHAR" property="projectNumber"/>
+        <result column="name" jdbcType="VARCHAR" property="projectName"/>
+        <result column="introduction" jdbcType="VARCHAR" property="projectIntroduction"/>
+
+    </resultMap>
+
+
+    <select id="selectSignUpNeedInfoAdmin" resultMap="SignUpVOMap2">
+        SELECT p.project_id,
+               p.number,
+               p.`name`,
+               p.introduction,
+               p.type,
+               p.upnum,
+               p.renum,
+               p.gtype,
+               ai.arrange_info_id,
+               ai.time,
+               ai.place,
+               ai.content
+        FROM tb_project p
+                 LEFT JOIN tb_arrange_info ai
+                           ON p.project_id = ai.project_id
+                               AND p.is_cancel = '0'
+    </select>
+
+    <select id="selectSignUpNeedInfoCancel" resultMap="SignUpVOMap">
+        SELECT p.project_id,
+               p.number,
+               p.`name`,
+               p.introduction,
+               p.type,
+               p.upnum,
+               p.renum,
+               p.gtype,
+               ai.arrange_info_id,
+               ai.time,
+               ai.place,
+               ai.content
+        FROM tb_project p
+                 INNER JOIN tb_arrange_info ai
+                            ON p.project_id = ai.project_id
+                                AND p.is_cancel = '1'
+    </select>
+
+    <select id="selectProjectByNumber" resultMap="SignUpVOMap">
+        SELECT p.project_id,
+               p.number,
+               p.`name`,
+               p.introduction,
+               p.type,
+               p.upnum,
+               p.renum,
+               p.gtype,
+               ai.arrange_info_id,
+               ai.time,
+               ai.place,
+               ai.content
+        FROM tb_project p
+                 INNER JOIN tb_arrange_info ai
+                            ON p.project_id = ai.project_id
+                                AND p.number = #{projectNumber}
+                                AND p.is_cancel = '0'
+    </select>
+
+    <select id="selectProjectsByName" resultMap="SignUpVOMap">
+        SELECT p.project_id,
+               p.number,
+               p.`name`,
+               p.introduction,
+               p.type,
+               p.upnum,
+               p.renum,
+               p.gtype,
+               ai.arrange_info_id,
+               ai.time,
+               ai.place,
+               ai.content
+        FROM tb_project p
+                 INNER JOIN tb_arrange_info ai
+                            ON p.project_id = ai.project_id
+                                AND p.is_cancel = '0'
+                                AND p.`name` LIKE '%${projectName}%'
+    </select>
+
+    <select id="selectProjectsByType" resultMap="SignUpVOMap">
+        SELECT p.project_id,
+               p.number,
+               p.`name`,
+               p.introduction,
+               p.type,
+               p.upnum,
+               p.renum,
+               p.gtype,
+               ai.arrange_info_id,
+               ai.time,
+               ai.place,
+               ai.content
+        FROM tb_project p
+                 INNER JOIN tb_arrange_info ai
+                            ON p.project_id = ai.project_id
+                                AND p.is_cancel = '0'
+                                AND p.type = #{projectType}
+    </select>
+
+    <select id="getProjectPage" resultType="com.ruoyi.client.domain.vo.ProjectPageVO">
+        select
+            p.project_id,
+            p.`name`,
+            p.type,
+            p.upnum,
+            p.renum,
+            p.gtype,
+            ai.`time`
+        from tb_project  as p
+                 join tb_arrange_info as ai
+                      on  p.project_id = ai.project_id
+                          and  p.is_cancel = '0'
+                          and  ai.`time` > NOW()
+        limit #{pageNum},#{pageSize};
+    </select>
+    <select id="getProjectPageTotal" resultType="java.lang.Long">
+        select
+            count(*)
+        from tb_project  as p
+                 join tb_arrange_info as ai
+                      on  p.project_id = ai.project_id
+                          and  p.is_cancel = '0'
+                          and  ai.`time` > NOW();
+    </select>
+
+</mapper>

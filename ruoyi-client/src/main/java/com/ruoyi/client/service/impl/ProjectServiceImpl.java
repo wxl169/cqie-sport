@@ -4,17 +4,22 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.client.domain.entity.ArrangeInfo;
 import com.ruoyi.client.domain.entity.Project;
-import com.ruoyi.client.domain.vo.SportsVo;
+import com.ruoyi.client.domain.vo.*;
 import com.ruoyi.client.mapper.ArrangeInfoMapper;
+import com.ruoyi.client.mapper.ArrangementMapper;
 import com.ruoyi.client.mapper.ProjectMapper;
 import com.ruoyi.client.service.ProjectService;
+import com.ruoyi.common.constant.ProjectConstants;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.utils.BeanCopyUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.sun.istack.internal.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> implements ProjectService {
@@ -24,10 +29,12 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
     @Autowired
     private ArrangeInfoMapper arrangeInfoMapper;
+    @Autowired
+    private ArrangementMapper arrangementMapper;
 
 
     @Override
-    public R listSignUpNeedInfo() {
+    public R listSignUpNeedInfos() {
         List<ArrangeInfo> arrangeInfos = arrangeInfoMapper.selectList(null);
         List<SportsVo> sportsVos = new ArrayList<>();
 
@@ -63,7 +70,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     public R listProjectByNumber(String projectNumber) {
         SportsVo sportsVo = new SportsVo();
         LambdaQueryWrapper<Project> prolqw = new LambdaQueryWrapper<>();
-        prolqw.eq(Project::getNumber,projectNumber)
+        prolqw.eq(StringUtils.isNotEmpty(projectNumber),Project::getNumber,projectNumber)
             .eq(Project::getIsCancel,"0");
         Project project = projectMapper.selectOne(prolqw);
         LambdaQueryWrapper<ArrangeInfo> arrlqw = new LambdaQueryWrapper<>();
@@ -113,6 +120,36 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return getR(sportsVos, projects);
     }
 
+    @Override
+    public R getProjectPage(Integer pageNum, Integer pageSize) {
+        if (pageNum == null){
+            pageNum = 1;
+        }
+        if (pageSize == null){
+            pageSize = 5;
+        }
+        //查询正在报名的比赛
+        List<ProjectPageVO> projectPageVOS = projectMapper.getProjectPage((pageNum-1)*pageSize,pageSize);
+        projectPageVOS = projectPageVOS.stream().map(projectPageVO -> {
+            //查询有多少参数裁判和运动员
+            String referee = arrangementMapper.getRefereeNum(projectPageVO.getProjectId());
+            if (!StringUtils.isBlank(referee)){
+                String[] arr = referee.split(",");
+                int refereeNum = arr.length;
+                //剩余裁判数量
+                projectPageVO.setRenum(projectPageVO.getRenum() - refereeNum);
+            }
+            Long athleteNum = arrangementMapper.getAthleteNum(projectPageVO.getProjectId());
+            //剩余运动员/团队数量
+            projectPageVO.setUpnum((int) (projectPageVO.getUpnum() - athleteNum));
+            return projectPageVO;
+        }).collect(Collectors.toList());
+        //页数
+        Long projectPageTotal = projectMapper.getProjectPageTotal();
+        PageVO pageVO = new PageVO(projectPageVOS,projectPageTotal);
+        return R.ok(pageVO);
+    }
+
     @NotNull
     private R getR(List<SportsVo> sportsVos, List<Project> projects) {
         for (Project project : projects){
@@ -144,4 +181,28 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     }
 
 
+    @Override
+    public R getProjectName(String projectType) {
+        //如果项目类型为空，则返回请选择项目名,否则返回指定条件内容
+        LambdaQueryWrapper<Project> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(Project::getProjectId,Project::getName);
+
+        if (projectType != null && !ProjectConstants.NOT_PROJECT.equals(projectType)){
+            queryWrapper.eq(Project::getType,projectType);
+        }
+
+        List<Project> list = this.list(queryWrapper);
+        return R.ok(BeanCopyUtils.copyList(list, ProjectNameVO.class));
+    }
+
+    /**
+     * 申请报名时返回比赛项目的信息列表
+     *
+     * @return
+     */
+    @Override
+    public ResultVO listSignUpNeedInfo() {
+        List<SignUpVO> list = projectMapper.selectSignUpNeedInfo();
+        return new ResultVO(ResStatus.OK, "success", list);
+    }
 }

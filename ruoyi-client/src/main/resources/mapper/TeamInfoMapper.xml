@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.client.mapper.TeamInfoMapper">
+
+  <resultMap id="TeamResult" type="com.ruoyi.client.domain.entity.Team">
+    <id column="team_id" jdbcType="INTEGER" property="teamId" />
+    <result column="athlete_id" jdbcType="INTEGER" property="athleteId" />
+    <result column="number" jdbcType="VARCHAR" property="number" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="other" jdbcType="VARCHAR" property="other" />
+  </resultMap>
+
+  <resultMap id="TeamIndoResultMap" type="com.ruoyi.client.domain.entity.TeamInfo">
+    <id column="team_info_id" jdbcType="INTEGER" property="teamInfoId" />
+    <result column="team_id" jdbcType="INTEGER" property="teamId"/>
+    <result column="athlete_id" jdbcType="INTEGER" property="athleteId"/>
+    <result column="name" jdbcType="VARCHAR" property="teamLeader"/>
+    <association property="team" resultMap="TeamResult">
+    </association>
+  </resultMap>
+
+  <insert id="createTeamInfo">
+    insert into team_info(team_id,athlete_id) values
+    <foreach collection="list" item="item" index="index" separator=",">
+       (#{item.teamId},#{item.athleteId})
+    </foreach>
+  </insert>
+  <select id="selectTeamByStudentId" resultMap="TeamIndoResultMap">
+      select  team_info_id ,t.team_id as team_id, name, t.number as number
+      from team_info ti LEFT JOIN tb_athlete a1 on ti.athlete_id = a1.athlete_id LEFT JOIN tb_team t on t.team_id = ti.team_id
+                        LEFT JOIN tb_athlete a on t.athlete_id = a.athlete_id LEFT JOIN
+           tb_student s1 on a.student_id = s1.student_id
+    WHERE a1.student_id  = #{typeId}
+
+  </select>
+</mapper>

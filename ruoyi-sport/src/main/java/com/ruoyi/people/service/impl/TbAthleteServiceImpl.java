@@ -1,6 +1,7 @@
 package com.ruoyi.people.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.ruoyi.common.exception.base.BaseException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.domain.PageQuery;
@@ -100,6 +101,12 @@ public class TbAthleteServiceImpl implements ITbAthleteService {
      */
     private void validEntityBeforeSave(TbAthlete entity){
         //TODO 做一些数据校验,如唯一约束
+        LambdaQueryWrapper<TbAthlete> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(TbAthlete::getStudentId,entity.getStudentId());
+        TbAthlete tbAthlete = baseMapper.selectOne(lambdaQueryWrapper);
+        if(tbAthlete != null){
+            throw new BaseException("该学生已经是运动员");
+        }
     }
 
     /**

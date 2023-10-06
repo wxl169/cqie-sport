@@ -43,6 +43,12 @@ public class SystemController {
         return "user/my";
     }
 
+
+    @RequestMapping("/toSignUp")
+    public String toSignUp(){
+        return "user/signup";
+    }
+
     /**
      * 跳转到主页
      *

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.client.mapper.LostPropertyMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ruoyi.client.domain.entity.LostProperty">
+        <id column="lost_id" property="lostId" />
+        <result column="lost_name" property="lostName" />
+        <result column="lost_place" property="lostPlace" />
+        <result column="lost_time" property="lostTime" />
+        <result column="pick_up_name" property="pickUpName" />
+        <result column="pick_up_phone" property="pickUpPhone" />
+        <result column="status" property="status" />
+        <result column="claim_name" property="claimName" />
+        <result column="claim_phone" property="claimPhone" />
+        <result column="claim_time" property="claimTime" />
+    </resultMap>
+
+</mapper>

@@ -126,7 +126,7 @@
 </div>
 
 <script>
-    var baseUrl = "http://localhost:8080/client/user";
+    var baseUrl = "http://localhost:8080/client/";
     var vm = new Vue({
         el: '#container',
         data: {
@@ -189,7 +189,7 @@
                 // 发送 POST 请求
                 axios({
                     method: 'post',
-                    url: baseUrl + '/register',
+                    url: baseUrl + 'user/register',
                     data: {
                         number: this.formInfo.number,
                         type: this.formInfo.identity,
@@ -208,10 +208,12 @@
                     console.log(vo);
                     if (vo.code === 200) {
                         // console.log(vo);
-                        window.location.href = baseUrl +"/toLogin";
+                        window.location.href = baseUrl +"system/toLogin";
                     } else {
-                        this.$alert(res.data.msg, '注册失败', {
-                            confirmButtonText: '确定',
+                        this.$notify({
+                            title: '警告',
+                            message: vo.msg,
+                            type: 'warning'
                         });
                     }
                 });

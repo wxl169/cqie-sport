@@ -31,13 +31,13 @@ public class User implements Serializable {
     /**
      * 用户id 用户表的主键
      */
-    @TableId(value = "user_id", type = IdType.AUTO)
-    private Integer userId;
+    @TableId(value = "user_id", type = IdType.ASSIGN_ID)
+    private Long userId;
 
     /**
      * 对应身份id 若不是本校学生，则为NULL；若是本校学生，则学生表中已有的数据此表中为NULL即可
      */
-    private Integer typeId;
+    private Long typeId;
 
     /**
      * 身份类型 0：学生，1：班级老师，2：裁判，3：校内其他工作人员，4：非本校人员
@@ -77,7 +77,7 @@ public class User implements Serializable {
     /**
      * 出生日期
      */
-    private Date birthday;
+    private LocalDate birthday;
 
     /**
      * 头像 存储图片相对地址，初始应指定默认头像
@@ -92,12 +92,12 @@ public class User implements Serializable {
     /**
      * 录入时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 其他 备用字段

@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * <p>
  * 学生表  Mapper 接口
@@ -16,6 +18,9 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface StudentMapper extends BaseMapper<Student> {
 
+
+
+    List<Student> selectStudent(Integer id);
     /**
      * 修改学生信息
      *
@@ -23,5 +28,5 @@ public interface StudentMapper extends BaseMapper<Student> {
      * @param phoneNumber 手机号
      * @return 是否修改成功
      */
-    boolean updateSutdentPhone(@Param("studentId") Integer studentId, @Param("phoneNumber") String phoneNumber);
+    boolean updateSutdentPhone(@Param("studentId") Long studentId, @Param("phoneNumber") String phoneNumber);
 }

@@ -33,6 +33,17 @@
             <version>0.9.1</version>
         </dependency>
         <dependency>
+            <groupId>tk.mybatis</groupId>
+            <artifactId>mapper-spring-boot-starter</artifactId>
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>mybatis-spring</groupId>-->
+<!--                    <artifactId>org.mybatis</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+            <version>4.2.2</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>

@@ -24,4 +24,10 @@
             where student_id = #{studentId};
     </update>
 
+    <select id="selectStudent" resultMap="BaseResultMap">
+        select * from tb_student where  isnull(other)
+                                and class_id = (SELECT class_id FROM tb_student WHERE student_id = #{id})
+        ORDER BY gender DESC;
+    </select>
+
 </mapper>
