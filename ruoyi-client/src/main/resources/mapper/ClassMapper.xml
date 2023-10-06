@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.client.mapper.ClassMapper">
+  <resultMap id="BaseResultMap" type="com.ruoyi.client.domain.entity.Class">
+    <id column="class_id" jdbcType="BIGINT" property="classId" />
+    <result column="college_id" jdbcType="BIGINT" property="collegeId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="snum" jdbcType="INTEGER" property="snum" />
+    <result column="score" jdbcType="INTEGER" property="score" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="other" jdbcType="VARCHAR" property="other" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    class_id, college_id, `name`, snum, score, create_time, update_time, other
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_class
+    where class_id = #{classId,jdbcType=BIGINT}
+  </select>
+
+<!--    按班级总分_降序展示-->
+    <select id="selectAll" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select *
+        from tb_class
+        order by
+            score desc
+    </select>
+
+<!--    根据班级名称查询成绩-->
+    <select id="selectByNameClasses" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select *
+        from tb_class
+        where
+            name = #{name}
+    </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_class
+    where class_id = #{classId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="class_id" keyProperty="classId" parameterType="com.ruoyi.client.domain.entity.Class" useGeneratedKeys="true">
+    insert into tb_class (college_id, `name`, snum,
+      score, create_time, update_time,
+      other)
+    values (#{collegeId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{snum,jdbcType=INTEGER},
+      #{score,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+      #{other,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="class_id" keyProperty="classId" parameterType="com.ruoyi.client.domain.entity.Class" useGeneratedKeys="true">
+    insert into tb_class
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="collegeId != null">
+        college_id,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="snum != null">
+        snum,
+      </if>
+      <if test="score != null">
+        score,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="other != null">
+        other,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="collegeId != null">
+        #{collegeId,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="snum != null">
+        #{snum,jdbcType=INTEGER},
+      </if>
+      <if test="score != null">
+        #{score,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="other != null">
+        #{other,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.client.domain.entity.Class">
+    update tb_class
+    <set>
+      <if test="collegeId != null">
+        college_id = #{collegeId,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="snum != null">
+        snum = #{snum,jdbcType=INTEGER},
+      </if>
+      <if test="score != null">
+        score = #{score,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="other != null">
+        other = #{other,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where class_id = #{classId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.client.domain.entity.Class">
+    update tb_class
+    set college_id = #{collegeId,jdbcType=BIGINT},
+      `name` = #{name,jdbcType=VARCHAR},
+      snum = #{snum,jdbcType=INTEGER},
+      score = #{score,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      other = #{other,jdbcType=VARCHAR}
+    where class_id = #{classId,jdbcType=BIGINT}
+  </update>
+</mapper>
