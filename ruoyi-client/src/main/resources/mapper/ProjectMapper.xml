@@ -184,5 +184,8 @@
                           and  p.is_cancel = '0'
                           and  ai.`time` > NOW();
     </select>
+    <select id="find" resultType="com.ruoyi.client.domain.entity.Project">
+        select * from tb_project;
+    </select>
 
 </mapper>

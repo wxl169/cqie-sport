@@ -76,4 +76,10 @@ public interface ProjectMapper extends BaseMapper<Project>, GeneralDAO<Project> 
      * @return
      */
     Long getProjectPageTotal();
+
+    List<Project> find();
+
+    default boolean verify(String projectId) {
+        return false;
+    }
 }
